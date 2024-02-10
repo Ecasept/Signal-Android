@@ -192,7 +192,7 @@ public class AudioCodec implements Recorder {
   }
 
   private AudioRecord createAudioRecord(int bufferSize) {
-    return new AudioRecord(MediaRecorder.AudioSource.MIC, SAMPLE_RATE,
+    return new AudioRecord(MediaRecorder.AudioSource.CAMCORDER, SAMPLE_RATE,
                            AudioFormat.CHANNEL_IN_MONO,
                            AudioFormat.ENCODING_PCM_16BIT, bufferSize * 10);
   }

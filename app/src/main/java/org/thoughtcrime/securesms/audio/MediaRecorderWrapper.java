@@ -32,7 +32,7 @@ public class MediaRecorderWrapper implements Recorder {
     recorder = new MediaRecorder();
 
     try {
-      recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+      recorder.setAudioSource(MediaRecorder.AudioSource.CAMCORDER);
       recorder.setOutputFormat(MediaRecorder.OutputFormat.AAC_ADTS);
       recorder.setOutputFile(fileDescriptor.getFileDescriptor());
       recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
