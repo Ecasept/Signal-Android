@@ -12,6 +12,7 @@ import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.PublishSubject
 import org.signal.core.util.Result
+import org.signal.core.util.isNotNullOrBlank
 import org.signal.core.util.logging.Log
 import org.signal.libsignal.usernames.Username
 import org.thoughtcrime.securesms.dependencies.ApplicationDependencies
@@ -21,7 +22,7 @@ import org.thoughtcrime.securesms.profiles.manage.UsernameRepository.UsernameSet
 import org.thoughtcrime.securesms.util.NetworkUtil
 import org.thoughtcrime.securesms.util.UsernameUtil.InvalidReason
 import org.thoughtcrime.securesms.util.UsernameUtil.checkDiscriminator
-import org.thoughtcrime.securesms.util.UsernameUtil.checkUsername
+import org.thoughtcrime.securesms.util.UsernameUtil.checkNickname
 import org.thoughtcrime.securesms.util.rx.RxStore
 import org.whispersystems.signalservice.api.util.Usernames
 import java.util.concurrent.TimeUnit
@@ -33,9 +34,7 @@ import java.util.concurrent.TimeUnit
  * A note on naming conventions:
  * Usernames are made up of two discrete components, a nickname and a discriminator. They are formatted thusly:
  *
- * [nickname].[discriminator]
- *
- * The nickname is user-controlled, whereas the discriminator is controlled by the server.
+ * nickname.discriminator
  */
 internal class UsernameEditViewModel private constructor(private val mode: UsernameEditMode) : ViewModel() {
   private val events: PublishSubject<Event> = PublishSubject.create()
@@ -70,6 +69,7 @@ internal class UsernameEditViewModel private constructor(private val mode: Usern
 
     if (mode == UsernameEditMode.RECOVERY) {
       onNicknameUpdated(SignalStore.account().username?.split(Usernames.DELIMITER)?.first() ?: "")
+      onDiscriminatorUpdated(SignalStore.account().username?.split(Usernames.DELIMITER)?.last() ?: "")
     }
   }
 
@@ -83,7 +83,7 @@ internal class UsernameEditViewModel private constructor(private val mode: Usern
     uiState.update { state: State ->
       if (nickname.isBlank() && SignalStore.account().username != null) {
         return@update State(
-          buttonState = if (mode.allowsDelete) ButtonState.DELETE else ButtonState.SUBMIT_DISABLED,
+          buttonState = ButtonState.DELETE,
           usernameStatus = UsernameStatus.NONE,
           usernameState = UsernameState.NoUsername
         )
@@ -105,7 +105,7 @@ internal class UsernameEditViewModel private constructor(private val mode: Usern
     uiState.update { state: State ->
       if (discriminator.isBlank() && SignalStore.account().username != null) {
         return@update State(
-          buttonState = if (mode.allowsDelete) ButtonState.DELETE else ButtonState.SUBMIT_DISABLED,
+          buttonState = ButtonState.DELETE,
           usernameStatus = UsernameStatus.NONE,
           usernameState = UsernameState.NoUsername
         )
@@ -128,7 +128,17 @@ internal class UsernameEditViewModel private constructor(private val mode: Usern
     events.onNext(Event.SKIPPED)
   }
 
-  fun onUsernameSubmitted() {
+  fun isSameUsernameRecovery(): Boolean {
+    val usernameState = uiState.state.usernameState
+    return mode == UsernameEditMode.RECOVERY &&
+      usernameState is UsernameState.Reserved &&
+      usernameState.requireUsername().username.lowercase() == SignalStore.account().username?.lowercase()
+  }
+
+  /**
+   * @param userConfirmedResetOk True if the user is submitting this after confirming that they're ok with resetting their username via [Event.NEEDS_CONFIRM_RESET].
+   */
+  fun onUsernameSubmitted(userConfirmedResetOk: Boolean) {
     if (!NetworkUtil.isConnected(ApplicationDependencies.getApplication())) {
       events.onNext(Event.NETWORK_FAILURE)
       return
@@ -137,6 +147,11 @@ internal class UsernameEditViewModel private constructor(private val mode: Usern
     val editState = stateMachineStore.state
     val usernameState = uiState.state.usernameState
     val isCaseChange = isCaseChange(editState)
+
+    if (!isCaseChange && SignalStore.account().username.isNotNullOrBlank() && !userConfirmedResetOk) {
+      events.onNext(Event.NEEDS_CONFIRM_RESET)
+      return
+    }
 
     if (usernameState !is UsernameState.Reserved && usernameState !is UsernameState.CaseChange) {
       Log.w(TAG, "Username was submitted, current state is invalid! State: ${usernameState.javaClass.simpleName}")
@@ -150,7 +165,7 @@ internal class UsernameEditViewModel private constructor(private val mode: Usern
       return
     }
 
-    val invalidReason: InvalidReason? = checkUsername(usernameState.getNickname())
+    val invalidReason: InvalidReason? = checkNickname(usernameState.getNickname())
     if (invalidReason != null) {
       Log.w(TAG, "Username was submitted, but did not pass validity checks. Reason: $invalidReason")
       uiState.update { it.copy(buttonState = ButtonState.SUBMIT_DISABLED, usernameStatus = mapNicknameError(invalidReason)) }
@@ -191,6 +206,11 @@ internal class UsernameEditViewModel private constructor(private val mode: Usern
         UsernameSetResult.NETWORK_ERROR -> {
           uiState.update { State(ButtonState.SUBMIT, UsernameStatus.NONE, it.usernameState) }
           events.onNext(Event.NETWORK_FAILURE)
+        }
+
+        UsernameSetResult.RATE_LIMIT_ERROR -> {
+          uiState.update { State(ButtonState.SUBMIT, UsernameStatus.NONE, it.usernameState) }
+          events.onNext(Event.RATE_LIMIT_EXCEEDED)
         }
       }
     }
@@ -248,7 +268,7 @@ internal class UsernameEditViewModel private constructor(private val mode: Usern
       return
     }
 
-    val invalidReason: InvalidReason? = checkUsername(nickname)
+    val invalidReason: InvalidReason? = checkNickname(nickname)
     if (invalidReason != null) {
       uiState.update { uiState ->
         uiState.copy(
@@ -328,6 +348,11 @@ internal class UsernameEditViewModel private constructor(private val mode: Usern
               events.onNext(Event.NETWORK_FAILURE)
             }
 
+            UsernameSetResult.RATE_LIMIT_ERROR -> {
+              uiState.update { State(ButtonState.SUBMIT, UsernameStatus.NONE, UsernameState.NoUsername) }
+              events.onNext(Event.RATE_LIMIT_EXCEEDED)
+            }
+
             UsernameSetResult.CANDIDATE_GENERATION_ERROR -> {
               // TODO -- Retry
               uiState.update { State(ButtonState.SUBMIT_DISABLED, UsernameStatus.TAKEN, UsernameState.NoUsername) }
@@ -357,7 +382,7 @@ internal class UsernameEditViewModel private constructor(private val mode: Usern
     DISCRIMINATOR_TOO_LONG,
     DISCRIMINATOR_HAS_INVALID_CHARACTERS,
     DISCRIMINATOR_CANNOT_BE_00,
-    DISCRIMINATOR_CANNOT_START_WITH_00
+    DISCRIMINATOR_CANNOT_START_WITH_0
   }
 
   enum class ButtonState {
@@ -365,7 +390,7 @@ internal class UsernameEditViewModel private constructor(private val mode: Usern
   }
 
   enum class Event {
-    NETWORK_FAILURE, SUBMIT_SUCCESS, DELETE_SUCCESS, SUBMIT_FAIL_INVALID, SUBMIT_FAIL_TAKEN, SKIPPED
+    NETWORK_FAILURE, SUBMIT_SUCCESS, DELETE_SUCCESS, SUBMIT_FAIL_INVALID, SUBMIT_FAIL_TAKEN, SKIPPED, NEEDS_CONFIRM_RESET, RATE_LIMIT_EXCEEDED
   }
 
   class Factory(private val mode: UsernameEditMode) : ViewModelProvider.Factory {
@@ -377,7 +402,7 @@ internal class UsernameEditViewModel private constructor(private val mode: Usern
   companion object {
     private val TAG = Log.tag(UsernameEditViewModel::class.java)
 
-    private const val NICKNAME_PUBLISHER_DEBOUNCE_TIMEOUT_MILLIS: Long = 1000
+    private const val NICKNAME_PUBLISHER_DEBOUNCE_TIMEOUT_MILLIS: Long = 500
 
     private fun mapNicknameError(invalidReason: InvalidReason): UsernameStatus {
       return when (invalidReason) {
@@ -385,7 +410,9 @@ internal class UsernameEditViewModel private constructor(private val mode: Usern
         InvalidReason.TOO_LONG -> UsernameStatus.TOO_LONG
         InvalidReason.STARTS_WITH_NUMBER -> UsernameStatus.CANNOT_START_WITH_NUMBER
         InvalidReason.INVALID_CHARACTERS -> UsernameStatus.INVALID_CHARACTERS
-        InvalidReason.INVALID_NUMBER, InvalidReason.INVALID_NUMBER_PREFIX -> error("Unexpected reason $invalidReason")
+        InvalidReason.INVALID_NUMBER,
+        InvalidReason.INVALID_NUMBER_00,
+        InvalidReason.INVALID_NUMBER_PREFIX_0 -> error("Unexpected reason $invalidReason")
       }
     }
 
@@ -394,8 +421,8 @@ internal class UsernameEditViewModel private constructor(private val mode: Usern
         InvalidReason.TOO_SHORT -> UsernameStatus.DISCRIMINATOR_TOO_SHORT
         InvalidReason.TOO_LONG -> UsernameStatus.DISCRIMINATOR_TOO_LONG
         InvalidReason.INVALID_CHARACTERS -> UsernameStatus.DISCRIMINATOR_HAS_INVALID_CHARACTERS
-        InvalidReason.INVALID_NUMBER -> UsernameStatus.DISCRIMINATOR_CANNOT_BE_00
-        InvalidReason.INVALID_NUMBER_PREFIX -> UsernameStatus.DISCRIMINATOR_CANNOT_START_WITH_00
+        InvalidReason.INVALID_NUMBER_00 -> UsernameStatus.DISCRIMINATOR_CANNOT_BE_00
+        InvalidReason.INVALID_NUMBER_PREFIX_0 -> UsernameStatus.DISCRIMINATOR_CANNOT_START_WITH_0
         else -> UsernameStatus.INVALID_GENERIC
       }
     }

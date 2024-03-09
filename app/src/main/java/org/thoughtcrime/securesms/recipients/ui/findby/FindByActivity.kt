@@ -7,11 +7,11 @@ package org.thoughtcrime.securesms.recipients.ui.findby
 
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
 import androidx.activity.compose.setContent
+import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContract
-import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement.Absolute.spacedBy
 import androidx.compose.foundation.layout.Box
@@ -25,6 +25,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -40,6 +41,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
@@ -64,7 +66,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.dialog
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import kotlinx.coroutines.launch
+import org.signal.core.ui.Animations.navHostSlideInTransition
+import org.signal.core.ui.Animations.navHostSlideOutTransition
 import org.signal.core.ui.Buttons
 import org.signal.core.ui.Dialogs
 import org.signal.core.ui.Dividers
@@ -75,9 +80,10 @@ import org.signal.core.ui.theme.SignalTheme
 import org.signal.core.util.getParcelableExtraCompat
 import org.thoughtcrime.securesms.PassphraseRequiredActivity
 import org.thoughtcrime.securesms.R
+import org.thoughtcrime.securesms.components.settings.app.usernamelinks.main.UsernameQrScannerActivity
 import org.thoughtcrime.securesms.invites.InviteActions
+import org.thoughtcrime.securesms.permissions.compose.Permissions
 import org.thoughtcrime.securesms.phonenumbers.PhoneNumberVisualTransformation
-import org.thoughtcrime.securesms.recipients.Recipient
 import org.thoughtcrime.securesms.recipients.RecipientId
 import org.thoughtcrime.securesms.registration.util.CountryPrefix
 import org.thoughtcrime.securesms.util.viewModel
@@ -98,7 +104,15 @@ class FindByActivity : PassphraseRequiredActivity() {
     FindByViewModel(FindByMode.valueOf(intent.getStringExtra(MODE)!!))
   }
 
+  @OptIn(ExperimentalPermissionsApi::class)
   override fun onCreate(savedInstanceState: Bundle?, ready: Boolean) {
+    val qrScanLauncher: ActivityResultLauncher<Unit> = registerForActivityResult(UsernameQrScannerActivity.Contract()) { recipientId ->
+      if (recipientId != null) {
+        setResult(RESULT_OK, Intent().putExtra(RECIPIENT_ID, recipientId))
+        finishAfterTransition()
+      }
+    }
+
     setContent {
       val state by viewModel.state
 
@@ -108,10 +122,10 @@ class FindByActivity : PassphraseRequiredActivity() {
         NavHost(
           navController = navController,
           startDestination = "find-by-content",
-          enterTransition = { slideInHorizontally(initialOffsetX = { it }) },
-          exitTransition = { slideOutHorizontally(targetOffsetX = { -it }) },
-          popEnterTransition = { slideInHorizontally(initialOffsetX = { -it }) },
-          popExitTransition = { slideOutHorizontally(targetOffsetX = { it }) }
+          enterTransition = { navHostSlideInTransition { it } },
+          exitTransition = { navHostSlideOutTransition { -it } },
+          popEnterTransition = { navHostSlideInTransition { -it } },
+          popExitTransition = { navHostSlideOutTransition { it } }
         ) {
           composable("find-by-content") {
             val title = remember(state.mode) {
@@ -124,7 +138,15 @@ class FindByActivity : PassphraseRequiredActivity() {
               navigationIconPainter = painterResource(id = R.drawable.symbol_arrow_left_24)
             ) {
               val context = LocalContext.current
-              FindByContent(
+
+              val cameraPermissionController = Permissions.cameraPermissionHandler(
+                rationale = stringResource(id = R.string.PaymentsTransferFragment__to_scan_a_qr_code_signal_needs_access_to_the_camera),
+                onPermissionGranted = {
+                  qrScanLauncher.launch(Unit)
+                }
+              )
+
+              Content(
                 paddingValues = it,
                 state = state,
                 onUserEntryChanged = viewModel::onUserEntryChanged,
@@ -138,11 +160,15 @@ class FindByActivity : PassphraseRequiredActivity() {
 
                       FindByResult.InvalidEntry -> navController.navigate("invalid-entry")
                       is FindByResult.NotFound -> navController.navigate("not-found/${result.recipientId.toLong()}")
+                      is FindByResult.NetworkError -> navController.navigate("network-error")
                     }
                   }
                 },
                 onSelectCountryPrefixClick = {
                   navController.navigate("select-country-prefix")
+                },
+                onQrCodeScanClicked = {
+                  cameraPermissionController.request()
                 }
               )
             }
@@ -195,6 +221,16 @@ class FindByActivity : PassphraseRequiredActivity() {
           }
 
           dialog(
+            route = "network-error"
+          ) {
+            Dialogs.SimpleMessageDialog(
+              message = getString(R.string.FindByActivity__network_error_dialog),
+              dismiss = getString(android.R.string.ok),
+              onDismiss = { navController.popBackStack() }
+            )
+          }
+
+          dialog(
             route = "not-found/{recipientId}",
             arguments = listOf(navArgument("recipientId") { type = NavType.LongType })
           ) { navBackStackEntry ->
@@ -234,15 +270,10 @@ class FindByActivity : PassphraseRequiredActivity() {
               dismiss = dismiss,
               onConfirm = {
                 if (state.mode == FindByMode.PHONE_NUMBER) {
-                  val recipientId = navBackStackEntry.arguments?.getLong("recipientId")?.takeIf { it > 0 }?.let { RecipientId.from(it) } ?: RecipientId.UNKNOWN
-                  if (recipientId != RecipientId.UNKNOWN) {
-                    InviteActions.inviteUserToSignal(
-                      context,
-                      Recipient.resolved(recipientId),
-                      null,
-                      this@FindByActivity::startActivity
-                    )
-                  }
+                  InviteActions.inviteUserToSignal(
+                    context,
+                    this@FindByActivity::startActivity
+                  )
                 }
               },
               onDismiss = { navController.popBackStack() }
@@ -265,30 +296,14 @@ class FindByActivity : PassphraseRequiredActivity() {
   }
 }
 
-@Preview
 @Composable
-private fun FindByContentPreview() {
-  Previews.Preview {
-    FindByContent(
-      paddingValues = PaddingValues(0.dp),
-      state = FindByState(
-        mode = FindByMode.PHONE_NUMBER,
-        userEntry = ""
-      ),
-      onUserEntryChanged = {},
-      onNextClick = {},
-      onSelectCountryPrefixClick = {}
-    )
-  }
-}
-
-@Composable
-private fun FindByContent(
+private fun Content(
   paddingValues: PaddingValues,
   state: FindByState,
   onUserEntryChanged: (String) -> Unit,
   onNextClick: () -> Unit,
-  onSelectCountryPrefixClick: () -> Unit
+  onSelectCountryPrefixClick: () -> Unit,
+  onQrCodeScanClicked: () -> Unit
 ) {
   val placeholderLabel = remember(state.mode) {
     if (state.mode == FindByMode.PHONE_NUMBER) R.string.FindByActivity__phone_number else R.string.FindByActivity__username
@@ -363,18 +378,39 @@ private fun FindByContent(
         .padding(horizontal = 16.dp, vertical = 10.dp)
         .focusRequester(focusRequester)
         .heightIn(min = 44.dp),
-      contentPadding = TextFieldDefaults.contentPaddingWithoutLabel(top = 10.dp, bottom = 10.dp)
+      contentPadding = if (state.mode == FindByMode.PHONE_NUMBER) {
+        TextFieldDefaults.contentPaddingWithoutLabel(start = 4.dp, top = 10.dp, bottom = 10.dp)
+      } else {
+        TextFieldDefaults.contentPaddingWithoutLabel(top = 10.dp, bottom = 10.dp)
+      }
     )
 
     if (state.mode == FindByMode.USERNAME) {
       Text(
-        text = stringResource(id = R.string.FindByActivity__enter_a_full_username),
+        text = stringResource(id = R.string.FindByActivity__enter_username_description),
         style = MaterialTheme.typography.bodyMedium,
         color = MaterialTheme.colorScheme.onSurfaceVariant,
         modifier = Modifier
           .padding(horizontal = dimensionResource(id = R.dimen.core_ui__gutter))
           .padding(top = 8.dp)
       )
+
+      Spacer(modifier = Modifier.height(32.dp))
+
+      Box(
+        modifier = Modifier.fillMaxWidth(),
+        contentAlignment = Alignment.Center
+      ) {
+        Buttons.Small(onClick = onQrCodeScanClicked) {
+          Icon(painter = painterResource(id = R.drawable.symbol_qrcode_24), contentDescription = stringResource(id = R.string.FindByActivity__qr_scan_button))
+          Spacer(modifier = Modifier.width(10.dp))
+          Text(
+            text = stringResource(id = R.string.FindByActivity__qr_scan_button),
+            style = MaterialTheme.typography.labelMedium,
+            color = MaterialTheme.colorScheme.onSurface
+          )
+        }
+      }
     }
 
     Spacer(modifier = Modifier.weight(1f))
@@ -384,7 +420,7 @@ private fun FindByContent(
       modifier = Modifier.fillMaxWidth()
     ) {
       Buttons.LargeTonal(
-        enabled = !state.isLookupInProgress,
+        enabled = !state.isLookupInProgress && state.userEntry.isNotBlank(),
         onClick = onNextClick,
         contentPadding = PaddingValues(0.dp),
         modifier = Modifier
@@ -396,6 +432,10 @@ private fun FindByContent(
           contentDescription = stringResource(id = R.string.FindByActivity__next)
         )
       }
+    }
+
+    if (state.isLookupInProgress) {
+      Dialogs.IndeterminateProgressDialog()
     }
 
     LaunchedEffect(Unit) {
@@ -411,18 +451,27 @@ private fun PhoneNumberEntryPrefix(
   onSelectCountryPrefixClick: () -> Unit
 ) {
   Row(
+    verticalAlignment = Alignment.CenterVertically,
     modifier = Modifier.padding(end = 16.dp)
   ) {
     Row(
-      modifier = Modifier.clickable(onClick = onSelectCountryPrefixClick, enabled = enabled)
+      verticalAlignment = Alignment.CenterVertically,
+      modifier = Modifier
+        .clip(RoundedCornerShape(1000.dp))
+        .clickable(onClick = onSelectCountryPrefixClick, enabled = enabled)
     ) {
       Text(
-        text = selectedCountryPrefix.toString()
+        text = selectedCountryPrefix.toString(),
+        modifier = Modifier
+          .padding(start = 12.dp, top = 6.dp, bottom = 6.dp)
       )
       Icon(
         painter = painterResource(id = R.drawable.symbol_dropdown_triangle_24),
         contentDescription = null,
-        tint = MaterialTheme.colorScheme.onSurfaceVariant
+        tint = MaterialTheme.colorScheme.onSurfaceVariant,
+        modifier = Modifier
+          .size(24.dp)
+          .padding(end = 1.dp)
       )
     }
     Dividers.Vertical(
@@ -430,22 +479,8 @@ private fun PhoneNumberEntryPrefix(
       color = MaterialTheme.colorScheme.outline,
       modifier = Modifier
         .padding(vertical = 2.dp)
-        .padding(start = 8.dp)
+        .padding(start = 7.dp)
         .height(20.dp)
-    )
-  }
-}
-
-@Preview
-@Composable
-private fun SelectCountryScreenPreview() {
-  Previews.Preview {
-    SelectCountryScreen(
-      paddingValues = PaddingValues(0.dp),
-      searchEntry = "",
-      onSearchEntryChanged = {},
-      supportedCountryPrefixes = FindByState(mode = FindByMode.PHONE_NUMBER).supportedCountryPrefixes,
-      onCountryPrefixSelected = {}
     )
   }
 }
@@ -553,6 +588,59 @@ private fun CountryPrefixRowItem(
       text = countryPrefix.toString(),
       color = MaterialTheme.colorScheme.onSurfaceVariant,
       style = MaterialTheme.typography.bodyMedium
+    )
+  }
+}
+
+@Preview(name = "Light Theme", group = "content - phone", uiMode = Configuration.UI_MODE_NIGHT_NO)
+@Preview(name = "Dark Theme", group = "content - phone", uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun ContentPreviewPhoneNumber() {
+  Previews.Preview {
+    Content(
+      paddingValues = PaddingValues(0.dp),
+      state = FindByState(
+        mode = FindByMode.PHONE_NUMBER,
+        userEntry = ""
+      ),
+      onUserEntryChanged = {},
+      onNextClick = {},
+      onSelectCountryPrefixClick = {},
+      onQrCodeScanClicked = {}
+    )
+  }
+}
+
+@Preview(name = "Light Theme", group = "content - username", uiMode = Configuration.UI_MODE_NIGHT_NO)
+@Preview(name = "Dark Theme", group = "content - username", uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun ContentPreviewUsername() {
+  Previews.Preview {
+    Content(
+      paddingValues = PaddingValues(0.dp),
+      state = FindByState(
+        mode = FindByMode.USERNAME,
+        userEntry = ""
+      ),
+      onUserEntryChanged = {},
+      onNextClick = {},
+      onSelectCountryPrefixClick = {},
+      onQrCodeScanClicked = {}
+    )
+  }
+}
+
+@Preview(name = "Light Theme", group = "select country", uiMode = Configuration.UI_MODE_NIGHT_NO)
+@Preview(name = "Dark Theme", group = "select country", uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun SelectCountryScreenPreview() {
+  Previews.Preview {
+    SelectCountryScreen(
+      paddingValues = PaddingValues(0.dp),
+      searchEntry = "",
+      onSearchEntryChanged = {},
+      supportedCountryPrefixes = FindByState(mode = FindByMode.PHONE_NUMBER).supportedCountryPrefixes,
+      onCountryPrefixSelected = {}
     )
   }
 }

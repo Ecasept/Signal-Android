@@ -4,8 +4,9 @@ import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.InsetDrawable;
 import android.os.Bundle;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
@@ -18,6 +19,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
@@ -89,20 +91,23 @@ public final class RecipientBottomSheetDialogFragment extends BottomSheetDialogF
 
   private ButtonStripPreference.ViewHolder buttonStripViewHolder;
 
-  public static BottomSheetDialogFragment create(@NonNull RecipientId recipientId,
-                                                 @Nullable GroupId groupId)
-  {
-    Bundle                             args     = new Bundle();
-    RecipientBottomSheetDialogFragment fragment = new RecipientBottomSheetDialogFragment();
+  public static void show(FragmentManager fragmentManager, @NonNull RecipientId recipientId, @Nullable GroupId groupId) {
+    Recipient recipient = Recipient.resolved(recipientId);
+    if (recipient.isSelf()) {
+      AboutSheet.create(recipient).show(fragmentManager, BottomSheetUtil.STANDARD_BOTTOM_SHEET_FRAGMENT_TAG);
+    } else {
+      Bundle                             args     = new Bundle();
+      RecipientBottomSheetDialogFragment fragment = new RecipientBottomSheetDialogFragment();
 
-    args.putString(ARGS_RECIPIENT_ID, recipientId.serialize());
-    if (groupId != null) {
-      args.putString(ARGS_GROUP_ID, groupId.toString());
+      args.putString(ARGS_RECIPIENT_ID, recipientId.serialize());
+      if (groupId != null) {
+        args.putString(ARGS_GROUP_ID, groupId.toString());
+      }
+
+      fragment.setArguments(args);
+
+      fragment.show(fragmentManager, BottomSheetUtil.STANDARD_BOTTOM_SHEET_FRAGMENT_TAG);
     }
-
-    fragment.setArguments(args);
-
-    return fragment;
   }
 
   @Override
@@ -183,16 +188,20 @@ public final class RecipientBottomSheetDialogFragment extends BottomSheetDialogF
       fullName.setVisibility(TextUtils.isEmpty(name) ? View.GONE : View.VISIBLE);
       SpannableStringBuilder nameBuilder = new SpannableStringBuilder(name);
       if (recipient.showVerified()) {
-        SpanUtil.appendCenteredImageSpan(nameBuilder, ContextUtil.requireDrawable(requireContext(), R.drawable.ic_official_28), 28, 28);
+        SpanUtil.appendSpacer(nameBuilder, 8);
+        SpanUtil.appendCenteredImageSpanWithoutSpace(nameBuilder, ContextUtil.requireDrawable(requireContext(), R.drawable.ic_official_28), 28, 28);
+      } else if (recipient.isSystemContact()) {
+        Drawable drawable = ContextUtil.requireDrawable(requireContext(), R.drawable.symbol_person_circle_24);
+        drawable.setTint(ContextCompat.getColor(requireContext(), R.color.signal_colorOnSurface));
+        SpanUtil.appendSpacer(nameBuilder, 8);
+        SpanUtil.appendCenteredImageSpanWithoutSpace(nameBuilder, drawable, 24, 24);
       }
 
       if (!recipient.isSelf() && recipient.isIndividual()) {
-        Drawable drawable = ContextUtil.requireDrawable(requireContext(), R.drawable.symbol_chevron_right_24_color_on_secondary_container);
+        Drawable drawable = ContextUtil.requireDrawable(requireContext(), R.drawable.symbol_chevron_right_24);
         drawable.setBounds(0, 0, (int) DimensionUnit.DP.toPixels(24), (int) DimensionUnit.DP.toPixels(24));
-
-        Drawable insetDrawable = new InsetDrawable(drawable, 0, 0, 0, (int) DimensionUnit.DP.toPixels(4));
-
-        SpanUtil.appendBottomImageSpan(nameBuilder, insetDrawable, 24, 28);
+        drawable.setTint(ContextCompat.getColor(requireContext(), R.color.signal_colorOutline));
+        nameBuilder.append(SpanUtil.buildCenteredImageSpan(drawable));
 
         fullName.setText(nameBuilder);
         fullName.setOnClickListener(v -> {

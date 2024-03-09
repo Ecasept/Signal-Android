@@ -44,7 +44,7 @@ object ContactDiscoveryRefreshV2 {
   @WorkerThread
   @Synchronized
   @JvmStatic
-  fun refreshAll(context: Context, useCompat: Boolean, timeoutMs: Long? = null): ContactDiscovery.RefreshResult {
+  fun refreshAll(context: Context, timeoutMs: Long? = null): ContactDiscovery.RefreshResult {
     val recipientE164s: Set<String> = SignalDatabase.recipients.getAllE164s().sanitize()
     val systemE164s: Set<String> = SystemContactsRepository.getAllDisplayNumbers(context).toE164s(context).sanitize()
 
@@ -53,7 +53,6 @@ object ContactDiscoveryRefreshV2 {
       systemE164s = systemE164s,
       inputPreviousE164s = SignalDatabase.cds.getAllE164s(),
       isPartialRefresh = false,
-      useCompat = useCompat,
       timeoutMs = timeoutMs
     )
   }
@@ -62,14 +61,14 @@ object ContactDiscoveryRefreshV2 {
   @WorkerThread
   @Synchronized
   @JvmStatic
-  fun refresh(context: Context, inputRecipients: List<Recipient>, useCompat: Boolean, timeoutMs: Long? = null): ContactDiscovery.RefreshResult {
+  fun refresh(context: Context, inputRecipients: List<Recipient>, timeoutMs: Long? = null): ContactDiscovery.RefreshResult {
     val recipients: List<Recipient> = inputRecipients.map { it.resolve() }
     val inputE164s: Set<String> = recipients.mapNotNull { it.e164.orElse(null) }.toSet().sanitize()
 
     return if (inputE164s.size > MAXIMUM_ONE_OFF_REQUEST_SIZE) {
       Log.i(TAG, "List of specific recipients to refresh is too large! (Size: ${recipients.size}). Doing a full refresh instead.")
 
-      val fullResult: ContactDiscovery.RefreshResult = refreshAll(context, useCompat = useCompat, timeoutMs = timeoutMs)
+      val fullResult: ContactDiscovery.RefreshResult = refreshAll(context, timeoutMs = timeoutMs)
       val inputIds: Set<RecipientId> = recipients.map { it.id }.toSet()
 
       ContactDiscovery.RefreshResult(
@@ -82,8 +81,43 @@ object ContactDiscoveryRefreshV2 {
         systemE164s = inputE164s,
         inputPreviousE164s = emptySet(),
         isPartialRefresh = true,
-        useCompat = useCompat,
         timeoutMs = timeoutMs
+      )
+    }
+  }
+
+  @Throws(IOException::class)
+  @WorkerThread
+  @Synchronized
+  fun lookupE164(e164: String): ContactDiscovery.LookupResult? {
+    val response: CdsiV2Service.Response = try {
+      ApplicationDependencies.getSignalServiceAccountManager().getRegisteredUsersWithCdsi(
+        emptySet(),
+        setOf(e164),
+        SignalDatabase.recipients.getAllServiceIdProfileKeyPairs(),
+        Optional.empty(),
+        BuildConfig.CDSI_MRENCLAVE,
+        10_000,
+        if (FeatureFlags.useLibsignalNetForCdsiLookup()) BuildConfig.LIBSIGNAL_NET_ENV else null
+      ) {
+        Log.i(TAG, "Ignoring token for one-off lookup.")
+      }
+    } catch (e: CdsiResourceExhaustedException) {
+      Log.w(TAG, "CDS resource exhausted! Can try again in ${e.retryAfterSeconds} seconds.")
+      SignalStore.misc().cdsBlockedUtil = System.currentTimeMillis() + e.retryAfterSeconds.seconds.inWholeMilliseconds
+      throw e
+    } catch (e: CdsiInvalidTokenException) {
+      Log.w(TAG, "We did not provide a token, but still got a token error! Unexpected, but ignoring.")
+      throw e
+    }
+
+    return response.results[e164]?.let { item ->
+      val id = SignalDatabase.recipients.processIndividualCdsLookup(e164 = e164, aci = item.aci.orElse(null), pni = item.pni)
+
+      ContactDiscovery.LookupResult(
+        recipientId = id,
+        pni = item.pni,
+        aci = item.aci?.orElse(null)
       )
     }
   }
@@ -94,10 +128,9 @@ object ContactDiscoveryRefreshV2 {
     systemE164s: Set<String>,
     inputPreviousE164s: Set<String>,
     isPartialRefresh: Boolean,
-    useCompat: Boolean,
     timeoutMs: Long? = null
   ): ContactDiscovery.RefreshResult {
-    val tag = "refreshInternal-${if (useCompat) "compat" else "v2"}"
+    val tag = "refreshInternal-v2"
     val stopwatch = Stopwatch(tag)
 
     val previousE164s: Set<String> = if (SignalStore.misc().cdsToken != null && !isPartialRefresh) inputPreviousE164s else emptySet()
@@ -127,10 +160,10 @@ object ContactDiscoveryRefreshV2 {
         previousE164s,
         newE164s,
         SignalDatabase.recipients.getAllServiceIdProfileKeyPairs(),
-        useCompat,
         Optional.ofNullable(token),
         BuildConfig.CDSI_MRENCLAVE,
-        timeoutMs
+        timeoutMs,
+        if (FeatureFlags.useLibsignalNetForCdsiLookup()) BuildConfig.LIBSIGNAL_NET_ENV else null
       ) { tokenToSave ->
         stopwatch.split("network-pre-token")
         if (!isPartialRefresh) {
@@ -164,10 +197,6 @@ object ContactDiscoveryRefreshV2 {
 
     val registeredIds: MutableSet<RecipientId> = mutableSetOf()
     val rewrites: MutableMap<String, String> = mutableMapOf()
-
-    if (useCompat && !response.isCompatResponse()) {
-      Log.w(TAG, "Was told to useCompat, but the server responded with a non-compat response! Assuming the server has shut off compat mode.")
-    }
 
     val transformed: Map<String, CdsV2Result> = response.results.mapValues { entry -> CdsV2Result(entry.value.pni, entry.value.aci.orElse(null)) }
     val fuzzyOutput: OutputResult<CdsV2Result> = FuzzyPhoneNumberHelper.generateOutput(transformed, fuzzyInput)
@@ -237,14 +266,5 @@ object ContactDiscoveryRefreshV2 {
   private fun Int.roundedString(): String {
     val nearestThousand = (this.toDouble() / 1000).roundToInt()
     return "~${nearestThousand}k"
-  }
-
-  /**
-   * Responses that respect useCompat will have an ACI for every user. If it doesn't, it means is a PNP response where some accounts may only have PNI's.
-   * There may come a day when we request compat mode but the server refuses to allow it, so we need to be able to detect when that happens to fallback
-   * to the PNP behavior.
-   */
-  private fun CdsiV2Service.Response.isCompatResponse(): Boolean {
-    return this.results.values.all { it.hasAci() }
   }
 }
