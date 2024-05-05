@@ -9,24 +9,29 @@ import android.Manifest
 import android.content.Context
 import android.util.Size
 import android.view.MotionEvent
+import android.view.ScaleGestureDetector
 import android.view.Surface
 import android.view.View
+import android.view.ViewConfiguration
 import androidx.annotation.MainThread
 import androidx.annotation.RequiresApi
 import androidx.annotation.RequiresPermission
 import androidx.camera.core.Camera
 import androidx.camera.core.CameraSelector
+import androidx.camera.core.DisplayOrientedMeteringPointFactory
 import androidx.camera.core.FocusMeteringAction
 import androidx.camera.core.FocusMeteringResult
+import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.Preview
 import androidx.camera.core.UseCase
 import androidx.camera.core.UseCaseGroup
-import androidx.camera.core.ViewPort
 import androidx.camera.core.ZoomState
 import androidx.camera.core.resolutionselector.AspectRatioStrategy
 import androidx.camera.core.resolutionselector.ResolutionSelector
 import androidx.camera.core.resolutionselector.ResolutionStrategy
+import androidx.camera.extensions.ExtensionMode
+import androidx.camera.extensions.ExtensionsManager
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.video.FallbackStrategy
 import androidx.camera.video.FileDescriptorOutputOptions
@@ -43,21 +48,35 @@ import androidx.core.content.ContextCompat
 import androidx.core.util.Consumer
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
+import com.google.common.util.concurrent.FutureCallback
+import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.ListenableFuture
 import org.signal.core.util.ThreadUtil
 import org.signal.core.util.logging.Log
+import org.thoughtcrime.securesms.mediasend.camerax.SignalCameraController.InitializationListener
 import org.thoughtcrime.securesms.util.TextSecurePreferences
-import java.util.concurrent.ExecutionException
+import org.thoughtcrime.securesms.util.ViewUtil
+import org.thoughtcrime.securesms.util.visible
 import java.util.concurrent.Executor
+import kotlin.math.max
+import kotlin.math.min
 
 /**
  * This is a class to manage the camera resource, and relies on the AndroidX CameraX library.
  *
  * The API is a subset of the [CameraController] class, but with a few additions such as [setImageRotation].
  */
-class SignalCameraController(val context: Context, val lifecycleOwner: LifecycleOwner, private val previewView: PreviewView) {
+class SignalCameraController(
+  private val context: Context,
+  private val lifecycleOwner: LifecycleOwner,
+  private val previewView: PreviewView,
+  private val focusIndicator: View
+) : CameraXController {
   companion object {
     val TAG = Log.tag(SignalCameraController::class.java)
+
+    private const val AF_SIZE = 1.0f / 6.0f
+    private const val AE_SIZE = AF_SIZE * 1.5f
 
     @JvmStatic
     private fun isLandscape(surfaceRotation: Int): Boolean {
@@ -69,9 +88,12 @@ class SignalCameraController(val context: Context, val lifecycleOwner: Lifecycle
   private val imageMode = CameraXUtil.getOptimalCaptureMode()
 
   private val cameraProviderFuture: ListenableFuture<ProcessCameraProvider> = ProcessCameraProvider.getInstance(context)
-  private val viewPort: ViewPort? = previewView.getViewPort(Surface.ROTATION_0)
+  private val scaleGestureDetector = ScaleGestureDetector(context, PinchToZoomGestureListener())
   private val initializationCompleteListeners: MutableSet<InitializationListener> = mutableSetOf()
   private val customUseCases: MutableList<UseCase> = mutableListOf()
+
+  private var tapToFocusEvents = 0
+  private var listenerAdded = false
 
   private var imageRotation = 0
   private var recording: Recording? = null
@@ -85,55 +107,89 @@ class SignalCameraController(val context: Context, val lifecycleOwner: Lifecycle
   private var videoCaptureUseCase: VideoCapture<Recorder> = createVideoCaptureRecorder()
 
   private lateinit var cameraProvider: ProcessCameraProvider
-  private lateinit var camera: Camera
+  private lateinit var extensionsManager: ExtensionsManager
+  private lateinit var cameraProperty: Camera
+
+  override fun isInitialized(): Boolean {
+    return this::cameraProvider.isInitialized && this::extensionsManager.isInitialized
+  }
+
+  override fun initializeAndBind(context: Context, lifecycleOwner: LifecycleOwner) {
+    bindToLifecycle(lifecycleOwner) { Log.d(TAG, "Camera initialization and binding complete.") }
+  }
 
   @RequiresPermission(Manifest.permission.CAMERA)
-  fun bindToLifecycle(onCameraBoundListener: Runnable) {
+  override fun bindToLifecycle(lifecycleOwner: LifecycleOwner, onCameraBoundListener: Runnable) {
     ThreadUtil.assertMainThread()
-    if (this::cameraProvider.isInitialized) {
+    if (isInitialized()) {
       bindToLifecycleInternal()
       onCameraBoundListener.run()
-    } else {
+    } else if (!listenerAdded) {
       cameraProviderFuture.addListener({
         cameraProvider = cameraProviderFuture.get()
-        initializationCompleteListeners.forEach { it.onInitialized(cameraProvider) }
-        bindToLifecycleInternal()
-        onCameraBoundListener.run()
+        val extensionsManagerFuture =
+          ExtensionsManager.getInstanceAsync(context, cameraProvider)
+        extensionsManagerFuture.addListener({
+          extensionsManager = extensionsManagerFuture.get()
+          initializationCompleteListeners.forEach { it.onInitialized(cameraProvider) }
+          bindToLifecycleInternal()
+          onCameraBoundListener.run()
+        }, ContextCompat.getMainExecutor(context))
       }, ContextCompat.getMainExecutor(context))
+      listenerAdded = true
     }
   }
 
   @MainThread
-  fun unbind() {
+  override fun unbind() {
     ThreadUtil.assertMainThread()
     cameraProvider.unbindAll()
   }
 
   @MainThread
-  private fun bindToLifecycleInternal() {
+  fun bindToLifecycleInternal() {
     ThreadUtil.assertMainThread()
     try {
-      if (!this::cameraProvider.isInitialized) {
+      if (!this::cameraProvider.isInitialized || !this::extensionsManager.isInitialized) {
         Log.d(TAG, "Camera provider not yet initialized.")
         return
       }
-      camera = cameraProvider.bindToLifecycle(
+
+      val extCameraSelector = if (extensionsManager.isExtensionAvailable(cameraSelector, ExtensionMode.AUTO)) {
+        Log.d(TAG, "Using CameraX ExtensionMode.AUTO")
+        extensionsManager.getExtensionEnabledCameraSelector(
+          cameraSelector,
+          ExtensionMode.AUTO
+        )
+      } else {
+        Log.d(TAG, "Using standard camera selector")
+        cameraSelector
+      }
+
+      val camera = cameraProvider.bindToLifecycle(
         lifecycleOwner,
-        cameraSelector,
+        extCameraSelector,
         buildUseCaseGroup()
       )
 
-      initializeTapToFocus()
+      initializeTapToFocusAndPinchToZoom(camera)
+      this.cameraProperty = camera
     } catch (e: Exception) {
       Log.e(TAG, "Use case binding failed", e)
     }
   }
 
   @MainThread
-  fun addUseCase(useCase: UseCase) {
+  override fun setImageAnalysisAnalyzer(executor: Executor, analyzer: ImageAnalysis.Analyzer) {
     ThreadUtil.assertMainThread()
+    val imageAnalysis = ImageAnalysis.Builder()
+      .setResolutionSelector(ResolutionSelector.Builder().setResolutionStrategy(ResolutionStrategy.HIGHEST_AVAILABLE_STRATEGY).build())
+      .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
+      .build()
 
-    customUseCases += useCase
+    imageAnalysis.setAnalyzer(executor, analyzer)
+
+    customUseCases += imageAnalysis
 
     if (isRecording()) {
       stopRecording()
@@ -143,7 +199,7 @@ class SignalCameraController(val context: Context, val lifecycleOwner: Lifecycle
   }
 
   @MainThread
-  fun takePicture(executor: Executor, callback: ImageCapture.OnImageCapturedCallback) {
+  override fun takePicture(executor: Executor, callback: ImageCapture.OnImageCapturedCallback) {
     ThreadUtil.assertMainThread()
     assertImageEnabled()
     imageCaptureUseCase.takePicture(executor, callback)
@@ -151,7 +207,7 @@ class SignalCameraController(val context: Context, val lifecycleOwner: Lifecycle
 
   @RequiresApi(26)
   @MainThread
-  fun startRecording(outputOptions: FileDescriptorOutputOptions, audioConfig: AudioConfig, videoSavedListener: Consumer<VideoRecordEvent>): Recording {
+  override fun startRecording(outputOptions: FileDescriptorOutputOptions, audioConfig: AudioConfig, executor: Executor, videoSavedListener: Consumer<VideoRecordEvent>): Recording {
     ThreadUtil.assertMainThread()
     assertVideoEnabled()
 
@@ -176,7 +232,7 @@ class SignalCameraController(val context: Context, val lifecycleOwner: Lifecycle
   }
 
   @MainThread
-  fun setEnabledUseCases(useCaseFlags: Int) {
+  override fun setEnabledUseCases(useCaseFlags: Int) {
     ThreadUtil.assertMainThread()
     if (enabledUseCases == useCaseFlags) {
       return
@@ -191,13 +247,13 @@ class SignalCameraController(val context: Context, val lifecycleOwner: Lifecycle
   }
 
   @MainThread
-  fun getImageCaptureFlashMode(): Int {
+  override fun getImageCaptureFlashMode(): Int {
     ThreadUtil.assertMainThread()
     return imageCaptureUseCase.flashMode
   }
 
   @MainThread
-  fun setPreviewTargetSize(size: Size) {
+  override fun setPreviewTargetSize(size: Size) {
     ThreadUtil.assertMainThread()
     if (size == previewTargetSize || previewTargetSize?.equals(size) == true) {
       return
@@ -213,7 +269,7 @@ class SignalCameraController(val context: Context, val lifecycleOwner: Lifecycle
   }
 
   @MainThread
-  fun setImageCaptureTargetSize(size: Size) {
+  override fun setImageCaptureTargetSize(size: Size) {
     ThreadUtil.assertMainThread()
     if (size == imageCaptureTargetSize || imageCaptureTargetSize?.equals(size) == true) {
       return
@@ -227,7 +283,7 @@ class SignalCameraController(val context: Context, val lifecycleOwner: Lifecycle
   }
 
   @MainThread
-  fun setImageRotation(rotation: Int) {
+  override fun setImageRotation(rotation: Int) {
     ThreadUtil.assertMainThread()
     val newRotation = UseCase.snapToSurfaceRotation(rotation.coerceIn(0, 359))
 
@@ -246,25 +302,25 @@ class SignalCameraController(val context: Context, val lifecycleOwner: Lifecycle
   }
 
   @MainThread
-  fun setImageCaptureFlashMode(flashMode: Int) {
+  override fun setImageCaptureFlashMode(flashMode: Int) {
     ThreadUtil.assertMainThread()
     imageCaptureUseCase.flashMode = flashMode
   }
 
   @MainThread
-  fun setZoomRatio(ratio: Float): ListenableFuture<Void> {
+  override fun setZoomRatio(ratio: Float): ListenableFuture<Void> {
     ThreadUtil.assertMainThread()
-    return camera.cameraControl.setZoomRatio(ratio)
+    return cameraProperty.cameraControl.setZoomRatio(ratio)
   }
 
   @MainThread
-  fun getZoomState(): LiveData<ZoomState> {
+  override fun getZoomState(): LiveData<ZoomState> {
     ThreadUtil.assertMainThread()
-    return camera.cameraInfo.zoomState
+    return cameraProperty.cameraInfo.zoomState
   }
 
   @MainThread
-  fun setCameraSelector(selector: CameraSelector) {
+  override fun setCameraSelector(selector: CameraSelector) {
     ThreadUtil.assertMainThread()
     if (selector == cameraSelector) {
       return
@@ -280,21 +336,20 @@ class SignalCameraController(val context: Context, val lifecycleOwner: Lifecycle
   }
 
   @MainThread
-  fun getCameraSelector(): CameraSelector {
+  override fun getCameraSelector(): CameraSelector {
     ThreadUtil.assertMainThread()
     return cameraSelector
   }
 
   @MainThread
-  fun hasCamera(selectedCamera: CameraSelector): Boolean {
+  override fun hasCamera(selectedCamera: CameraSelector): Boolean {
     ThreadUtil.assertMainThread()
     return cameraProvider.hasCamera(selectedCamera)
   }
 
-  @MainThread
-  fun addInitializationCompletedListener(listener: InitializationListener) {
+  override fun addInitializationCompletedListener(executor: Executor, onComplete: () -> Unit) {
     ThreadUtil.assertMainThread()
-    initializationCompleteListeners.add(listener)
+    initializationCompleteListeners.add(InitializationListener { onComplete() })
   }
 
   @MainThread
@@ -371,51 +426,77 @@ class SignalCameraController(val context: Context, val lifecycleOwner: Lifecycle
       addUseCase(useCase)
     }
 
-    if (viewPort != null) {
-      setViewPort(viewPort)
-    } else {
-      Log.d(TAG, "ViewPort was null, not adding to UseCase builder.")
-    }
+    previewView.getViewPort(Surface.ROTATION_0)?.let { setViewPort(it) } ?: Log.d(TAG, "ViewPort was null, not adding to UseCase builder.")
   }.build()
 
   @MainThread
-  private fun initializeTapToFocus() {
+  private fun initializeTapToFocusAndPinchToZoom(camera: Camera) {
     ThreadUtil.assertMainThread()
     previewView.setOnTouchListener { v: View?, event: MotionEvent ->
-      if (event.action == MotionEvent.ACTION_DOWN) {
-        return@setOnTouchListener true
-      }
-      if (event.action == MotionEvent.ACTION_UP) {
-        focusAndMeterOnPoint(event.x, event.y)
+      val isSingleTouch = event.pointerCount == 1
+      val isUpEvent = event.action == MotionEvent.ACTION_UP
+      val notALongPress = (event.eventTime - event.downTime < ViewConfiguration.getLongPressTimeout())
+      if (isSingleTouch && isUpEvent && notALongPress) {
+        focusAndMeterOnPoint(camera, event.x, event.y)
         v?.performClick()
         return@setOnTouchListener true
       }
-      false
+      return@setOnTouchListener scaleGestureDetector.onTouchEvent(event)
     }
   }
 
   @MainThread
-  private fun focusAndMeterOnPoint(x: Float, y: Float) {
+  private fun focusAndMeterOnPoint(camera: Camera, x: Float, y: Float) {
     ThreadUtil.assertMainThread()
-    if (this::camera.isInitialized) {
-      Log.d(TAG, "Can't tap to focus before camera is initialized.")
-      return
-    }
-    val factory = previewView.meteringPointFactory
-    val point = factory.createPoint(x, y)
-    val action = FocusMeteringAction.Builder(point).build()
+    val meteringPointFactory = DisplayOrientedMeteringPointFactory(previewView.display, camera.cameraInfo, previewView.width.toFloat(), previewView.height.toFloat())
+    val afPoint = meteringPointFactory.createPoint(x, y, AF_SIZE)
+    val aePoint = meteringPointFactory.createPoint(x, y, AE_SIZE)
+    val action = FocusMeteringAction.Builder(afPoint, FocusMeteringAction.FLAG_AF)
+      .addPoint(aePoint, FocusMeteringAction.FLAG_AE)
+      .build()
 
-    val future: ListenableFuture<FocusMeteringResult> = camera.cameraControl.startFocusAndMetering(action)
-    future.addListener({
-      try {
-        val result = future.get()
-        Log.d(TAG, "Tap to focus was successful? ${result.isFocusSuccessful}")
-      } catch (e: ExecutionException) {
-        Log.d(TAG, "Tap to focus could not be completed due to an exception.", e)
-      } catch (e: InterruptedException) {
-        Log.d(TAG, "Tap to focus could not be completed due to an exception.", e)
-      }
-    }, ContextCompat.getMainExecutor(context))
+    focusIndicator.x = x - (focusIndicator.width / 2)
+    focusIndicator.y = y - (focusIndicator.height / 2)
+    focusIndicator.visible = true
+
+    tapToFocusEvents += 1
+
+    Futures.addCallback(
+      camera.cameraControl.startFocusAndMetering(action),
+      object : FutureCallback<FocusMeteringResult> {
+        override fun onSuccess(result: FocusMeteringResult?) {
+          Log.d(TAG, "Tap to focus was successful? ${result?.isFocusSuccessful}")
+          tapToFocusEvents -= 1
+          if (tapToFocusEvents <= 0) {
+            ViewUtil.fadeOut(focusIndicator, 80)
+          }
+        }
+
+        override fun onFailure(t: Throwable) {
+          Log.d(TAG, "Tap to focus could not be completed due to an exception.", t)
+          tapToFocusEvents -= 1
+          if (tapToFocusEvents <= 0) {
+            ViewUtil.fadeOut(focusIndicator, 80)
+          }
+        }
+      },
+      ContextCompat.getMainExecutor(context)
+    )
+  }
+
+  @MainThread
+  private fun onPinchToZoom(pinchToZoomScale: Float) {
+    val zoomState = getZoomState().getValue() ?: return
+    var clampedRatio: Float = zoomState.zoomRatio * if (pinchToZoomScale > 1f) {
+      1.0f + (pinchToZoomScale - 1.0f) * 2
+    } else {
+      1.0f - (1.0f - pinchToZoomScale) * 2
+    }
+    clampedRatio = min(
+      max(clampedRatio.toDouble(), zoomState.minZoomRatio.toDouble()),
+      zoomState.maxZoomRatio.toDouble()
+    ).toFloat()
+    setZoomRatio(clampedRatio)
   }
 
   private fun isRecording(): Boolean {
@@ -442,7 +523,18 @@ class SignalCameraController(val context: Context, val lifecycleOwner: Lifecycle
     return Size(this.height, this.width)
   }
 
-  interface InitializationListener {
+  inner class PinchToZoomGestureListener : ScaleGestureDetector.OnScaleGestureListener {
+    override fun onScale(detector: ScaleGestureDetector): Boolean {
+      onPinchToZoom(detector.scaleFactor)
+      return true
+    }
+
+    override fun onScaleBegin(detector: ScaleGestureDetector): Boolean = true
+
+    override fun onScaleEnd(detector: ScaleGestureDetector) = Unit
+  }
+
+  fun interface InitializationListener {
     fun onInitialized(cameraProvider: ProcessCameraProvider)
   }
 }

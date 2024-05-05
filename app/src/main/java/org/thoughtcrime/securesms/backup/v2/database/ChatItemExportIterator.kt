@@ -17,12 +17,17 @@ import org.signal.core.util.requireBoolean
 import org.signal.core.util.requireInt
 import org.signal.core.util.requireLong
 import org.signal.core.util.requireString
+import org.thoughtcrime.securesms.attachments.Cdn
+import org.thoughtcrime.securesms.attachments.DatabaseAttachment
+import org.thoughtcrime.securesms.backup.v2.BackupRepository.getMediaName
 import org.thoughtcrime.securesms.backup.v2.proto.CallChatUpdate
 import org.thoughtcrime.securesms.backup.v2.proto.ChatItem
 import org.thoughtcrime.securesms.backup.v2.proto.ChatUpdateMessage
 import org.thoughtcrime.securesms.backup.v2.proto.ExpirationTimerChatUpdate
+import org.thoughtcrime.securesms.backup.v2.proto.FilePointer
 import org.thoughtcrime.securesms.backup.v2.proto.GroupCallChatUpdate
 import org.thoughtcrime.securesms.backup.v2.proto.IndividualCallChatUpdate
+import org.thoughtcrime.securesms.backup.v2.proto.MessageAttachment
 import org.thoughtcrime.securesms.backup.v2.proto.ProfileChangeChatUpdate
 import org.thoughtcrime.securesms.backup.v2.proto.Quote
 import org.thoughtcrime.securesms.backup.v2.proto.Reaction
@@ -33,6 +38,7 @@ import org.thoughtcrime.securesms.backup.v2.proto.SimpleChatUpdate
 import org.thoughtcrime.securesms.backup.v2.proto.StandardMessage
 import org.thoughtcrime.securesms.backup.v2.proto.Text
 import org.thoughtcrime.securesms.backup.v2.proto.ThreadMergeChatUpdate
+import org.thoughtcrime.securesms.database.AttachmentTable
 import org.thoughtcrime.securesms.database.GroupReceiptTable
 import org.thoughtcrime.securesms.database.MessageTable
 import org.thoughtcrime.securesms.database.MessageTypes
@@ -70,7 +76,7 @@ import org.thoughtcrime.securesms.backup.v2.proto.BodyRange as BackupBodyRange
  *
  * All of this complexity is hidden from the user -- they just get a normal iterator interface.
  */
-class ChatItemExportIterator(private val cursor: Cursor, private val batchSize: Int) : Iterator<ChatItem>, Closeable {
+class ChatItemExportIterator(private val cursor: Cursor, private val batchSize: Int, private val archiveMedia: Boolean) : Iterator<ChatItem>, Closeable {
 
   companion object {
     private val TAG = Log.tag(ChatItemExportIterator::class.java)
@@ -106,6 +112,7 @@ class ChatItemExportIterator(private val cursor: Cursor, private val batchSize: 
 
     val reactionsById: Map<Long, List<ReactionRecord>> = SignalDatabase.reactions.getReactionsForMessages(records.keys)
     val mentionsById: Map<Long, List<Mention>> = SignalDatabase.mentions.getMentionsForMessages(records.keys)
+    val attachmentsById: Map<Long, List<DatabaseAttachment>> = SignalDatabase.attachments.getAttachmentsForMessages(records.keys)
     val groupReceiptsById: Map<Long, List<GroupReceiptTable.GroupReceiptInfo>> = SignalDatabase.groupReceipts.getGroupReceiptInfoForMessages(records.keys)
 
     for ((id, record) in records) {
@@ -117,15 +124,25 @@ class ChatItemExportIterator(private val cursor: Cursor, private val batchSize: 
         MessageTypes.isIdentityUpdate(record.type) -> builder.updateMessage = ChatUpdateMessage(simpleUpdate = SimpleChatUpdate(type = SimpleChatUpdate.Type.IDENTITY_UPDATE))
         MessageTypes.isIdentityVerified(record.type) -> builder.updateMessage = ChatUpdateMessage(simpleUpdate = SimpleChatUpdate(type = SimpleChatUpdate.Type.IDENTITY_VERIFIED))
         MessageTypes.isIdentityDefault(record.type) -> builder.updateMessage = ChatUpdateMessage(simpleUpdate = SimpleChatUpdate(type = SimpleChatUpdate.Type.IDENTITY_DEFAULT))
-        MessageTypes.isChangeNumber(record.type) -> builder.updateMessage = ChatUpdateMessage(simpleUpdate = SimpleChatUpdate(type = SimpleChatUpdate.Type.CHANGE_NUMBER))
-        MessageTypes.isBoostRequest(record.type) -> builder.updateMessage = ChatUpdateMessage(simpleUpdate = SimpleChatUpdate(type = SimpleChatUpdate.Type.BOOST_REQUEST))
+        MessageTypes.isChangeNumber(record.type) -> {
+          builder.updateMessage = ChatUpdateMessage(simpleUpdate = SimpleChatUpdate(type = SimpleChatUpdate.Type.CHANGE_NUMBER))
+          builder.sms = false
+        }
+        MessageTypes.isBoostRequest(record.type) -> {
+          builder.updateMessage = ChatUpdateMessage(simpleUpdate = SimpleChatUpdate(type = SimpleChatUpdate.Type.BOOST_REQUEST))
+          builder.sms = false
+        }
         MessageTypes.isEndSessionType(record.type) -> builder.updateMessage = ChatUpdateMessage(simpleUpdate = SimpleChatUpdate(type = SimpleChatUpdate.Type.END_SESSION))
         MessageTypes.isChatSessionRefresh(record.type) -> builder.updateMessage = ChatUpdateMessage(simpleUpdate = SimpleChatUpdate(type = SimpleChatUpdate.Type.CHAT_SESSION_REFRESH))
         MessageTypes.isBadDecryptType(record.type) -> builder.updateMessage = ChatUpdateMessage(simpleUpdate = SimpleChatUpdate(type = SimpleChatUpdate.Type.BAD_DECRYPT))
         MessageTypes.isPaymentsActivated(record.type) -> builder.updateMessage = ChatUpdateMessage(simpleUpdate = SimpleChatUpdate(type = SimpleChatUpdate.Type.PAYMENTS_ACTIVATED))
         MessageTypes.isPaymentsRequestToActivate(record.type) -> builder.updateMessage = ChatUpdateMessage(simpleUpdate = SimpleChatUpdate(type = SimpleChatUpdate.Type.PAYMENT_ACTIVATION_REQUEST))
-        MessageTypes.isExpirationTimerUpdate(record.type) -> builder.updateMessage = ChatUpdateMessage(expirationTimerChange = ExpirationTimerChatUpdate((record.expiresIn / 1000).toInt()))
+        MessageTypes.isExpirationTimerUpdate(record.type) -> {
+          builder.updateMessage = ChatUpdateMessage(expirationTimerChange = ExpirationTimerChatUpdate(record.expiresIn.toInt()))
+          builder.expiresInMs = null
+        }
         MessageTypes.isProfileChange(record.type) -> {
+          if (record.body == null) continue
           builder.updateMessage = ChatUpdateMessage(
             profileChange = try {
               val decoded: ByteArray = Base64.decode(record.body!!)
@@ -140,6 +157,7 @@ class ChatItemExportIterator(private val cursor: Cursor, private val batchSize: 
               ProfileChangeChatUpdate()
             }
           )
+          builder.sms = false
         }
         MessageTypes.isSessionSwitchoverType(record.type) -> {
           builder.updateMessage = ChatUpdateMessage(
@@ -182,16 +200,17 @@ class ChatItemExportIterator(private val cursor: Cursor, private val batchSize: 
           }
         }
         MessageTypes.isCallLog(record.type) -> {
+          builder.sms = false
           val call = calls.getCallByMessageId(record.id)
           if (call != null) {
             builder.updateMessage = ChatUpdateMessage(callingMessage = CallChatUpdate(callId = call.callId))
           } else {
             when {
               MessageTypes.isMissedAudioCall(record.type) -> {
-                builder.updateMessage = ChatUpdateMessage(callingMessage = CallChatUpdate(callMessage = IndividualCallChatUpdate(type = IndividualCallChatUpdate.Type.MISSED_AUDIO_CALL)))
+                builder.updateMessage = ChatUpdateMessage(callingMessage = CallChatUpdate(callMessage = IndividualCallChatUpdate(type = IndividualCallChatUpdate.Type.MISSED_INCOMING_AUDIO_CALL)))
               }
               MessageTypes.isMissedVideoCall(record.type) -> {
-                builder.updateMessage = ChatUpdateMessage(callingMessage = CallChatUpdate(callMessage = IndividualCallChatUpdate(type = IndividualCallChatUpdate.Type.MISSED_VIDEO_CALL)))
+                builder.updateMessage = ChatUpdateMessage(callingMessage = CallChatUpdate(callMessage = IndividualCallChatUpdate(type = IndividualCallChatUpdate.Type.MISSED_INCOMING_VIDEO_CALL)))
               }
               MessageTypes.isIncomingAudioCall(record.type) -> {
                 builder.updateMessage = ChatUpdateMessage(callingMessage = CallChatUpdate(callMessage = IndividualCallChatUpdate(type = IndividualCallChatUpdate.Type.INCOMING_AUDIO_CALL)))
@@ -214,12 +233,23 @@ class ChatItemExportIterator(private val cursor: Cursor, private val batchSize: 
                     .withoutNulls()
                     .map { obj: UUID? -> ACI.from(obj!!).toByteString() }
                     .toList()
+
+                  val localUserJoined: GroupCallChatUpdate.LocalUserJoined = if (groupCallUpdateDetails.localUserJoined) {
+                    GroupCallChatUpdate.LocalUserJoined.JOINED
+                  } else if (groupCallUpdateDetails.endedCallTimestamp == 0L) {
+                    GroupCallChatUpdate.LocalUserJoined.UNKNOWN
+                  } else {
+                    GroupCallChatUpdate.LocalUserJoined.DID_NOT_JOIN
+                  }
+
                   builder.updateMessage = ChatUpdateMessage(
                     callingMessage = CallChatUpdate(
                       groupCall = GroupCallChatUpdate(
                         startedCallAci = ACI.from(UuidUtil.parseOrThrow(groupCallUpdateDetails.startedCallUuid)).toByteString(),
                         startedCallTimestamp = groupCallUpdateDetails.startedCallTimestamp,
-                        inCallAcis = joinedMembers
+                        inCallAcis = joinedMembers,
+                        localUserJoined = localUserJoined,
+                        endedCallTimestamp = groupCallUpdateDetails.endedCallTimestamp
                       )
                     )
                   )
@@ -230,11 +260,11 @@ class ChatItemExportIterator(private val cursor: Cursor, private val batchSize: 
             }
           }
         }
-        record.body == null -> {
-          Log.w(TAG, "Record missing a body, skipping")
+        record.body == null && !attachmentsById.containsKey(record.id) -> {
+          Log.w(TAG, "Record missing a body and doesnt have attachments, skipping")
           continue
         }
-        else -> builder.standardMessage = record.toTextMessage(reactionsById[id], mentions = mentionsById[id])
+        else -> builder.standardMessage = record.toStandardMessage(reactionsById[id], mentions = mentionsById[id], attachments = attachmentsById[record.id])
       }
 
       buffer += builder.build()
@@ -268,7 +298,6 @@ class ChatItemExportIterator(private val cursor: Cursor, private val batchSize: 
       chatId = record.threadId
       authorId = record.fromRecipientId
       dateSent = record.dateSent
-      sealedSender = record.sealedSender
       expireStartDate = if (record.expireStarted > 0) record.expireStarted else null
       expiresInMs = if (record.expiresIn > 0) record.expiresIn else null
       revisions = emptyList()
@@ -282,19 +311,28 @@ class ChatItemExportIterator(private val cursor: Cursor, private val batchSize: 
         incoming = ChatItem.IncomingMessageDetails(
           dateServerSent = record.dateServer,
           dateReceived = record.dateReceived,
-          read = record.read
+          read = record.read,
+          sealedSender = record.sealedSender
         )
       }
     }
   }
 
-  private fun BackupMessageRecord.toTextMessage(reactionRecords: List<ReactionRecord>?, mentions: List<Mention>?): StandardMessage {
-    return StandardMessage(
-      quote = this.toQuote(),
-      text = Text(
-        body = this.body!!,
+  private fun BackupMessageRecord.toStandardMessage(reactionRecords: List<ReactionRecord>?, mentions: List<Mention>?, attachments: List<DatabaseAttachment>?): StandardMessage {
+    val text = if (body == null) {
+      null
+    } else {
+      Text(
+        body = this.body,
         bodyRanges = (this.bodyRanges?.toBackupBodyRanges() ?: emptyList()) + (mentions?.toBackupBodyRanges() ?: emptyList())
-      ),
+      )
+    }
+    val quotedAttachments = attachments?.filter { it.quote } ?: emptyList()
+    val messageAttachments = attachments?.filter { !it.quote } ?: emptyList()
+    return StandardMessage(
+      quote = this.toQuote(quotedAttachments),
+      text = text,
+      attachments = messageAttachments.toBackupAttachments(),
       // TODO Link previews!
       linkPreview = emptyList(),
       longText = null,
@@ -302,14 +340,14 @@ class ChatItemExportIterator(private val cursor: Cursor, private val batchSize: 
     )
   }
 
-  private fun BackupMessageRecord.toQuote(): Quote? {
+  private fun BackupMessageRecord.toQuote(attachments: List<DatabaseAttachment>? = null): Quote? {
     return if (this.quoteTargetSentTimestamp != MessageTable.QUOTE_NOT_PRESENT_ID && this.quoteAuthor > 0) {
-      // TODO Attachments!
       val type = QuoteModel.Type.fromCode(this.quoteType)
       Quote(
         targetSentTimestamp = this.quoteTargetSentTimestamp.takeIf { !this.quoteMissing && it != MessageTable.QUOTE_TARGET_MISSING_ID },
         authorId = this.quoteAuthor,
         text = this.quoteBody,
+        attachments = attachments?.toBackupQuoteAttachments() ?: emptyList(),
         bodyRanges = this.quoteBodyRanges?.toBackupBodyRanges() ?: emptyList(),
         type = when (type) {
           QuoteModel.Type.NORMAL -> Quote.Type.NORMAL
@@ -318,6 +356,66 @@ class ChatItemExportIterator(private val cursor: Cursor, private val batchSize: 
       )
     } else {
       null
+    }
+  }
+
+  private fun List<DatabaseAttachment>.toBackupQuoteAttachments(): List<Quote.QuotedAttachment> {
+    return this.map { attachment ->
+      Quote.QuotedAttachment(
+        contentType = attachment.contentType,
+        fileName = attachment.fileName,
+        thumbnail = attachment.toBackupAttachment()
+      )
+    }
+  }
+
+  private fun DatabaseAttachment.toBackupAttachment(): MessageAttachment {
+    val builder = FilePointer.Builder()
+    builder.contentType = contentType
+    builder.incrementalMac = incrementalDigest?.toByteString()
+    builder.incrementalMacChunkSize = incrementalMacChunkSize
+    builder.fileName = fileName
+    builder.width = width
+    builder.height = height
+    builder.caption = caption
+    builder.blurHash = blurHash?.hash
+
+    if (remoteKey.isNullOrBlank() || remoteDigest == null || size == 0L) {
+      builder.invalidAttachmentLocator = FilePointer.InvalidAttachmentLocator()
+    } else {
+      if (archiveMedia) {
+        builder.backupLocator = FilePointer.BackupLocator(
+          mediaName = archiveMediaName ?: this.getMediaName().toString(),
+          cdnNumber = if (archiveMediaName != null) archiveCdn else Cdn.CDN_3.cdnNumber, // TODO (clark): Update when new proto with optional cdn is landed
+          key = decode(remoteKey).toByteString(),
+          size = this.size.toInt(),
+          digest = remoteDigest.toByteString()
+        )
+      } else {
+        if (remoteLocation.isNullOrBlank()) {
+          builder.invalidAttachmentLocator = FilePointer.InvalidAttachmentLocator()
+        } else {
+          builder.attachmentLocator = FilePointer.AttachmentLocator(
+            cdnKey = this.remoteLocation,
+            cdnNumber = this.cdn.cdnNumber,
+            uploadTimestamp = this.uploadTimestamp,
+            key = decode(remoteKey).toByteString(),
+            size = this.size.toInt(),
+            digest = remoteDigest.toByteString()
+          )
+        }
+      }
+    }
+    return MessageAttachment(
+      pointer = builder.build(),
+      wasDownloaded = this.transferState == AttachmentTable.TRANSFER_PROGRESS_DONE || this.transferState == AttachmentTable.TRANSFER_NEEDS_RESTORE,
+      flag = if (voiceNote) MessageAttachment.Flag.VOICE_MESSAGE else if (videoGif) MessageAttachment.Flag.GIF else if (borderless) MessageAttachment.Flag.BORDERLESS else MessageAttachment.Flag.NONE
+    )
+  }
+
+  private fun List<DatabaseAttachment>.toBackupAttachments(): List<MessageAttachment> {
+    return this.map { attachment ->
+      attachment.toBackupAttachment()
     }
   }
 

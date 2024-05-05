@@ -45,8 +45,6 @@
     <string name="ApplicationPreferencesActivity_disable_passphrase">సంకేతపదమును ఆపివేయాలా?</string>
     <string name="ApplicationPreferencesActivity_this_will_permanently_unlock_signal_and_message_notifications">ఇది శాశ్వతంగా Signal మరియు సందేశ ప్రకటనలను అన్లాక్ చేస్తుంది</string>
     <string name="ApplicationPreferencesActivity_disable">అచేతనించు</string>
-    <string name="ApplicationPreferencesActivity_disable_signal_messages_and_calls">Signal సందేశాలు మరియు కాల్స్ ఆపివేయాలా?</string>
-    <string name="ApplicationPreferencesActivity_disable_signal_messages_and_calls_by_unregistering">సర్వర్ నుండి నమోదుని తీసివేయడానికి ద్వారా Signal సందేశాలు మరియు కాల్స్ ఆపివేయి. మీరు భవిష్యత్తులో మళ్ళీ వాటిని ఉపయోగించడానికి మీ ఫోన్ నంబర్ తిరిగి నమోదు అవసరం.</string>
     <string name="ApplicationPreferencesActivity_error_connecting_to_server">సర్వర్ కి కలిపినపుడు లోపం!</string>
     <string name="ApplicationPreferencesActivity_pins_are_required_for_registration_lock">రిజిస్ట్రేషన్ లాక్ కోసం పిన్లు అవసరం. పిన్‌లను నిలిపివేయడానికి, దయచేసి మొదట రిజిస్ట్రేషన్ లాక్‌ని నిలిపివేయండి.</string>
     <string name="ApplicationPreferencesActivity_pin_created">పిన్ సృష్టించబడింది.</string>
@@ -91,6 +89,16 @@
     <string name="AttachmentManager_signal_requires_the_external_storage_permission_in_order_to_attach_photos_videos_or_audio">చిత్రాలు , వీడియోలు లేదా ఆడియోను అటాచ్ చేయడానికి Signal కు నిల్వ అనుమతి అవసరం, కానీ ఇది శాశ్వతంగా తిరస్కరించబడింది. దయచేసి అనువర్తనం సెట్టింగ్ల మెనుకు కొనసాగండి, \"అనుమతులు\" ఎంచుకోండి మరియు \"నిల్వ\" ను ప్రారంభించండి.</string>
     <string name="AttachmentManager_signal_requires_contacts_permission_in_order_to_attach_contact_information">సంప్రదింపు సమాచారాన్ని అటాచ్ చేయడానికి Signal కాంటాక్ట్స్ అనుమతి అవసరం, కానీ అది శాశ్వతంగా తిరస్కరించబడింది. దయచేసి అనువర్తన సెట్టింగ్ల మెనుకి కొనసాగండి, \"అనుమతులు\" ఎంచుకోండి మరియు \"పరిచయాలు\" ప్రారంభించండి.</string>
     <string name="AttachmentManager_signal_requires_location_information_in_order_to_attach_a_location">ఒక స్థానాన్ని అటాచ్ చేయడానికి Signalకి నగర అనుమతి అవసరం, కానీ ఇది శాశ్వతంగా తిరస్కరించబడింది. దయచేసి అనువర్తనం సెట్టింగ్ల మెనుకి కొనసాగండి, \"అనుమతులు\" ఎంచుకోండి మరియు \"స్థానం\" ని ప్రారంభించండి.</string>
+
+    <!-- Dialog title asking users for location permission -->
+    <string name="AttachmentManager_signal_allow_access_location">Allow access to your location</string>
+    <!-- Dialog description that will explain the steps needed to give location permission -->
+    <string name="AttachmentManager_signal_to_send_location">To send your location:</string>
+    <!-- Alert dialog description asking for location permission -->
+    <string name="AttachmentManager_signal_allow_signal_access_location">Allow Signal access to send your location.</string>
+    <!-- Toast text explaining Signal\'s need for location access -->
+    <string name="AttachmentManager_signal_needs_location_access">Signal needs location access to send your location.</string>
+
     <!-- Alert dialog title to show the recipient has not activated payments -->
     <string name="AttachmentManager__not_activated_payments">%1$s చెల్లింపులను యాక్టివేట్ చేయలేదు </string>
     <!-- Alert dialog description to send the recipient a request to activate payments -->
@@ -309,7 +317,6 @@
     <string name="ConversationItem_error_network_not_delivered">పంపడం విఫలమైంది</string>
     <string name="ConversationItem_group_action_left">%1$s సమూహం వదిలి వెళ్లారు</string>
     <string name="ConversationItem_send_paused">పంపండి పాజ్ చేయబడింది</string>
-    <string name="ConversationItem_click_to_approve_unencrypted">పంపడం విఫలమైంది, అసురక్షిత తిరిగి పొందడం కోసం నొక్కండి</string>
     <string name="ConversationItem_click_to_approve_unencrypted_sms_dialog_title">ఎన్క్రిప్టు కాని ఎస్సెమ్మెస్ తిరిగి అయ్యిందా?</string>
     <string name="ConversationItem_click_to_approve_unencrypted_mms_dialog_title">ఎన్క్రిప్టు కాని ఎమ్మెమ్మెస్ తిరిగి అయ్యిందా?</string>
     <string name="ConversationItem_click_to_approve_unencrypted_dialog_message">ఈ సందేశం <b> </b> భద్రపరచు విధంగా చేయలేము ఎందుకంటే గ్రహీత ఇకపై Signal వినియోగదారుడు కాదు.\n\nభద్రతలేని సందేశాన్ని పంపవచా?</string>
@@ -389,8 +396,16 @@
     <string name="ConversationActivity_your_request_to_join_has_been_sent_to_the_group_admin">గ్రూప్‌లో చేరడానికి మీ అభ్యర్థన నిర్వాహకుడికి పంపబడింది. వారు చర్య తీసుకున్నప్పుడు మీకు తెలియజేయబడుతుంది.</string>
     <string name="ConversationActivity_cancel_request">అభ్యర్ధన రద్దు చేయి</string>
 
-    <string name="ConversationActivity_to_send_audio_messages_allow_signal_access_to_your_microphone">ఆడియో సందేశాలను పంపడానికి, మీ మైక్రోఫోన్‌కు Signal ప్రాప్తిని అనుమతించండి.</string>
+    <!-- Dialog title asking users for microphone permission -->
+    <string name="ConversationActivity_allow_access_microphone">Allow access to your microphone</string>
+    <!-- Dialog description that will explain the steps needed to give microphone permissions -->
+    <string name="ConversationActivity_signal_to_send_audio_messages">To send audio messages:</string>
+    <!-- Alert dialog description asking for microphone permission in order to send voice messages -->
+    <string name="ConversationActivity_to_send_voice_messages_allow_signal_access_to_your_microphone">To send voice messages, allow Signal access to your microphone.</string>
+    <!-- Toast text explaining Signal\'s need for microphone access -->
+    <string name="ConversationActivity_signal_needs_microphone_access_voice_message">Signal needs microphone access to record a voice message.</string>
     <string name="ConversationActivity_signal_requires_the_microphone_permission_in_order_to_send_audio_messages">ఆడియో సందేశాలను పంపడానికి Signalకు మైక్రోఫోన్ అనుమతి అవసరం, కానీ ఇది శాశ్వతంగా తిరస్కరించబడింది. దయచేసి అనువర్తనం సెట్టింగ్లకు కొనసాగించండి, \"అనుమతులు\" ఎంచుకోండి మరియు \"మైక్రోఫోన్\" ని ప్రారంభించండి.</string>
+
     <string name="ConversationActivity_signal_needs_the_microphone_and_camera_permissions_in_order_to_call_s">Signal కాల్ చేయడానికి మైక్రోఫోన్ మరియు కెమెరా అనుమతులు అవసరం %1$s,కానీ అవి శాశ్వతంగా తిరస్కరించబడ్డాయి. దయచేసి అనువర్తనం సెట్టింగ్లకు కొనసాగించండి, \"అనుమతులు\" ఎంచుకోండి మరియు \"మైక్రోఫోన్\" మరియు \"కెమెరా\" ని ప్రారంభించండి.</string>
     <string name="ConversationActivity_to_capture_photos_and_video_allow_signal_access_to_the_camera">చిత్రాలు మరియు వీడియోలను సంగ్రహించడానికి, కెమెరాకి Signal ప్రాప్తిని అనుమతించండి.</string>
     <string name="ConversationActivity_signal_needs_the_camera_permission_to_take_photos_or_video">చిత్రాలను లేదా వీడియోను తీసుకోవడానికి Signal కు కెమెరా అనుమతి అవసరం, కానీ ఇది శాశ్వతంగా తిరస్కరించబడింది. దయచేసి అనువర్తనం సెట్టింగ్లకు కొనసాగించండి, \"అనుమతులు\" ఎంచుకోండి మరియు \"కెమెరా\" ని ప్రారంభించండి.</string>
@@ -414,10 +429,17 @@
     <string name="ConversationActivity_you_will_leave_this_group_and_it_will_be_deleted_from_all_of_your_devices">మీరు ఈ గ్రూప్‌ను వదిలి వెళతారు మరియు ఇది మీ పరికరాలు అన్నింటి నుండి తొలగించబడుతుంది.</string>
     <string name="ConversationActivity_delete">తొలగించండి</string>
     <string name="ConversationActivity_delete_and_leave">తొలగించండి మరియు వదిలివేయండి</string>
-    <string name="ConversationActivity__to_call_s_signal_needs_access_to_your_microphone">%1$s కి కాల్ చేయడానికి, Signal కు మీ మైక్రోఫోన్‌ ప్రాప్యత అవసరం</string>
+
+    <!-- Dialog description that will explain the steps needed to give microphone permissions for a voice call -->
+    <string name="ConversationActivity__to_start_call">To start a call:</string>
+    <!-- Alert dialog description asking for microphone permission in order to start a voice call -->
+    <string name="ConversationActivity__to_call_signal_needs_access_to_your_microphone">To start a call, allow Signal access to your microphone.</string>
+    <!-- Toast text explaining Signal\'s need for microphone access for a voice call -->
+    <string name="ConversationActivity_signal_needs_microphone_access_voice_call">Signal needs microphone access to start a call.</string>
 
 
     <string name="ConversationActivity_join">చేరండి</string>
+    <!-- Button text for an active group call but the call is currently full and unjoinable -->
     <string name="ConversationActivity_full">సంపూర్ణమైన</string>
 
     <string name="ConversationActivity_error_sending_media">మీడియాను పంపడంలో లోపం చోటుచేసుకుంది</string>
@@ -427,7 +449,7 @@
     <!-- Message shown when opening an SMS conversation with SMS disabled and there are no exported messages -->
     <string name="ConversationActivity__sms_messaging_is_no_longer_supported_in_signal_invite_s_to_to_signal_to_keep_the_conversation_here">Signal లో SMS సందేశాలు పంపేందుకు ఇక ఏమాత్రం మద్దతు ఇవ్వబడదు. ఇక్కడ సంభాషణను ఉంచడానికి %1$s ను Signal కు ఆహ్వానించండి.</string>
     <!-- Message shown when opening a conversation with an unregistered user who used to be on Signal -->
-    <string name="ConversationActivity__this_person_is_no_longer_using_signal">This person is no longer using Signal. Invite them to Signal to keep the conversation here.</string>
+    <string name="ConversationActivity__this_person_is_no_longer_using_signal">ఈ వ్యక్తి Signal ను ఏమాత్రం ఉపయోగించడం లేదు. ఇక్కడ సంభాషణను ఉంచడానికి వారిని Signal కు ఆహ్వానించండి.</string>
     <!-- Action button shown when opening an SMS conversation with SMS disabled and there are no exported messages -->
     <string name="ConversationActivity__invite_to_signal">Signal కు ఆహ్వానించండి</string>
     <!-- Snackbar message shown after dismissing the full screen sms export megaphone indicating we\'ll do it again soon -->
@@ -616,6 +638,7 @@
     <string name="ConversationListFragment_unarchive">అన్ఆర్కైవ్</string>
     <string name="ConversationListFragment_delete">తొలగించండి</string>
     <string name="ConversationListFragment_select_all">అన్నిటిని ఎంచుకోండి</string>
+    <!-- Screen title shown when selecting multiple items from a list like conversation threads or call logs. -->
     <plurals name="ConversationListFragment_s_selected">
         <item quantity="one">%1$dఎంచుకోబడింది</item>
         <item quantity="other">%1$d ఎంచుకోబడింది</item>
@@ -867,6 +890,7 @@
         <item quantity="one">ఆహ్వానం పంపబడింది</item>
         <item quantity="other">%1$d ఆహ్వానాలు పంపబడ్డాయి</item>
     </plurals>
+    <!-- Dialog message shown when you are attempting to add a single contact to a group and you don\'t have enough information about them to do it automatically, so must do it via an invite instead. Placeholder is name/username/phone number. -->
     <string name="GroupManagement_invite_single_user">“%1$s” ను మీరు స్వయంచాలకంగా ఈ గుంపుకు చేర్చలేరు. \n\n చేరడానికి వారిని ఆహ్వానించారు మరియు వారు అంగీకరించే వరకు ఏ సమూహ సందేశాలను చూడలేరు.</string>
     <string name="GroupManagement_invite_multiple_users">ఈ వినియోగదారులను మీరు స్వయంచాలకంగా ఈ గుంపుకు చేర్చలేరు. \n\\ n గుంపులో చేరమని వారిని ఆహ్వానించారు మరియు వారు అంగీకరించే వరకు ఏ సమూహ సందేశాలను చూడలేరు.</string>
 
@@ -1047,7 +1071,9 @@
 
     <string name="ManageGroupActivity_edit_name_and_picture">పేరు మరియు చిత్రం సవరించండి</string>
     <string name="ManageGroupActivity_legacy_group">లెగసీ సమూహం</string>
+    <!-- This is placed inside a "Learn More" text view, which automatically appends LearnMoreTextView_learn_more in code -->
     <string name="ManageGroupActivity_legacy_group_learn_more">ఇది లెగసీ సమూహం . సమూహ నిర్వాహకులు వంటి లక్షణాలు క్రొత్త సమూహాలకు మాత్రమే అందుబాటులో ఉంటాయి.</string>
+    <!-- This is placed inside a "Learn More" text view, which automatically appends LearnMoreTextView_learn_more in code to the end of the string -->
     <string name="ManageGroupActivity_legacy_group_upgrade">ఇది లెగసీ గ్రూప్. @ ప్రస్తావనలు మరియు నిర్వాహకులు వంటి క్రొత్త లక్షణాలను ప్రాప్యత చేయడానికి,</string>
     <string name="ManageGroupActivity_legacy_group_too_large">ఈ లెగసీ గ్రూప్ క్రొత్త సమూహానికి అప్‌గ్రేడ్ చేయబడదు ఎందుకంటే ఇది చాలా పెద్దది. గరిష్ట సమూహ పరిమాణం %1$d.</string>
     <string name="ManageGroupActivity_upgrade_this_group">ఈ సమూహాన్ని అప్‌గ్రేడ్ చేయండి</string>
@@ -1274,6 +1300,7 @@
         <item quantity="other">తొలగించండి</item>
     </plurals>
 
+    <!-- Screen title shown when selecting multiple items in the media overview screen. The first placeholder is the number of items, the second number is the cumulative file size in bytes. -->
     <plurals name="MediaOverviewActivity_d_selected_s">
         <item quantity="one">%1$d ఎంచుకున్నారు (%2$s)</item>
         <item quantity="other">%1$d ఎంచుకున్నారు (%2$s)</item>
@@ -1338,17 +1365,13 @@
     <string name="MessageRecord_left_group">మీరు సమూహం నుండి వైదొలిగారు</string>
     <string name="MessageRecord_you_updated_group">మీరు ఈ సమూహాన్ని నవీకరించారు.</string>
     <string name="MessageRecord_the_group_was_updated">సమూహం నవీకరించబడింది.</string>
-    <!-- Update message shown when placing an outgoing 1:1 voice/audio call and it\'s answered by the other party -->
+    <!-- Update message shown when placing an outgoing 1:1 voice/audio call -->
     <string name="MessageRecord_outgoing_voice_call">అవుట్‌గోయింగ్ వాయిస్ కాల్</string>
-    <!-- Update message shown when placing an outgoing 1:1 video call and it\'s answered by the other party -->
+    <!-- Update message shown when placing an outgoing 1:1 video call -->
     <string name="MessageRecord_outgoing_video_call">అవుట్‌గోయింగ్ వీడియో కాల్</string>
-    <!-- Update message shown when placing an outgoing 1:1 voice/audio call and it\'s not answered by the other party -->
-    <string name="MessageRecord_unanswered_voice_call">సమాధానం ఇవ్వని వాయిస్ కాల్</string>
-    <!-- Update message shown when placing an outgoing 1:1 video call and it\'s not answered by the other party -->
-    <string name="MessageRecord_unanswered_video_call">సమాధానం ఇవ్వని వీడియో కాల్</string>
-    <!-- Update message shown when receiving an incoming 1:1 voice/audio call and it\'s answered -->
+    <!-- Update message shown when receiving an incoming 1:1 voice/audio call and it\'s answered or ringing -->
     <string name="MessageRecord_incoming_voice_call">ఇన్‌కమింగ్ వాయిస్ కాల్</string>
-    <!-- Update message shown when receiving an incoming 1:1 video call and answered -->
+    <!-- Update message shown when receiving an incoming 1:1 video call and answered or ringing -->
     <string name="MessageRecord_incoming_video_call">ఇన్‌కమింగ్ వీడియో కాల్</string>
     <!-- Update message shown when receiving an incoming 1:1 voice/audio call and not answered -->
     <string name="MessageRecord_missed_voice_call">మిస్డ్ వాయిస్ కాల్</string>
@@ -1358,10 +1381,6 @@
     <string name="MessageRecord_missed_voice_call_notification_profile">నోటిఫికేషన్ ప్రొఫైల్ ఆన్‌లో ఉన్నప్పుడు మిస్ అయిన స్వర కాల్</string>
     <!-- Update message shown when receiving an incoming video call and declined due to notification profile -->
     <string name="MessageRecord_missed_video_call_notification_profile">నోటిఫికేషన్ ప్రొఫైల్ ఆన్‌లో ఉన్నప్పుడు మిస్ అయిన వీడియో కాల్</string>
-    <!-- Update message shown when receiving an incoming 1:1 voice/audio call and explicitly declined -->
-    <string name="MessageRecord_you_declined_a_voice_call">మీరు ఒక వాయిస్ కాల్‌ను నిరాకరించారు</string>
-    <!-- Update message shown when receiving an incoming 1:1 video call and explicitly declined -->
-    <string name="MessageRecord_you_declined_a_video_call">మీరు ఒక వీడియో కాల్‌ను నిరాకరించారు</string>
     <!-- Call update formatter string to place the update message next to a time stamp. e.g., \'Incoming voice call · 11:11am\' -->
     <string name="MessageRecord_call_message_with_date">%1$s · %2$s</string>
     <string name="MessageRecord_s_updated_group">%1$s సమూహాన్ని నవీకరించారు.</string>
@@ -1389,7 +1408,7 @@
     <string name="MessageRecord_changed_their_profile_name_from_to">%1$s వారి ప్రొఫైల్ పేరును %2$s నుండి %3$s కి మార్చారు.</string>
     <string name="MessageRecord_changed_their_profile">%1$s వారి ప్రొఫైల్ మార్చబడింది.</string>
     <!-- Conversation update event message shown when you\'ve started a conversation by phone number or username and then learn their profile name. placeholder is username or phone number -->
-    <string name="MessageRecord_started_this_chat">You started this chat with %1$s.</string>
+    <string name="MessageRecord_started_this_chat">మీరు %1$s‌తో ఈ చాట్‌ను ప్రారంభించారు.</string>
 
     <!-- GV2 specific -->
     <string name="MessageRecord_you_created_the_group">మీరు సమూహాన్ని సృష్టించారు.</string>
@@ -1570,28 +1589,53 @@
     <string name="MessageRecord_can_accept_payments">%1$s ఇప్పుడు చెల్లింపులను అంగీకరించవచ్చు.</string>
 
     <!-- Group Calling update messages -->
-    <string name="MessageRecord_s_started_a_group_call_s">%1$s సమూహ కాల్ ప్రారంభించారు. %2$s</string>
-    <string name="MessageRecord_you_started_a_group_call_s">మీరు గ్రూప్ కాల్ ప్రారంభించారు · %1$s</string>
-    <string name="MessageRecord_s_is_in_the_group_call_s">%1$s సమూహ కాల్‌లో ఉన్నారు · %2$s</string>
-    <string name="MessageRecord_you_are_in_the_group_call_s1">మీరు గ్రూప్ కాల్‌లో ఉన్నారు. %1$s</string>
-    <string name="MessageRecord_s_and_s_are_in_the_group_call_s1">%1$s మరియు %2$s గ్రూప్ కాల్‌లో ఉన్నారు · %3$s</string>
-    <string name="MessageRecord_group_call_s">సమూహ కాల్ · %1$s</string>
-
-    <string name="MessageRecord_s_started_a_group_call">%1$s సమూహ కాల్ ప్రారంభించారు</string>
-    <string name="MessageRecord_you_started_a_group_call">మీరు సమూహ కాల్ ప్రారంభించారు</string>
-    <string name="MessageRecord_s_is_in_the_group_call">%1$s సమూహ కాల్‌లో ఉన్నారు</string>
-    <string name="MessageRecord_you_are_in_the_group_call">మీరు గ్రూప్ కాల్‌లో ఉన్నారు</string>
-    <string name="MessageRecord_s_and_s_are_in_the_group_call">%1$s మరియు %2$s గ్రూప్ కాల్‌లో ఉన్నారు</string>
-    <string name="MessageRecord_group_call">సమూహ కాల్</string>
+    <!-- Chat log text for an ongoing group call that has one participant with a placeholder for the short display name of the user that joined and a placeholder for formatted time -->
+    <string name="MessageRecord_s_is_in_the_call_s">%1$s కాల్‌లో ఉన్నారు · %2$s</string>
+    <!-- Chat log text for an ongoing group call only the local user has joined with a placeholder for formatted time -->
+    <string name="MessageRecord_you_are_in_the_call_s1">మీరు కాల్‌లో ఉన్నారు · %1$s</string>
+    <!-- Chat log text for an ongoing group call with two participants with two placeholders for the short display name of the users that joined and a placeholder for formatted time -->
+    <string name="MessageRecord_s_and_s_are_in_the_call_s1">%1$s మరియు %2$s కాల్‌లో ఉన్నారు · %3$s</string>
+    <!-- Chat log text for an ongoing group call that has one participant -->
+    <string name="MessageRecord_s_is_in_the_call">%1$s కాల్‌లో ఉన్నారు</string>
+    <!-- Chat log text for an ongoing group call only the local user has joined -->
+    <string name="MessageRecord_you_are_in_the_call">మీరు కాల్‌లో ఉన్నారు</string>
+    <!-- Chat log text for an ongoing group call with two participants with two placeholders, each for the short display name of the users that joined -->
+    <string name="MessageRecord_s_and_s_are_in_the_call">%1$s మరియు %2$s కాల్‌లో ఉన్నారు</string>
+    <!-- Chat log text for a group call that ended within the last 5 minutes -->
+    <string name="MessageRecord__the_video_call_has_ended">వీడియో కాల్ ముగిసింది</string>
+    <!-- Chat log text for a group call that ended within the last 5 minutes with a placeholder for formatted time -->
+    <string name="MessageRecord__the_video_call_has_ended_s">వీడియో కాల్ ముగిసింది · %1$s</string>
+    <!-- Chat log text for a group call that ended more than 5 minutes ago and was missed -->
+    <string name="MessageRecord__missed_video_call">మిస్డ్ వీడియో కాల్</string>
+    <!-- Chat log text for a group call that ended more than 5 minutes ago and was missed with a placeholder for formatted time -->
+    <string name="MessageRecord__missed_video_call_s">తప్పిన వీడియో కాల్ . %1$s</string>
+    <!-- Chat log text for a group call that ended that the local user did not start -->
+    <string name="MessageRecord__incoming_video_call">ఇన్‌కమింగ్ వీడియో కాల్</string>
+    <!-- Chat log text for a group call that ended that the local user did not start with a placeholder for formatted time -->
+    <string name="MessageRecord__incoming_video_call_s">ఇన్‌కమింగ్ వీడియో కాల్ · %1$s</string>
+    <!-- Chat log text for a group call that ended that the local user started -->
+    <string name="MessageRecord__outgoing_video_call">అవుట్‌గోయింగ్ వీడియో కాల్</string>
+    <!-- Chat log text for a group call that ended that the local user started with a placeholder for formatted time -->
+    <string name="MessageRecord__outgoing_video_call_s">అవుట్‌గోయింగ్ వీడియో కాల్ · %1$s</string>
+    <!-- Chat log text for an ongoing group call that the local user started -->
+    <string name="MessageRecord__you_started_a_video_call">మీరు వీడియో కాల్ ప్రారంభించారు</string>
+    <!-- Chat log text for an ongoing group call that the local user started with a placeholder for formatted time -->
+    <string name="MessageRecord__you_started_a_video_call_s">మీరు వీడియో కాల్ ప్రారంభించారు · %1$s</string>
+    <!-- Chat log text for an ongoing group call that the local user has not joined with a placeholder for user\'s short display name -->
+    <string name="MessageRecord__s_started_a_video_call">%1$s వీడియో కాల్ ప్రారంభించారు</string>
+    <!-- Chat log text for an ongoing group call that the local user has not joined with a placeholder for user\'s short display name and a placeholder for formatted time -->
+    <string name="MessageRecord__s_started_a_video_call_s">%1$s వీడియో కాల్ ప్రారంభించారు · %2$s</string>
 
     <string name="MessageRecord_you">మీరు</string>
 
-    <plurals name="MessageRecord_s_s_and_d_others_are_in_the_group_call_s">
+    <!-- Chat log text for an ongoing group call with more than two participants with placeholders for the first two joined users, a placeholder for the number of users in the call, and a placeholder for formatted time -->
+    <plurals name="MessageRecord_s_s_and_d_others_are_in_the_call_s">
         <item quantity="one">%1$s, %2$s మరియు %3$d ఇతర ఈ కాల్‌లో ఉన్నారు · %4$s</item>
         <item quantity="other">%1$s, %2$s, మరియు %3$d ఇతరులు ఈ సమూహ కాల్‌లో ఉన్నారు · %4$s</item>
     </plurals>
 
-    <plurals name="MessageRecord_s_s_and_d_others_are_in_the_group_call">
+    <!-- Chat log text for an ongoing group call with more than two participants with placeholders for the first two joined users and a placeholder for the number of users in the call -->
+    <plurals name="MessageRecord_s_s_and_d_others_are_in_the_call">
         <item quantity="one">%1$s, %2$s మరియు %3$d ఇతర ఈ సమూహ కాల్‌లో ఉన్నారు</item>
         <item quantity="other">%1$s, %2$s, మరియు %3$d ఇతరులు ఈ సమూహ కాల్‌లో ఉన్నారు</item>
     </plurals>
@@ -1866,9 +1910,9 @@
     <!-- Utilized in the lobby before joining a call link -->
     <string name="WebRtcCallView__signal_call_link">Signal కాల్ లింక్</string>
     <!-- Warning displayed when entering a call via a link and you have Phone Number Privacy disabled-->
-    <string name="WebRtcCallView__anyone_who_joins_pnp_disabled">Anyone who joins this call via the link will see your name, photo, and phone number.</string>
+    <string name="WebRtcCallView__anyone_who_joins_pnp_disabled">లింక్ ద్వారా ఈ కాల్‌లో చేరే ఎవరైనా మీ పేరు, ఫోటో మరియు ఫోన్ నంబర్‌ను చూస్తారు.</string>
     <!-- Warning displayed when entering a call via a link and you have Phone Number Privacy enabled-->
-    <string name="WebRtcCallView__anyone_who_joins_pnp_enabled">Anyone who joins this call via the link will see your name and photo.</string>
+    <string name="WebRtcCallView__anyone_who_joins_pnp_enabled">లింక్ ద్వారా ఈ కాల్‌లో చేరే ఎవరైనా మీ పేరు మరియు ఫోటోను చూస్తారు.</string>
     <!-- Displayed on the call screen as the status when waiting to be let into a call link by an admin -->
     <string name="WebRtcCallView__waiting_to_be_let_in">అనుమతి కోసం వేచి ఉంది…</string>
 
@@ -1975,7 +2019,7 @@
     <!-- Displayed in bottom sheet describing that the user has no direct messages with this person. The placeholder is a person\'s name. -->
     <string name="AboutSheet__no_direct_message">%1$sతో ప్రత్యక్ష సందేశాలు లేవు</string>
     <!-- Explains that the given user (placeholder is short name) is in the users system contact -->
-    <string name="AboutSheet__s_is_in_your_system_contacts">%1$s మీ సిస్టమ్ కాంటాక్ట్‌లలో ఉన్నారు</string>
+    <string name="AboutSheet__s_is_in_your_system_contacts">%1$s మీ ఫోన్ కాంటాక్ట్‌లలో ఉంది</string>
     <!-- Notice in a row when user has no groups in common -->
     <string name="AboutSheet__you_have_no_groups_in_common">మీకు ఉమ్మడిగా ఎలాంటి గ్రూపులు లేవు</string>
     <!-- Notice when a user is not a connection to review requests carefully -->
@@ -1989,6 +2033,8 @@
     <string name="AboutSheet__about">గురించి</string>
     <!-- Text displayed in title for you -->
     <string name="AboutSheet__you">మీరు</string>
+    <!-- Displays the name of a contact. The first placeholder is the name the user has assigned to that contact, the second name is the name the contact assigned to themselves -->
+    <string name="AboutSheet__user_set_display_name_and_profile_name">%1$s (%2$s)</string>
 
     <!-- CallParticipantsListDialog -->
     <plurals name="CallParticipantsListDialog_in_this_call">
@@ -2064,6 +2110,7 @@
     <!-- Generic error when the app is unable to request an SMS code for an unknown reason. -->
     <string name="RegistrationActivity_unable_to_request_verification_code">ధృవీకరణ కోడ్‌ను అభ్యర్ధించలేకపోయింది. దయచేసి నెట్‌వర్క్ కనెక్షన్ తనిఖీ చేసి, మళ్ళీ ప్రయత్నించండి.</string>
     <string name="RegistrationActivity_non_standard_number_format">నాన్-స్టాండర్డ్ నెంబర్ ఫార్మెట్</string>
+    <!-- Dialog message shown to confirm when entering phone number (first placeholder) is normalized and formatted differently by the app (second placeholder). -->
     <string name="RegistrationActivity_the_number_you_entered_appears_to_be_a_non_standard">మీరు నమోదు చేసిన నెంబరు (%1$s) నాన్-స్టాండర్డ్ ఫార్మెట్‌లో కనిపిస్తోంది.\n\n%2$s అని మీ అర్ధమా?</string>
     <string name="RegistrationActivity_signal_android_phone_number_format">Signal Android - ఫోన్ నెంబర్ ఫార్మెట్</string>
     <!--    Small "toast" notification to the user confirming that they have requested a new code via voice call.-->
@@ -2710,6 +2757,8 @@
     <string name="ConversationUpdateItem_loading">లోడ్</string>
     <string name="ConversationUpdateItem_learn_more">ఇంకా నేర్చుకో</string>
     <string name="ConversationUpdateItem_join_call">కాల్‌లో చేరండి</string>
+    <!-- Action button label for starting a new call in the current conversation -->
+    <string name="ConversationUpdateItem_call_back">తిరిగి కాల్ చేయండి</string>
     <string name="ConversationUpdateItem_return_to_call">కాల్‌కు తిరిగి వెళ్ళు</string>
     <string name="ConversationUpdateItem_call_is_full">కాల్ నిండింది</string>
     <string name="ConversationUpdateItem_invite_friends">స్నేహితులను ఆహ్వానించండి</string>
@@ -2774,6 +2823,7 @@
     <string name="safety_number_change_dialog__leave_call">కాల్ ని వదిలి</string>
     <string name="safety_number_change_dialog__the_following_people_may_have_reinstalled_or_changed_devices">కింది వ్యక్తులు పరికరాలను తిరిగి ఇన్‌స్టాల్ చేసి ఉండవచ్చు లేదా మార్చవచ్చు. గోప్యతను నిర్ధారించడానికి వారితో మీ భద్రతా సంఖ్యను ధృవీకరించండి.</string>
     <string name="safety_number_change_dialog__view">వీక్షణ</string>
+    <!-- Subtitle shown for a single contact and that their safety number was previously verified and is now no longer verified. -->
     <string name="safety_number_change_dialog__previous_verified">మునుపటి ధృవీకరించబడింది</string>
 
     <!-- EnableCallNotificationSettingsDialog__call_notifications_checklist -->
@@ -2925,6 +2975,18 @@
     <string name="EditProfileFragment__group_name">సమూహం పేరు</string>
     <string name="EditProfileFragment__group_description">గ్రూపు వివరణ</string>
   <!-- Removed by excludeNonTranslatables <string name="EditProfileFragment__support_link" translatable="false">https://support.signal.org/hc/articles/360007459591</string> -->
+    <!-- The title of a dialog prompting user to update to the latest version of Signal. -->
+    <string name="EditProfileFragment_deprecated_dialog_title">Signal ను నవీకరించండి</string>
+    <!-- The body of a dialog prompting user to update to the latest version of Signal. -->
+    <string name="EditProfileFragment_deprecated_dialog_body">Signal యొక్క ఈ వెర్షన్ గడువు తీరింది. Signal ఉపయోగించడం కొనసాగించడానికి ఇప్పుడు అప్‌డేట్ చేయండి.</string>
+    <!-- The button on a dialog prompting user to update to the latest version of Signal. When clicked, the user will be taken to the store to update their app. -->
+    <string name="EditProfileFragment_deprecated_dialog_update_button">నవీకరణ</string>
+    <!-- The title of a dialog informing the user that they cannot use this app feature when they are unregistered. -->
+    <string name="EditProfileFragment_unregistered_dialog_title">పరికరం నమోదు చేయబడలేదు</string>
+    <!-- The body of a dialog informing the user that they cannot use this app feature when they are unregistered. -->
+    <string name="EditProfileFragment_unregistered_dialog_body">ఈ పరికరం ఇకపై నమోదు చేయబడిలేదు. మీ ఖాతాకు మార్పులు చేయడానికి మళ్ళీ నమోదు చేయండి.</string>
+    <!-- The button on a dialog informing the user that they cannot use this app feature when they are unregistered. When clicked, the user will be taken to a screen to help them re-register. -->
+    <string name="EditProfileFragment_unregistered_dialog_reregister_button">మల్లి నమోదుచేయుత </string>
 
     <!-- EditProfileNameFragment -->
     <string name="EditProfileNameFragment_your_name">మీ పేరు</string>
@@ -3019,7 +3081,6 @@
         <item>ఇతర</item>
         <item>చెల్లింపులు (MobileCoin)</item>
         <item>విరాళాలు &amp; బ్యాడ్జీలు</item>
-        <item>SMS ఎగుమతి</item>
     </string-array>
     <!-- Subject of email when submitting debug logs to help debug slow notifications -->
     <string name="DebugLogsPromptDialogFragment__signal_android_support_request">Signal Android డీబగ్ లాగ్ సమర్పణ</string>
@@ -3076,6 +3137,7 @@
 
     <string name="arrays__default">అప్రమేయం</string>
     <string name="arrays__high">అధికం</string>
+    <!-- Setting title that represent an abstract priority to assign to notifications as the max/highest priority a notification can be within the system. -->
     <string name="arrays__max">గరిష్టం</string>
 
     <!-- plurals.xml -->
@@ -3396,6 +3458,14 @@
     <!-- Storage permission row description -->
     <string name="GrantPermissionsFragment__send_photos_videos_and_files">మీ పరికరం నుండి ఫోటోలు, వీడియోలు మరియు ఫైళ్ళను పంపండి.</string>
 
+    <!-- PermissionDeniedBottomSheet -->
+    <!-- Sheet describing step 1 on how to give permissions by opening settings -->
+    <string name="PermissionDeniedBottomSheet__1_tap_settings_below">1. Tap “Settings” below</string>
+    <!-- Sheet describing step 2 on how to give permissions by checking the permissions button in settings where %s will be replaced with an image of a checked button -->
+    <string name="PermissionDeniedBottomSheet__2_allow_permission">2. %1$s Allow the permission</string>
+    <!-- Label for button at the bottom of the sheet which opens the system permission settings -->
+    <string name="PermissionDeniedBottomSheet__settings">Settings</string>
+
     <!-- PaymentsSecuritySetupFragment -->
     <!-- Toolbar title -->
     <string name="PaymentsSecuritySetupFragment__security_setup">భద్రతా సెటప్</string>
@@ -3436,6 +3506,7 @@
     <string name="PaymentsDetailsFragment__sent_to_s">%1$sకు పంపబడింది</string>
     <string name="PaymentsDetailsFragment__you_on_s_at_s">మీరు %2$s వద్ద %1$sపై ఉన్నారు</string>
     <string name="PaymentsDetailsFragment__s_on_s_at_s">%1$s %3$s వద్ద %2$sపై ఉన్నారు</string>
+    <!-- Prefix to a name to indicate who a payment was sent to -->
     <string name="PaymentsDetailsFragment__to">ఎవరికి</string>
     <string name="PaymentsDetailsFragment__from">ఎవరి నుండి</string>
     <string name="PaymentsDetailsFragment__information">చెల్లింపు మొత్తం మరియు లావాదేవీ సమయంతో సహా లావాదేవీ వివరాలు MobileCoin లెడ్జర్‌లో భాగం.</string>
@@ -3498,6 +3569,7 @@
     <string name="ConfirmPayment__confirm_payment">పేమెంట్‌ని ధృవీకరించండి</string>
     <string name="ConfirmPayment__network_fee">నెట్‌వర్క్ ఫీజు</string>
     <string name="ConfirmPayment__estimated_s">అంచనా వేయబడింది %1$s</string>
+    <!-- Prefix to a name to indicate who a payment will be sent to -->
     <string name="ConfirmPayment__to">ఎవరికి</string>
     <string name="ConfirmPayment__total_amount">మొత్తం అమౌంట్</string>
     <string name="ConfirmPayment__balance_s">బ్యాలెన్స్: %1$s</string>
@@ -3648,6 +3720,14 @@
     <string name="conversation_group_options__conversation">చాట్</string>
     <string name="conversation_group_options__broadcast">ప్రసారం</string>
 
+    <!-- DoubleTapEditEducationSheet -->
+    <!-- Displayed as the title of the education bottom sheet -->
+    <string name="DoubleTapEditEducationSheet__double_tap_edit_title">Double tap to edit</string>
+    <!-- Text on the sheet explaining how double tapping on a message will let them edit it -->
+    <string name="DoubleTapEditEducationSheet__quickly_tap_twice">Quickly tap twice on your messages to edit them. You can edit your messages up to 24hrs after they’ve been sent.</string>
+    <!-- Button label to dismiss sheet -->
+    <string name="DoubleTapEditEducationSheet__got_it">Got it</string>
+
     <!-- text_secure_normal -->
     <string name="text_secure_normal__menu_new_group">కొత్త సమూహం</string>
     <string name="text_secure_normal__menu_settings">అమరికలు</string>
@@ -3664,8 +3744,6 @@
     <string name="verify_display_fragment_context_menu__compare_with_clipboard">తాత్కాలికంగా భద్రపరుచు ప్రదేశముతో పోల్చడం</string>
 
     <!-- reminder_header -->
-    <string name="reminder_header_push_title">Signal సందేశాలు మరియు కాల్స్ ని ప్రారంభించు</string>
-    <string name="reminder_header_push_text">మీ యుక్క కమ్యూనికేషన్ అనుభవం అభివృద్ధి చెయండి</string>
     <string name="reminder_header_service_outage_text">Signal సాంకేతిక సమస్యలను ఎదుర్కొంటోంది. వీలైనంత త్వరగా సేవని పునరుద్ధరించడానికి మేము కృషి చేస్తున్నాము.</string>
     <string name="reminder_header_progress">%1$d%%</string>
     <!-- Body text of a banner that will show at the top of the chat list when we temporarily cannot process the user\'s contacts -->
@@ -3901,11 +3979,11 @@
     <!-- Snackbar text when pressing invalid radio item -->
     <string name="PhoneNumberPrivacySettingsFragment__to_change_this_setting">"ఈ సెట్టింగ్‌ను మార్చడానికి, నా నంబర్‌ను ఎవరు చూడగలరు అనే దానిని ఎవరూ చూడలేరుకు సెట్ చేయండి."</string>
     <!-- Dialog title shown when selecting "Nobody" in phone number privacy settings for who can find me by number -->
-    <string name="PhoneNumberPrivacySettingsFragment__nobody_can_find_me_warning_title">Are you sure?</string>
+    <string name="PhoneNumberPrivacySettingsFragment__nobody_can_find_me_warning_title">ఖచ్చితంగా చేయాలా?</string>
     <!-- Dialog warning message shown when selecting "Nobody" in phone number privacy settings for who can find me by number -->
-    <string name="PhoneNumberPrivacySettingsFragment__nobody_can_find_me_warning_message">Setting \"Who can find me by number\" to \"Nobody\" will make it harder for people to find you on Signal.</string>
+    <string name="PhoneNumberPrivacySettingsFragment__nobody_can_find_me_warning_message">\"నంబరు ద్వారా నన్ను ఎవరు కనుగొనగలరు\" అనే సెట్టింగ్‌ను \"ఎవరూ లేరు\" కు సెట్ చేయడం వలన వ్యక్తులు మిమ్మల్ని Signal లో కనుగొనడం కష్టతరం చేస్తుంది.</string>
     <!-- Dialog button text for canceling change action -->
-    <string name="PhoneNumberPrivacySettingsFragment__cancel">Cancel</string>
+    <string name="PhoneNumberPrivacySettingsFragment__cancel">రద్దు చేయండి</string>
     <string name="PhoneNumberPrivacy_everyone">ప్రతి ఒక్కరూ</string>
     <string name="PhoneNumberPrivacy_nobody">యెవరు లేరు</string>
     <string name="preferences_app_protection__screen_lock">స్క్రీన్ తాళం</string>
@@ -3962,6 +4040,8 @@
     <string name="TransferOrRestoreFragment__you_need_access_to_your_old_device">మీకు మీ పాత పరికరానికి యాక్సెస్ అవసరం.</string>
     <string name="TransferOrRestoreFragment__restore_from_backup">బ్యాకప్ నుంచి పునరుద్ధరించండి</string>
     <string name="TransferOrRestoreFragment__restore_your_messages_from_a_local_backup">స్థానిక బ్యాకప్ నుంచి మీ సందేశాలను పునరుద్ధరించండి. మీరు ఇప్పుడు పునరుద్ధరించలేకపోతే, మీరు తరువాత పునరుద్ధరించలేరు.</string>
+    <!-- Button label for more options -->
+    <string name="TransferOrRestoreFragment__more_options">మరిన్ని ఎంపికలు</string>
 
     <!-- NewDeviceTransferInstructionsFragment -->
     <string name="NewDeviceTransferInstructions__open_signal_on_your_old_android_phone">మీ పాత Android పరికరంపై Signal ను తెరవండి</string>
@@ -4102,6 +4182,7 @@
     <string name="RecipientBottomSheet_copied_to_clipboard">క్లిప్బోర్డ్కు కాపీ చేయబడింది</string>
 
     <string name="GroupRecipientListItem_admin">అడ్మిన్</string>
+    <!-- Button text to approve a user that has requested to join a group -->
     <string name="GroupRecipientListItem_approve_description">ఆమోదించడానికి</string>
     <string name="GroupRecipientListItem_deny_description">తిరస్కరించండి</string>
 
@@ -4129,6 +4210,7 @@
 
     <!-- VoiceNoteMediaDescriptionCompatFactory -->
     <string name="VoiceNoteMediaItemFactory__voice_message">వాయిస్ సందేశం · %1$s</string>
+    <!-- This is a title in a banner describing the conversation sender to receiver placeholders of the currently playing voice memo. -->
     <string name="VoiceNoteMediaItemFactory__s_to_s">%1$sకు%2$s</string>
 
     <!-- StorageUtil -->
@@ -4142,8 +4224,16 @@
     <string name="ReviewCardDialogFragment__review_members">సభ్యులను సమీక్షించండి</string>
     <!-- Title of a screen where the user will be prompted to review a message request matching the name of someone they already know -->
     <string name="ReviewCardDialogFragment__review_request">అభ్యర్థనను సమీక్షించండి</string>
-    <string name="ReviewCardDialogFragment__d_group_members_have_the_same_name">%1$d మంది సమూహ సభ్యులకు ఒకే పేరు ఉంది, దిగువ సభ్యులను సమీక్షించండి మరియు చర్య తీసుకోవడానికి ఎంచుకోండి.</string>
-    <string name="ReviewCardDialogFragment__if_youre_not_sure">అభ్యర్థన ఎవరో మీకు తెలియకపోతే, దిగువ పరిచయాలను సమీక్షించి చర్య తీసుకోండి.</string>
+    <!-- Message of a screen where the user will be prompted to review a message request matching the name of someone they already know -->
+    <plurals name="ReviewCardDialogFragment__d_group_members_have_the_same_name">
+        <item quantity="one">%1$d group member have the same name, review the member below and choose to take action.</item>
+        <item quantity="other">%1$d group members have the same name, review the members below and choose to take action.</item>
+    </plurals>
+    <!-- Message of a screen where the user will be prompted to review a message request matching the name of someone they already know -->
+    <plurals name="ReviewCardDialogFragment__if_youre_not_sure">
+        <item quantity="one">If you\'re not sure who the request is from, review the contact below and take action.</item>
+        <item quantity="other">If you\'re not sure who the request is from, review the contacts below and take action.</item>
+    </plurals>
     <string name="ReviewCardDialogFragment__no_other_groups_in_common">ఉమ్మడిగా ఇతర సమూహాలు లేవు.</string>
     <string name="ReviewCardDialogFragment__no_groups_in_common">సాధారణమైన సమూహాలు లేవు</string>
     <plurals name="ReviewCardDialogFragment__d_other_groups_in_common">
@@ -4168,17 +4258,26 @@
     <!-- Displayed when a recent name change has occurred. First placeholder is new short name, second is previous name, third is new name. -->
     <string name="ReviewCard__s_recently_changed">%1$s ఇటీవల వారి ప్రొఫైల్ పేరును %2$s నుండి %3$s‌కు మార్చారు</string>
     <!-- Displayed when a review user is in your system contacts. Placeholder is short name. -->
-    <string name="ReviewCard__s_is_in_your_system_contacts">%1$s మీ సిస్టమ్ కాంటాక్ట్‌లలో ఉన్నారు</string>
+    <string name="ReviewCard__s_is_in_your_system_contacts">%1$s మీ ఫోన్ కాంటాక్ట్‌లలో ఉంది</string>
 
     <!-- CallParticipantsListUpdatePopupWindow -->
     <string name="CallParticipantsListUpdatePopupWindow__s_joined">%1$s చేరారు</string>
     <string name="CallParticipantsListUpdatePopupWindow__s_and_s_joined">%1$s మరియు %2$s చేరారు</string>
     <string name="CallParticipantsListUpdatePopupWindow__s_s_and_s_joined">%1$s,%2$s మరియు %3$s చేరారు</string>
-    <string name="CallParticipantsListUpdatePopupWindow__s_s_and_d_others_joined">%1$s, %2$s, మరో %3$d మంది చేరారు</string>
+    <!-- Toast message shown in group call when 3 or more people join -->
+    <plurals name="CallParticipantsListUpdatePopupWindow__s_s_and_d_others_joined">
+        <item quantity="one">%1$s, %2$s and %3$d other joined</item>
+        <item quantity="other">%1$s, %2$s and %3$d others joined</item>
+    </plurals>
+    <!-- Toast/popup text shown when someone leaves a group call -->
     <string name="CallParticipantsListUpdatePopupWindow__s_left">%1$s వెళ్ళిపోయారు</string>
     <string name="CallParticipantsListUpdatePopupWindow__s_and_s_left">%1$s మరియు %2$s వెళ్ళిపోయారు</string>
     <string name="CallParticipantsListUpdatePopupWindow__s_s_and_s_left">%1$s, %2$s మరియు %3$s వెళ్ళిపోయారు</string>
-    <string name="CallParticipantsListUpdatePopupWindow__s_s_and_d_others_left">%1$s, %2$s మరియు %3$d ఇతరులు వెళ్ళిపోయారు</string>
+    <!-- Toast message shown in group call when 3 or more people leave -->
+    <plurals name="CallParticipantsListUpdatePopupWindow__s_s_and_d_others_left">
+        <item quantity="one">%1$s, %2$s and %3$d other left</item>
+        <item quantity="other">%1$s, %2$s and %3$d others left</item>
+    </plurals>
 
     <string name="CallParticipant__you">మీరు</string>
     <string name="CallParticipant__you_on_another_device">మీరు (మరొక పరికరంలో)</string>
@@ -4412,7 +4511,7 @@
     <!-- Label for our high quality media conversion. This has better quality than standard. -->
     <string name="QualitySelectorBottomSheetDialog__slower_more_data">నెమ్మదిగా, మరింత డేటా</string>
     <!-- Title heading for our media conversion quality selector. -->
-    <string name="QualitySelectorBottomSheetDialog__media_quality">Media quality</string>
+    <string name="QualitySelectorBottomSheetDialog__media_quality">మీడియా నాణ్యత</string>
 
     <!-- AppSettingsFragment -->
     <string name="AppSettingsFragment__invite_your_friends">మీ స్నేహితులను ఆహ్వానించండి</string>
@@ -4548,10 +4647,15 @@
 
     <!-- PrivacySettingsFragment -->
     <string name="PrivacySettingsFragment__blocked">బ్లాక్ చేయబడింది</string>
-    <string name="PrivacySettingsFragment__d_contacts">%1$d కాంటాక్ట్‌లు</string>
+    <!-- Settings label that shows the number blocked contacts -->
+    <plurals name="PrivacySettingsFragment__d_contacts">
+        <item quantity="one">%1$d contact</item>
+        <item quantity="other">%1$d contacts</item>
+    </plurals>
     <string name="PrivacySettingsFragment__messaging">సందేశం</string>
     <string name="PrivacySettingsFragment__disappearing_messages">అదృశ్యమవుతున్న సందేశాలు</string>
     <string name="PrivacySettingsFragment__app_security">యాప్ సెక్యూరిటీ</string>
+    <!-- This refers to the multi-tasking overview (recent apps) from the Android operating system.-->
     <string name="PrivacySettingsFragment__block_screenshots_in_the_recents_list_and_inside_the_app">ఇటీవలి జాబితాలో మరియు యాప్ లోపల స్క్రీన్‌షాట్‌లను బ్లాక్ చేయండి</string>
     <string name="PrivacySettingsFragment__signal_message_and_calls">Signal సందేశాలు మరియు కాల్స్, ఎల్లప్పుడూ రిలే కాల్స్, మరియు సీల్ చేయబడ్డ సెండర్</string>
     <string name="PrivacySettingsFragment__default_timer_for_new_changes">కొత్త చాట్‌ల కొరకు డిఫాల్ట్ టైమర్</string>
@@ -4608,11 +4712,14 @@
     <string name="DataAndStorageSettingsFragment__media_quality">మీడియా నాణ్యత</string>
     <string name="DataAndStorageSettingsFragment__sent_media_quality">పంపిన మీడియా నాణ్యత</string>
     <string name="DataAndStorageSettingsFragment__sending_high_quality_media_will_use_more_data">అధిక నాణ్యత కలిగిన మీడియాను పంపడం వల్ల మరింత డేటా ఉపయోగించబడుతుంది.</string>
+    <!-- Setting option that can be selected to default media to be sent as high quality by default -->
     <string name="DataAndStorageSettingsFragment__high">అధికం</string>
+    <!-- Setting option that can be selected to default media to be sent as standard quality by default -->
     <string name="DataAndStorageSettingsFragment__standard">ప్రామాణికం</string>
     <string name="DataAndStorageSettingsFragment__calls">కాల్స్</string>
 
     <!-- ChatColorSelectionFragment -->
+    <!-- Text shown on a circle button to indicate the app will automatically select a color for conversation bubbles for this chat. -->
     <string name="ChatColorSelectionFragment__auto">ఆటో</string>
     <string name="ChatColorSelectionFragment__use_custom_colors">కస్టమ్ రంగులను ఉపయోగించండి</string>
     <string name="ChatColorSelectionFragment__chat_color">చాట్ రంగు</string>
@@ -4719,7 +4826,7 @@
     <string name="ConversationSettingsFragment__disappearing_messages">అదృశ్యమవుతున్న సందేశాలు</string>
     <string name="ConversationSettingsFragment__sounds_and_notifications">సౌండ్‌లు &amp; నోటిఫికేషన్‌లు</string>
   <!-- Removed by excludeNonTranslatables <string name="ConversationSettingsFragment__internal_details" translatable="false">Internal details</string> -->
-    <string name="ConversationSettingsFragment__contact_details">సంప్రదింపు వివరాలు</string>
+    <string name="ConversationSettingsFragment__contact_details">ఫోన్ కాంటాక్ట్ సమాచారం</string>
     <string name="ConversationSettingsFragment__view_safety_number">భద్రతా సంఖ్యను వీక్షించండి</string>
     <string name="ConversationSettingsFragment__block">బ్లాక్ చేయండి</string>
     <string name="ConversationSettingsFragment__block_group">గ్రూప్‌ను బ్లాక్ చేయండి</string>
@@ -4824,6 +4931,7 @@
     <string name="AvatarPickerFragment__take_a_picture">చిత్రాన్ని తీసుకోండి</string>
     <string name="AvatarPickerFragment__choose_a_photo">ఒక ఫోటోని ఎంచుకోండి</string>
     <string name="AvatarPickerFragment__photo">ఛాయాచిత్రం</string>
+    <!-- Button label during avatar selection/creation that when tapped lets you generate an avatar from typed in text. -->
     <string name="AvatarPickerFragment__text">వచనం</string>
     <string name="AvatarPickerFragment__save">భద్రపరుచు</string>
     <string name="AvatarPickerFragment__clear_avatar">అవతార్ తీసివేయండి</string>
@@ -4884,26 +4992,32 @@
     <string name="MediaReviewFragment__add_a_message">ఒక సందేశాన్ని జోడించండి</string>
     <string name="MediaReviewFragment__add_a_reply">ప్రత్యుత్తరమును జోడించండి</string>
     <string name="MediaReviewFragment__send_to">వీరికి పంపండి</string>
-    <string name="MediaReviewFragment__view_once_message">సందేశాన్ని ఒక్కసారి చూడండి</string>
+    <string name="MediaReviewFragment__view_once_message">ఒక్కసారి వీక్షించదగిన మీడియా</string>
     <string name="MediaReviewFragment__one_or_more_items_were_too_large">ఒకటి లేదా అంతకంటే ఎక్కువ ఐటమ్‌లు చాలా పొడవుగా ఉన్నాయి</string>
     <string name="MediaReviewFragment__one_or_more_items_were_invalid">ఒకటి లేదా అంతకంటే ఎక్కువ ఐటమ్‌లు చెల్లుబాటు కావు.</string>
     <string name="MediaReviewFragment__too_many_items_selected">చాలా ఎక్కువగా ఐటమ్‌లు ఎంచుకోబడ్డాయి</string>
     <!-- Small notification presented to the user when they set their video to view-once mode -->
-    <string name="MediaReviewFragment__video_set_to_view_once">Video set to view once</string>
+    <string name="MediaReviewFragment__video_set_to_view_once">ఒకసారి వీక్షించేందుకు వీడియో సెట్ చేయబడింది</string>
     <!-- Small notification presented to the user when they set their photo to view-once mode -->
-    <string name="MediaReviewFragment__photo_set_to_view_once">Photo sent to view once</string>
+    <string name="MediaReviewFragment__photo_set_to_view_once">ఒకసారి వీక్షించేందుకు ఫోటో సెట్ చేయబడింది</string>
     <!-- Small notification presented to the user when they set their video to be sent in high visual quality. -->
-    <string name="MediaReviewFragment__video_set_to_high_quality">Video set to high quality</string>
+    <string name="MediaReviewFragment__video_set_to_high_quality">అధిక నాణ్యతకు వీడియో సెట్ చేయబడింది</string>
     <!-- Small notification presented to the user when they set their video to be sent in standard (lower than high) visual quality. -->
-    <string name="MediaReviewFragment__video_set_to_standard_quality">Video set to standard quality</string>
+    <string name="MediaReviewFragment__video_set_to_standard_quality">ప్రామాణిక నాణ్యతకు వీడియో సెట్ చేయబడింది</string>
     <!-- Small notification presented to the user when they set their still image to be sent in high visual quality. -->
-    <string name="MediaReviewFragment__photo_set_to_high_quality">Photo set to high quality</string>
+    <string name="MediaReviewFragment__photo_set_to_high_quality">అధిక నాణ్యతకు ఫోటో సెట్ చేయబడింది</string>
     <!-- Small notification presented to the user when they set their still image to be sent in standard (lower than high) visual quality. -->
-    <string name="MediaReviewFragment__photo_set_to_standard_quality">Photo set to standard quality</string>
+    <string name="MediaReviewFragment__photo_set_to_standard_quality">ప్రామాణిక నాణ్యతకు ఫోటో సెట్ చేయబడింది</string>
     <!-- Small notification presented to the user when they set multiple media items to be sent in high visual quality. -->
-    <string name="MediaReviewFragment__items_set_to_high_quality">%1$d items set to high quality</string>
+    <plurals name="MediaReviewFragment__items_set_to_high_quality">
+        <item quantity="one">%1$d అంశం అధిక నాణ్యతకు సెట్ చేయబడింది</item>
+        <item quantity="other">%1$d అంశాలు అధిక నాణ్యతకు సెట్ చేయబడ్డాయి</item>
+    </plurals>
     <!-- Small notification presented to the user when they set multiple media items to be sent in standard (lower than high) visual quality. -->
-    <string name="MediaReviewFragment__items_set_to_standard_quality">%1$d items set to standard quality</string>
+    <plurals name="MediaReviewFragment__items_set_to_standard_quality">
+        <item quantity="one">%1$d అంశం ప్రామాణిక నాణ్యతకు సెట్ చేయబడింది</item>
+        <item quantity="other">%1$d అంశాలు ప్రామాణిక నాణ్యతకు సెట్ చేయబడ్డాయి</item>
+    </plurals>
 
     <string name="ImageEditorHud__cancel">రద్దు</string>
     <string name="ImageEditorHud__draw">గీయండి</string>
@@ -4929,18 +5043,18 @@
     <string name="MediaReviewImagePageFragment__youll_lose_any_changes">ఈ ఫోటోకు మీరు చేసిన ఏవైనా మార్పులను మీరు కోల్పోతారు.</string>
 
     <!-- The title of a dialog notifying that a user was found matching a scanned QR code. The placeholder is a username. Usernames are always latin characters. -->
-    <string name="MediaCaptureFragment_username_dialog_title">Found %1$s</string>
+    <string name="MediaCaptureFragment_username_dialog_title">%1$s ను కనుగొన్నాము</string>
     <!-- The body of a dialog notifying that a user was found matching a scanned QR code, prompting the user to start a chat with them. The placeholder is a username. Usernames are always latin characters. -->
-    <string name="MediaCaptureFragment_username_dialog_body">Start a chat with \"%1$s\"</string>
+    <string name="MediaCaptureFragment_username_dialog_body">\"%1$s\"తో చాట్‌ను ప్రారంభించండి</string>
     <!-- The label of a dialog asking the user if they would like to start a chat with a specific user. -->
-    <string name="MediaCaptureFragment_username_dialog_go_to_chat_button">Go to chat</string>
+    <string name="MediaCaptureFragment_username_dialog_go_to_chat_button">చాట్‌కు వెళ్ళండి</string>
 
     <!-- The title of a dialog notifying that the user scanned a QR code that could be used to link a Signal device. -->
-    <string name="MediaCaptureFragment_device_link_dialog_title">Link device?</string>
+    <string name="MediaCaptureFragment_device_link_dialog_title">పరికరాన్ని లింక్ చేసేదా?</string>
     <!-- The body of a dialog notifying that the user scanned a QR code that could be used to link a Signal device. -->
-    <string name="MediaCaptureFragment_device_link_dialog_body">It looks like you\'re trying to link a Signal device. Tap continue and scan the code again to link it.</string>
+    <string name="MediaCaptureFragment_device_link_dialog_body">మీరు Signal పరికరాన్ని లింక్ చేయడానికి ప్రయత్నిస్తున్నట్టు కనిపిస్తోంది. దాన్ని లింక్ చేయడానికి కొనసాగించును తట్టండి మరియు కోడ్‌ను మళ్ళీ స్కాన్ చేయండి.</string>
     <!-- The label of a dialog asking the user if they would like to continue to the linked device settings screen. -->
-    <string name="MediaCaptureFragment_device_link_dialog_continue">Continue</string>
+    <string name="MediaCaptureFragment_device_link_dialog_continue">కొనసాగండి</string>
 
 
     <string name="BadgesOverviewFragment__my_badges">నా బ్యాడ్జీలు</string>
@@ -5040,7 +5154,7 @@
     <!-- Displayed as a subtitle on a row in the Manage Donations screen when payment for a donation is pending -->
     <string name="MySupportPreference__payment_pending">చెల్లింపు పెండింగ్‌లో ఉంది</string>
     <!-- Displayed as a dialog message when clicking on a donation row that is pending. Placeholder is a formatted fiat amount -->
-    <string name="MySupportPreference__your_bank_transfer_of_s">Your bank transfer of %1$s is pending. Bank transfers can take 1 to 14 business days to complete.  </string>
+    <string name="MySupportPreference__your_bank_transfer_of_s">మీ %1$s బ్యాంక్ బదిలీ పెండింగ్‌లో ఉంది. బ్యాంక్ బదిలీలు పూర్తి కావడానికి 1 నుండి 14 వ్యాపార రోజులు పట్టవచ్చు.  </string>
     <!-- Displayed in the pending help dialog, used to launch user to more details about bank transfers -->
     <string name="MySupportPreference__learn_more">మరింత తెలుసుకోండి</string>
 
@@ -5471,7 +5585,7 @@
     <string name="StoryViewerFragment__s_s">%1$s %2$s</string>
     <!-- Displayed when viewing a post you sent -->
     <string name="StoryViewerPageFragment__you">మీరు</string>
-    <!-- Displayed when viewing a post displayed to a group -->
+    <!-- Displayed when viewing a story sent to a group, placeholders are person who sent the story and the group name -->
     <string name="StoryViewerPageFragment__s_to_s">%1$sకు%2$s</string>
     <!-- Displayed when viewing a post from another user with no replies -->
     <string name="StoryViewerPageFragment__reply">స్పంధించు</string>
@@ -5564,7 +5678,7 @@
     <!-- Signal connections sheet bullet point 2 -->
     <string name="SignalConnectionsBottomSheet__accepting_a_message_request">సందేశం అభ్యర్ధన ఆమోదించడం</string>
     <!-- Signal connections sheet bullet point 3 -->
-    <string name="SignalConnectionsBottomSheet__having_them_in_your_system_contacts">మీ సిస్టమ్ కాంటాక్ట్‌ల్లో వారు ఉండటం</string>
+    <string name="SignalConnectionsBottomSheet__having_them_in_your_system_contacts">వాటిని మీ ఫోన్ కాంటాక్ట్‌లలో కలిగి ఉండటం</string>
     <!-- Note at the bottom of the Signal connections sheet -->
     <string name="SignalConnectionsBottomSheet__your_connections_can_see_your_name">"మీ కనెక్షన్స్ మీ పేరు మరియు ఫోటోను చూడవచ్చు, మరియు వారి నుంచి మీరు దాచిపెడితే తప్ప నా స్టోరీకు పోస్ట్‌లను చూడవచ్చు."</string>
     <!-- Clickable option to add a viewer to a custom story -->
@@ -5984,9 +6098,9 @@
     <!-- Dialog title when a user tries to donate while they already have a pending donation. -->
     <string name="DonateToSignalFragment__you_have_a_donation_pending">మీకు ఒక విరాళం పెండింగులో ఉంది</string>
     <!-- Dialog body when a user tries to donate while they already have a pending monthly donation. -->
-    <string name="DonateToSignalFragment__bank_transfers_usually_take_1_business_day_to_process_monthly">Bank transfers can take 1 to 14 business days to process. Please wait until this payment completes before updating your subscription.</string>
+    <string name="DonateToSignalFragment__bank_transfers_usually_take_1_business_day_to_process_monthly">బ్యాంక్ బదిలీలు ప్రక్రియ కావడానికి 1 నుండి 14 వ్యాపార రోజులు పట్టవచ్చు. మీ సబ్‌స్క్రిప్షన్‌ను అప్‌డేట్ చేయడానికి ముందు ఈ చెల్లింపు పూర్తయ్యే వరకు దయచేసి వేచి ఉండండి.</string>
     <!-- Dialog body when a user tries to donate while they already have a pending one time donation. -->
-    <string name="DonateToSignalFragment__bank_transfers_usually_take_1_business_day_to_process_onetime">Bank transfers can take 1 to 14 business days to process. Please wait until this payment completes before making another donation.</string>
+    <string name="DonateToSignalFragment__bank_transfers_usually_take_1_business_day_to_process_onetime">బ్యాంక్ బదిలీలు ప్రక్రియ కావడానికి 1 నుండి 14 వ్యాపార రోజులు పట్టవచ్చు. మరొక విరాళం ఇచ్చే ముందు ఈ చెల్లింపు పూర్తయ్యే వరకు దయచేసి వేచి ఉండండి.</string>
     <!-- Dialog body when a user tries to donate while they already have a pending monthly donation. -->
     <string name="DonateToSignalFragment__your_payment_is_still_being_processed_monthly">మీ విరాళం ఇంకా ప్రక్రియ చేయబడుతోంది. మీ కనెక్షన్ ఆధారంగా దీనికి కొన్ని నిమిషాలు పట్టవచ్చు. మీ సబ్‌స్క్రిప్షన్‌ను అప్‌డేట్ చేయడానికి ముందు ఈ చెల్లింపు పూర్తయ్యే వరకు దయచేసి వేచి ఉండండి.</string>
     <!-- Dialog body when a user tries to donate while they already have a pending one time donation. -->
@@ -6138,7 +6252,7 @@
     <!-- Top text block of donation pending sheet displayed after one-time donation via a bank transfer. Placeholder is the badge name. -->
     <string name="DonationPendingBottomSheet__your_one_time_donation_is_pending">మీ ఒక్కసారి విరాళం పెండింగ్‌లో ఉంది. మీ విరాళం అందుకోబడినప్పుడు మీ ప్రొఫైల్‌పై మీరు %1$s బ్యాడ్జ్‌ను ప్రదర్శించగలుగుతారు.</string>
     <!-- Bottom text block of donation pending sheet displayed after donating via a bank transfer. Placeholder is for learn more. -->
-    <string name="DonationPendingBottomSheet__bank_transfers_usually_take">Bank transfers can take 1 to 14 business days to process. %1$s</string>
+    <string name="DonationPendingBottomSheet__bank_transfers_usually_take">బ్యాంక్ బదిలీలు ప్రక్రియ కావడానికి 1 నుండి 14 వ్యాపార రోజులు పట్టవచ్చు. %1$s</string>
     <!-- Learn more text for donation pending sheet displayed after donating via a bank transfer. -->
     <string name="DonationPendingBottomSheet__learn_more">మరింత తెలుసుకోండి</string>
     <!-- Confirmation button for donation pending sheet displayed after donating via a bank transfer. -->
@@ -6480,7 +6594,7 @@
     <!-- Displayed in action bar at the top of the fragment -->
     <string name="CallLinkDetailsFragment__call_details">కాల్ వివరాలు</string>
     <!-- Displayed in a text row, allowing the user to click and edit a call name -->
-    <string name="CallLinkDetailsFragment__edit_call_name">Edit call name</string>
+    <string name="CallLinkDetailsFragment__edit_call_name">కాల్ పేరును సవరించండి</string>
     <!-- Displayed in a text row, allowing the user to click and add a call name -->
     <string name="CallLinkDetailsFragment__add_call_name">కాల్ పేరును జోడించండి</string>
     <!-- Displayed in a toggle row, allowing the user to click to enable or disable member approval -->
@@ -6549,9 +6663,9 @@
     <!-- Shown on the generated username qr code image to explain how to use it. -->
     <string name="UsernameLinkSettings_scan_this_qr_code">Signal లో నాతో చాట్ చేయడానికి మీ ఫోన్‌తో ఈ QR కోడ్‌ను స్కాన్ చేయండి.</string>
     <!-- Dialog title shown when scanning an image from the gallery for a username QR code and there is no qr code in the image. -->
-    <string name="UsernameLinkSettings_qr_code_not_found">QR code not found</string>
+    <string name="UsernameLinkSettings_qr_code_not_found">QR కోడ్ కనుగొనబడలేదు</string>
     <!-- Dialog message shown when scanning an image from the gallery for a username QR code and there is no qr code in the image. -->
-    <string name="UsernameLinkSettings_try_scanning_another_image_containing_a_signal_qr_code">Try scanning another image containing a Signal QR code.</string>
+    <string name="UsernameLinkSettings_try_scanning_another_image_containing_a_signal_qr_code">Signal QR కోడ్ ఉన్న మరొక చిత్రాన్ని స్కాన్ చేయడానికి ప్రయత్నించండి.</string>
 
     <!-- Explanatory text at the top of a bottom sheet describing how username links work -->
     <string name="UsernameLinkShareBottomSheet_title">ఈ లింక్‌ను కలిగి ఉన్న ఎవరైనా మీ యూజర్‌నేమ్‌ను చూడగలరు మరియు మీతో చాటింగ్ ప్రారంభించగలరు. మీకు నమ్మకం ఉన్న వ్యక్తులతో మాత్రమే దీనిని పంచుకోండి.</string>
@@ -6644,9 +6758,70 @@
     <!-- Dialog action to invite the phone number to Signal -->
     <string name="FindByActivity__invite">ఆహ్వానించండి</string>
     <!-- Button label for a button that will launch a camera to scan a username QR code -->
-    <string name="FindByActivity__qr_scan_button">Scan QR code</string>
+    <string name="FindByActivity__qr_scan_button">QR కోడ్‌ను స్కాన్ చేయండి</string>
     <!-- Content of a dialog indicating that we could not perform the requested action because we encountered a network error. -->
-    <string name="FindByActivity__network_error_dialog">Encountered a network error. Try again later.</string>
+    <string name="FindByActivity__network_error_dialog">నెట్‌వర్క్ లోపాన్ని ఎదుర్కొంది. తరువాత మళ్ళీ ప్రయత్నించండి.</string>
+
+    <!-- Title for an alert letting someone know that one of their linked devices is inactive. -->
+    <string name="LinkedDeviceInactiveMegaphone_title">లింక్ చేసిన పరికరం క్రియారహితమైనది</string>
+    <!-- Body for an alert letting someone know that one of their linked devices is inactive. The string placeholder is the name of the device, and the number placeholder is the number of days before device is unlinked. -->
+    <plurals name="LinkedDeviceInactiveMegaphone_body">
+        <item quantity="one">\"%1$s\" లింక్ అయ్యి ఉండేలా చేయడానికి, ఆ పరికరంపై Signal ను %2$d రోజులోపు తెరవండి.</item>
+        <item quantity="other">\"%1$s\" లింక్ అయ్యి ఉండేలా చేయడానికి, ఆ పరికరంపై Signal ను %2$d రోజులలోపు తెరవండి.</item>
+    </plurals>
+    <!-- Button label for an alert letting someone know that one of their linked devices is inactive. When clicked, the user will opt out of all future alerts. -->
+    <string name="LinkedDeviceInactiveMegaphone_dont_remind_button_label">నాకు గుర్తు చేయకండి</string>
+    <!-- Button label for an alert letting someone know that one of their linked devices is inactive. When clicked, the alert will be dismissed. -->
+    <string name="LinkedDeviceInactiveMegaphone_got_it_button_label">అర్థమైంది</string>
+
+    <!-- NicknameFragment -->
+    <!-- Title displayed at the top of the screen -->
+    <string name="NicknameActivity__nickname">మారుపేరు</string>
+    <!-- Subtitle displayed under title -->
+    <string name="NicknameActivity__nicknames_amp_notes">మారుపేర్లు &amp; గమనికలు Signal లో నిల్వ చేయబడినవి మరియు ఎండ్-టు-ఎండ్ గుప్తీకరించబడివి. అవి మీకు మాత్రమే కనిపిస్తాయి.</string>
+    <!-- Field label for given name -->
+    <string name="NicknameActivity__first_name">మొదటి పేరు</string>
+    <!-- Content description for first name clear button -->
+    <string name="NicknameActivity__clear_first_name">మొదటి పేరు తొలగించండి</string>
+    <!-- Field label for family name -->
+    <string name="NicknameActivity__last_name">చివరి పేరు</string>
+    <!-- Content description for last name clear button -->
+    <string name="NicknameActivity__clear_last_name">చివరి పేరు తొలగించండి</string>
+    <!-- Field label for note -->
+    <string name="NicknameActivity__note">గమనిక</string>
+    <!-- Button label to save -->
+    <string name="NicknameActivity__save">సేవ్ చేయండి</string>
+    <!-- Dialog title for note and name deletion -->
+    <string name="NicknameActivity__delete_nickname">తొలగించేదా?</string>
+    <!-- Dialog message for note and name deletion -->
+    <string name="NicknameActivity__this_will_permanently_delete_this_nickname_and_note">ఇది మీరు సెట్ చేసిన మారుపేరు మరియు గమనికను శాశ్వతంగా తొలగిస్తుంది.</string>
+
+    <!-- ViewNoteBottomSheetDialogFragment -->
+    <!-- Sheet title -->
+    <string name="ViewNoteSheet__note">గమనిక</string>
+    <!-- Content description for opening the note editor -->
+    <string name="ViewNoteSheet__edit_note">గమనిక సవరించండి</string>
+
+    <!-- BackupProgressService -->
+    <!-- Notification title shown while backup restore job is running -->
+    <string name="BackupProgressService_title">బ్యాకప్ పునరుద్ధరించబడుతోంది…</string>
+    <!-- Notification title shown while downloading backup restore data -->
+    <string name="BackupProgressService_title_downloading">బ్యాకప్ డేటాను డౌన్‌లోడ్ చేస్తోంది…</string>
+
+    <!-- BackupsTypeSettingsFragment -->
+    <!-- Displayed as the user\'s payment method as a label in a preference row -->
+    <string name="BackupsTypeSettingsFragment__credit_or_debit_card">Credit or debit card</string>
+    <!-- Displayed as the user\'s payment method as a label in a preference row -->
+    <string name="BackupsTypeSettingsFragment__iDEAL">iDEAL</string>
+    <!-- Displayed as the user\'s payment method as a label in a preference row -->
+    <string name="BackupsTypeSettingsFragment__google_pay">Google Pay</string>
+    <!-- Displayed as the user\'s payment method as a label in a preference row -->
+    <string name="BackupsTypeSettingsFragment__bank_transfer">Bank transfer</string>
+    <!-- Displayed as the user\'s payment method as a label in a preference row -->
+    <string name="BackupsTypeSettingsFragment__paypal">PayPal</string>
+    <!-- Displayed as the user\'s payment method as a label in a preference row -->
+    <string name="BackupsTypeSettingsFragment__unknown">Unknown</string>
+
 
     <!-- EOF -->
 </resources>

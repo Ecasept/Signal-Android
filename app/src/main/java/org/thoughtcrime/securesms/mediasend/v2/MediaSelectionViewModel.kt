@@ -108,7 +108,7 @@ class MediaSelectionViewModel(
     store.update {
       it.copy(
         isMeteredConnection = metered,
-        isPreUploadEnabled = shouldPreUpload(metered, it.sendType.usesSmsTransport, it.recipient)
+        isPreUploadEnabled = shouldPreUpload(metered, it.recipient)
       )
     }
   }
@@ -121,7 +121,7 @@ class MediaSelectionViewModel(
       store.update(Recipient.live(recipientSearchKey.recipientId).liveData) { r, s ->
         s.copy(
           recipient = r,
-          isPreUploadEnabled = shouldPreUpload(s.isMeteredConnection, s.sendType.usesSmsTransport, r)
+          isPreUploadEnabled = shouldPreUpload(s.isMeteredConnection, r)
         )
       }
     }
@@ -320,11 +320,7 @@ class MediaSelectionViewModel(
   }
 
   fun getMediaConstraints(): MediaConstraints {
-    return if (store.state.sendType.usesSmsTransport) {
-      MediaConstraints.getMmsMediaConstraints(store.state.sendType.simSubscriptionId ?: -1)
-    } else {
-      MediaConstraints.getPushMediaConstraints()
-    }
+    return MediaConstraints.getPushMediaConstraints()
   }
 
   fun setSentMediaQuality(sentMediaQuality: SentMediaQuality) {
@@ -348,18 +344,27 @@ class MediaSelectionViewModel(
     store.update {
       val uri = it.focusedMedia?.uri ?: return@update it
       val data = it.getOrCreateVideoTrimData(uri)
-      val clampedStartTime = max(startTimeUs.toDouble(), 0.0).toLong()
+      val clampedStartTime = max(startTimeUs, 0)
 
-      val alreadyEdited = data.isDurationEdited
+      val unedited = !data.isDurationEdited
       val durationEdited = clampedStartTime > 0 || endTimeUs < totalDurationUs
-      val endMoved = data.endTimeUs != endTimeUs
+      val isEntireDuration = startTimeUs == 0L && endTimeUs == totalDurationUs
+      val endMoved = !isEntireDuration && data.endTimeUs != endTimeUs
       val maxVideoDurationUs: Long = if (it.isStory && !MediaConstraints.isVideoTranscodeAvailable()) {
         Stories.MAX_VIDEO_DURATION_MILLIS
       } else {
         it.transcodingPreset.calculateMaxVideoUploadDurationInSeconds(getMediaConstraints().getVideoMaxSize(context)).seconds.inWholeMicroseconds
       }
-      val updatedData = clampToMaxClipDuration(VideoTrimData(durationEdited, totalDurationUs, clampedStartTime, endTimeUs), maxVideoDurationUs, !alreadyEdited || !endMoved)
-      if (!alreadyEdited && durationEdited) {
+      val preserveStartTime = unedited || !endMoved
+      val videoTrimData = VideoTrimData(durationEdited, totalDurationUs, clampedStartTime, endTimeUs)
+      val updatedData = clampToMaxClipDuration(videoTrimData, maxVideoDurationUs, preserveStartTime)
+
+      if (updatedData != videoTrimData) {
+        Log.d(TAG, "Video trim clamped from ${videoTrimData.startTimeUs}, ${videoTrimData.endTimeUs} to ${updatedData.startTimeUs}, ${updatedData.endTimeUs}")
+      }
+
+      if (unedited && durationEdited) {
+        Log.d(TAG, "Canceling upload because the duration has been edited for the first time..")
         cancelUpload(MediaBuilder.buildMedia(uri))
       }
       it.copy(
@@ -394,7 +399,6 @@ class MediaSelectionViewModel(
         stateMap = store.state.editorStateMap,
         quality = store.state.quality,
         message = store.state.message,
-        isSms = store.state.sendType.usesSmsTransport,
         isViewOnce = isViewOnceEnabled(),
         singleContact = destination.getRecipientSearchKey(),
         contacts = selectedContacts.ifEmpty { destination.getRecipientSearchKeyList() },
@@ -407,8 +411,7 @@ class MediaSelectionViewModel(
   }
 
   private fun isViewOnceEnabled(): Boolean {
-    return !store.state.sendType.usesSmsTransport &&
-      store.state.selectedMedia.size == 1 &&
+    return store.state.selectedMedia.size == 1 &&
       store.state.viewOnceToggleState == MediaSelectionState.ViewOnceToggleState.ONCE
   }
 
@@ -430,8 +433,8 @@ class MediaSelectionViewModel(
     repository.uploadRepository.cancelUpload(media)
   }
 
-  private fun shouldPreUpload(metered: Boolean, isSms: Boolean, recipient: Recipient?): Boolean {
-    return !metered && !isSms && !repository.isLocalSelfSend(recipient, isSms)
+  private fun shouldPreUpload(metered: Boolean, recipient: Recipient?): Boolean {
+    return !metered && !repository.isLocalSelfSend(recipient)
   }
 
   fun onSaveState(outState: Bundle) {
@@ -565,7 +568,7 @@ class MediaSelectionViewModel(
     private const val STATE_EDITOR_COUNT = "$STATE_PREFIX.editor_count"
 
     @JvmStatic
-    fun clampToMaxClipDuration(data: VideoTrimData, maxVideoDurationUs: Long, clampEnd: Boolean): VideoTrimData {
+    fun clampToMaxClipDuration(data: VideoTrimData, maxVideoDurationUs: Long, preserveStartTime: Boolean): VideoTrimData {
       if (!MediaConstraints.isVideoTranscodeAvailable()) {
         return data
       }
@@ -576,8 +579,8 @@ class MediaSelectionViewModel(
 
       return data.copy(
         isDurationEdited = true,
-        startTimeUs = if (!clampEnd) data.endTimeUs - maxVideoDurationUs else data.startTimeUs,
-        endTimeUs = if (clampEnd) data.startTimeUs + maxVideoDurationUs else data.endTimeUs
+        startTimeUs = if (!preserveStartTime) data.endTimeUs - maxVideoDurationUs else data.startTimeUs,
+        endTimeUs = if (preserveStartTime) data.startTimeUs + maxVideoDurationUs else data.endTimeUs
       )
     }
   }

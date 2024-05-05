@@ -45,8 +45,6 @@
     <string name="ApplicationPreferencesActivity_disable_passphrase">გამოვრთოთ პაროლფრაზა?</string>
     <string name="ApplicationPreferencesActivity_this_will_permanently_unlock_signal_and_message_notifications">ეს სამუდამოდ განბლოკავს Signal-ს და მიმოწერის შეტყობინებებს.</string>
     <string name="ApplicationPreferencesActivity_disable">გამორთვა</string>
-    <string name="ApplicationPreferencesActivity_disable_signal_messages_and_calls">გამოვრთოთ Signal-ის შეტყობინებები და ზარები?</string>
-    <string name="ApplicationPreferencesActivity_disable_signal_messages_and_calls_by_unregistering">Signal-ის შეტყობინებებისა და ზარების გათიშვა სერვერიდან რეგისტრაციის გაუქმებით. მომავალში მათი გამოყენებისათვის დაგჭირდება ტელეფონის ნომრის ხელახალი რეგისტრაცია.</string>
     <string name="ApplicationPreferencesActivity_error_connecting_to_server">სერვერთან დაკავშირებისას დაფიქსირდა შეცდომა!</string>
     <string name="ApplicationPreferencesActivity_pins_are_required_for_registration_lock">პინ-კოდი საჭიროა რეგისტრაციის ბლოკირებისთვის. პინ-კოდის გასათიშად, ჯერ უნდა გათიშო რეგისტრაციის ბლოკირება.</string>
     <string name="ApplicationPreferencesActivity_pin_created">პინ-კოდი შექმნილია.</string>
@@ -91,6 +89,16 @@
     <string name="AttachmentManager_signal_requires_the_external_storage_permission_in_order_to_attach_photos_videos_or_audio">სურათების, ვიდეოების ან აუდიოს მისამაგრებლად Signal-ს მეხსიერებაზე წვდომის ნებართვა სჭირდება, მაგრამ ის სამუდამოდ იქნა უარყოფილი. გთხოვთ გადახვიდე აპის პარამეტრების მენიუში, აირჩიე \"ნებართვები\" და გააქტიურე \"მეხსიერება\".</string>
     <string name="AttachmentManager_signal_requires_contacts_permission_in_order_to_attach_contact_information">საკონტაქტო ინფორმაციის მისაბმელად Signal-ს კონტაქტებზე წვდომის ნებართვა სჭირდება, მაგრამ ის სამუდამოდ იქნა უარყოფილი. გთხოვთ გადახვიდე აპის პარამეტრების მენიუში, აირჩიე \"ნებართვები\" და გააქტიურე \"კონტაქტები\".</string>
     <string name="AttachmentManager_signal_requires_location_information_in_order_to_attach_a_location">ადგილმდებარეობის საჩვენებლად Signal-ს ადგილმდებარეობაზე წვდომის ნებართვა სჭირდება, მაგრამ ის სამუდამოდ იქნა უარყოფილი. გთხოვთ, გადახვიდე აპის პარამეტრების მენიუში, აირჩიე \"ნებართვები\" და გააქტიურე \"ადგილმდებარეობა\".</string>
+
+    <!-- Dialog title asking users for location permission -->
+    <string name="AttachmentManager_signal_allow_access_location">Allow access to your location</string>
+    <!-- Dialog description that will explain the steps needed to give location permission -->
+    <string name="AttachmentManager_signal_to_send_location">To send your location:</string>
+    <!-- Alert dialog description asking for location permission -->
+    <string name="AttachmentManager_signal_allow_signal_access_location">Allow Signal access to send your location.</string>
+    <!-- Toast text explaining Signal\'s need for location access -->
+    <string name="AttachmentManager_signal_needs_location_access">Signal needs location access to send your location.</string>
+
     <!-- Alert dialog title to show the recipient has not activated payments -->
     <string name="AttachmentManager__not_activated_payments">%1$s-ს ტრანზაქციები არ გაუაქტიურებია </string>
     <!-- Alert dialog description to send the recipient a request to activate payments -->
@@ -309,7 +317,6 @@
     <string name="ConversationItem_error_network_not_delivered">გაგზავნა ვერ მოხერხდა</string>
     <string name="ConversationItem_group_action_left">%1$s დატოვა ჯგუფი.</string>
     <string name="ConversationItem_send_paused">გაგზავნა შეჩერებულია</string>
-    <string name="ConversationItem_click_to_approve_unencrypted">გაგზავნა ვერ მოხერხდა, დააჭირე არასაიმედო რეზერვისთვის</string>
     <string name="ConversationItem_click_to_approve_unencrypted_sms_dialog_title">დავაბრუნოთ დაუშიფრავ SMS-ზე?</string>
     <string name="ConversationItem_click_to_approve_unencrypted_mms_dialog_title">დავაბრუნოთ დაუშიფრავ MMS-ზე?</string>
     <string name="ConversationItem_click_to_approve_unencrypted_dialog_message">ეს მესიჯი <b>არ</b> იქნება დაშიფრული, რადგან მიმღები აღარ არის Signalს მომხმარებელი. \n\nგავაგზავნოთ დაუშიფრავი შეტყობინება?</string>
@@ -389,8 +396,16 @@
     <string name="ConversationActivity_your_request_to_join_has_been_sent_to_the_group_admin">შენი გაწევრიანების მოთხოვნა იქნა გაგზავნილი ჯგუფის ადმინთან. შენ მიიღებ შეტყობინებას, როდესაც ისინი რამეს მოიმოქმედებენ.</string>
     <string name="ConversationActivity_cancel_request">მოთხოვნის გაუქმება</string>
 
-    <string name="ConversationActivity_to_send_audio_messages_allow_signal_access_to_your_microphone">აუდიო შეტყობინებების გასაგზავნად, მიეცი Signal-ს წვდომა შენს მიკროფონზე.</string>
+    <!-- Dialog title asking users for microphone permission -->
+    <string name="ConversationActivity_allow_access_microphone">Allow access to your microphone</string>
+    <!-- Dialog description that will explain the steps needed to give microphone permissions -->
+    <string name="ConversationActivity_signal_to_send_audio_messages">To send audio messages:</string>
+    <!-- Alert dialog description asking for microphone permission in order to send voice messages -->
+    <string name="ConversationActivity_to_send_voice_messages_allow_signal_access_to_your_microphone">To send voice messages, allow Signal access to your microphone.</string>
+    <!-- Toast text explaining Signal\'s need for microphone access -->
+    <string name="ConversationActivity_signal_needs_microphone_access_voice_message">Signal needs microphone access to record a voice message.</string>
     <string name="ConversationActivity_signal_requires_the_microphone_permission_in_order_to_send_audio_messages">აუდიო შეტყობინებების გადასაგზავნად Signal-ს მიკროფონზე წვდომის ნებართვა სჭირდება, მაგრამ ის სამუდამოდ იქნა უარყოფილი. გთხოვთ, გადახვიდე აპის პარამეტრების მენიუში, აირჩიო \"უფლებები\" და ჩართო \"მიკროფონი\".</string>
+
     <string name="ConversationActivity_signal_needs_the_microphone_and_camera_permissions_in_order_to_call_s">%1$s-თან დასარეკად Signal-ს მიკროფონსა და კამერაზე წვდომის ნებართვა სჭირდება, მაგრამ ის სამუდამოდ იქნა უარყოფილი. გთხოვთ, გადახვიდე აპის პარამეტრების მენიუში, აირჩიო \"უფლებები\" და ჩართოთ \"მიკროფონი\" და \"კამერა\".</string>
     <string name="ConversationActivity_to_capture_photos_and_video_allow_signal_access_to_the_camera">სურათების და ვიდეოების გადასაღებად, მიეცი Signal-ს წვდომა კამერაზე.</string>
     <string name="ConversationActivity_signal_needs_the_camera_permission_to_take_photos_or_video">სურათების და ვიდეოების გადასაღებად Signal-ს კამერაზე წვდომის ნებართვა სჭირდება, მაგრამ ის სამუდამოდ იქნა უარყოფილი. გთხოვთ, გადახვიდე აპის პარამეტრების მენიუში, აირჩიო \"უფლებები\" და ჩართოთ \"კამერა\".</string>
@@ -414,10 +429,17 @@
     <string name="ConversationActivity_you_will_leave_this_group_and_it_will_be_deleted_from_all_of_your_devices">ამ ჯგუფს დატოვებ და ის შენი ყველა მოწყობილობიდან წაიშლება.</string>
     <string name="ConversationActivity_delete">წაშლა</string>
     <string name="ConversationActivity_delete_and_leave">წაშლა და დატოვება</string>
-    <string name="ConversationActivity__to_call_s_signal_needs_access_to_your_microphone">%1$s-თან დასარეკად, Signal-ს შენს მიკროფონზე წვდომა სჭირდება</string>
+
+    <!-- Dialog description that will explain the steps needed to give microphone permissions for a voice call -->
+    <string name="ConversationActivity__to_start_call">To start a call:</string>
+    <!-- Alert dialog description asking for microphone permission in order to start a voice call -->
+    <string name="ConversationActivity__to_call_signal_needs_access_to_your_microphone">To start a call, allow Signal access to your microphone.</string>
+    <!-- Toast text explaining Signal\'s need for microphone access for a voice call -->
+    <string name="ConversationActivity_signal_needs_microphone_access_voice_call">Signal needs microphone access to start a call.</string>
 
 
     <string name="ConversationActivity_join">შემოუერთდი</string>
+    <!-- Button text for an active group call but the call is currently full and unjoinable -->
     <string name="ConversationActivity_full">სრული</string>
 
     <string name="ConversationActivity_error_sending_media">მედია ფაილის გაგზავნისას შეცდომა მოხდა</string>
@@ -427,7 +449,7 @@
     <!-- Message shown when opening an SMS conversation with SMS disabled and there are no exported messages -->
     <string name="ConversationActivity__sms_messaging_is_no_longer_supported_in_signal_invite_s_to_to_signal_to_keep_the_conversation_here">SMS მიმოწერები Signal-ში აღარ არის ხელმისაწვდომი. მოიწვიე %1$s Signal-ში, რათა მიმოწერა აქ განაგრძოთ.</string>
     <!-- Message shown when opening a conversation with an unregistered user who used to be on Signal -->
-    <string name="ConversationActivity__this_person_is_no_longer_using_signal">This person is no longer using Signal. Invite them to Signal to keep the conversation here.</string>
+    <string name="ConversationActivity__this_person_is_no_longer_using_signal">ეს ადამიანი Signal-ს აღარ იყენებს. მოიწვიე ის Signal-ში, რათა მიმოწერა აქ განაგრძოთ.</string>
     <!-- Action button shown when opening an SMS conversation with SMS disabled and there are no exported messages -->
     <string name="ConversationActivity__invite_to_signal">მოიწვიე Signal-ში</string>
     <!-- Snackbar message shown after dismissing the full screen sms export megaphone indicating we\'ll do it again soon -->
@@ -616,6 +638,7 @@
     <string name="ConversationListFragment_unarchive">დეარქივაცია</string>
     <string name="ConversationListFragment_delete">წაშლა</string>
     <string name="ConversationListFragment_select_all">მონიშნე ყველა</string>
+    <!-- Screen title shown when selecting multiple items from a list like conversation threads or call logs. -->
     <plurals name="ConversationListFragment_s_selected">
         <item quantity="one">%1$d არჩეულია</item>
         <item quantity="other">%1$d არჩეულია</item>
@@ -867,6 +890,7 @@
         <item quantity="one">მოწვევა გაგზავნილია</item>
         <item quantity="other">გაგზავნილია %1$d მოწვევა</item>
     </plurals>
+    <!-- Dialog message shown when you are attempting to add a single contact to a group and you don\'t have enough information about them to do it automatically, so must do it via an invite instead. Placeholder is name/username/phone number. -->
     <string name="GroupManagement_invite_single_user">“%1$s”-ის შენს მიერ ამ ჯგუფში ავტომატურად დამატება შეუძლებელია.\n\nისინი მოწვეულნი არიან გასაწევრიანებლად და ვერ ნახავენ ჯგუფურ შეტყობინებებს, სანამ მოწვევას არ დაეთანხმებიან.</string>
     <string name="GroupManagement_invite_multiple_users">შენ მიერ ამ მომხმარებლების ამ ჯგუფში ავტომატურად დამატება შეუძლებელია.\n\nისინი მოწვეული არიან ჯგუფში გასაწევრიანებლად და ვერ ნახავენ ჯგუფურ შეტყობინებებს, სანამ მოწვევას არ დაეთანხმებიან.</string>
 
@@ -1047,7 +1071,9 @@
 
     <string name="ManageGroupActivity_edit_name_and_picture">სახელისა და სურათის რედაქტირება</string>
     <string name="ManageGroupActivity_legacy_group">მოძველებული ჯგუფი</string>
+    <!-- This is placed inside a "Learn More" text view, which automatically appends LearnMoreTextView_learn_more in code -->
     <string name="ManageGroupActivity_legacy_group_learn_more">ეს მოძველებული ჯგუფია. ჯგუფის ადმინების მსგავსი ფუნქციები მხოლოდ ახალი ჯგუფებისთვისაა ხელმისაწვდომი.</string>
+    <!-- This is placed inside a "Learn More" text view, which automatically appends LearnMoreTextView_learn_more in code to the end of the string -->
     <string name="ManageGroupActivity_legacy_group_upgrade">ეს მოძველებული ჯგუფია. იმისათვის, რომ მიიღო წვდომა ახალ ფუნქციებზე, მაგალითად @მონიშვნებსა და ადმინებზე,</string>
     <string name="ManageGroupActivity_legacy_group_too_large">ეს მოძველებული ჯგუფი ვერ განახლდება ახალ ჯგუფად, რადგან ზედმეტად დიდია. ჯგუფის მაქსიმალური ზომა არის %1$d.</string>
     <string name="ManageGroupActivity_upgrade_this_group">ამ ჯგუფის განახლება.</string>
@@ -1274,6 +1300,7 @@
         <item quantity="other">წაშლა</item>
     </plurals>
 
+    <!-- Screen title shown when selecting multiple items in the media overview screen. The first placeholder is the number of items, the second number is the cumulative file size in bytes. -->
     <plurals name="MediaOverviewActivity_d_selected_s">
         <item quantity="one">%1$d არჩეულია (%2$s)</item>
         <item quantity="other">%1$d არჩეულია (%2$s)</item>
@@ -1338,17 +1365,13 @@
     <string name="MessageRecord_left_group">შენ დატოვე ჯგუფი.</string>
     <string name="MessageRecord_you_updated_group">შენ განაახლე ჯგუფი.</string>
     <string name="MessageRecord_the_group_was_updated">ჯგუფი განახლებულია.</string>
-    <!-- Update message shown when placing an outgoing 1:1 voice/audio call and it\'s answered by the other party -->
+    <!-- Update message shown when placing an outgoing 1:1 voice/audio call -->
     <string name="MessageRecord_outgoing_voice_call">გამავალი ხმოვანი ზარი</string>
-    <!-- Update message shown when placing an outgoing 1:1 video call and it\'s answered by the other party -->
+    <!-- Update message shown when placing an outgoing 1:1 video call -->
     <string name="MessageRecord_outgoing_video_call">გამავალი ვიდეო ზარი</string>
-    <!-- Update message shown when placing an outgoing 1:1 voice/audio call and it\'s not answered by the other party -->
-    <string name="MessageRecord_unanswered_voice_call">უპასუხო ხმოვანი ზარი</string>
-    <!-- Update message shown when placing an outgoing 1:1 video call and it\'s not answered by the other party -->
-    <string name="MessageRecord_unanswered_video_call">უპასუხო ვიდეო ზარი</string>
-    <!-- Update message shown when receiving an incoming 1:1 voice/audio call and it\'s answered -->
+    <!-- Update message shown when receiving an incoming 1:1 voice/audio call and it\'s answered or ringing -->
     <string name="MessageRecord_incoming_voice_call">შემომავალი ხმოვანი ზარი</string>
-    <!-- Update message shown when receiving an incoming 1:1 video call and answered -->
+    <!-- Update message shown when receiving an incoming 1:1 video call and answered or ringing -->
     <string name="MessageRecord_incoming_video_call">შემომავალი ვიდეო ზარი</string>
     <!-- Update message shown when receiving an incoming 1:1 voice/audio call and not answered -->
     <string name="MessageRecord_missed_voice_call">გამოტოვებული ხმოვანი ზარი</string>
@@ -1358,10 +1381,6 @@
     <string name="MessageRecord_missed_voice_call_notification_profile">გამოტოვებული ხმოვანი ზარი ჩართული შეტყობინების პროფილის დროს</string>
     <!-- Update message shown when receiving an incoming video call and declined due to notification profile -->
     <string name="MessageRecord_missed_video_call_notification_profile">გამოტოვებული ვიდეო ზარი ჩართული შეტყობინების პროფილის დროს</string>
-    <!-- Update message shown when receiving an incoming 1:1 voice/audio call and explicitly declined -->
-    <string name="MessageRecord_you_declined_a_voice_call">შენ უარყავი ხმოვანი ზარი</string>
-    <!-- Update message shown when receiving an incoming 1:1 video call and explicitly declined -->
-    <string name="MessageRecord_you_declined_a_video_call">შენ უარყავი ვიდეო ზარი</string>
     <!-- Call update formatter string to place the update message next to a time stamp. e.g., \'Incoming voice call · 11:11am\' -->
     <string name="MessageRecord_call_message_with_date">%1$s · %2$s</string>
     <string name="MessageRecord_s_updated_group">%1$s-მა განაახლა ჯგუფი.</string>
@@ -1389,7 +1408,7 @@
     <string name="MessageRecord_changed_their_profile_name_from_to">%1$s-მა პროფილის სახელი %2$s ჩაანაცვლა %3$s-ით.</string>
     <string name="MessageRecord_changed_their_profile">%1$s-მა პროფილი შეცვალა.</string>
     <!-- Conversation update event message shown when you\'ve started a conversation by phone number or username and then learn their profile name. placeholder is username or phone number -->
-    <string name="MessageRecord_started_this_chat">You started this chat with %1$s.</string>
+    <string name="MessageRecord_started_this_chat">შენ წამოიწყე ეს ჩატი %1$s-თან.</string>
 
     <!-- GV2 specific -->
     <string name="MessageRecord_you_created_the_group">შენ ჯგუფი შექმენი.</string>
@@ -1570,28 +1589,53 @@
     <string name="MessageRecord_can_accept_payments">%1$s-ს უკვე შეუძლია ტრანზაქციები მიიღოს</string>
 
     <!-- Group Calling update messages -->
-    <string name="MessageRecord_s_started_a_group_call_s">%1$s-მა ჯგუფური ზარი წამოიწყო · %2$s</string>
-    <string name="MessageRecord_you_started_a_group_call_s">შენ დიწყე ჯგუფური ზარი · %1$s</string>
-    <string name="MessageRecord_s_is_in_the_group_call_s">%1$s ჯგუფურ ზარზეა · %2$s</string>
-    <string name="MessageRecord_you_are_in_the_group_call_s1">ჯგუფურ ზარზე ხარ · %1$s</string>
-    <string name="MessageRecord_s_and_s_are_in_the_group_call_s1">%1$s და %2$s ჯგუფურ ზარზე არიან · %3$s</string>
-    <string name="MessageRecord_group_call_s">ჯგუფური ზარი · %1$s</string>
-
-    <string name="MessageRecord_s_started_a_group_call">%1$s-მა ჯგუფური ზარი წამოიწყო</string>
-    <string name="MessageRecord_you_started_a_group_call">შენ დაიწყე ჯგუფური ზარი</string>
-    <string name="MessageRecord_s_is_in_the_group_call">%1$s ჯგუფურ ზარზეა</string>
-    <string name="MessageRecord_you_are_in_the_group_call">ჯგუფურ ზარზე ხარ</string>
-    <string name="MessageRecord_s_and_s_are_in_the_group_call">%1$s და %2$s ჯგუფურ ზარზე არიან</string>
-    <string name="MessageRecord_group_call">ჯგუფური ზარი</string>
+    <!-- Chat log text for an ongoing group call that has one participant with a placeholder for the short display name of the user that joined and a placeholder for formatted time -->
+    <string name="MessageRecord_s_is_in_the_call_s">%1$s არის ამ ზარზე · %2$s</string>
+    <!-- Chat log text for an ongoing group call only the local user has joined with a placeholder for formatted time -->
+    <string name="MessageRecord_you_are_in_the_call_s1">შენ ხარ ამ ზარზე · %1$s</string>
+    <!-- Chat log text for an ongoing group call with two participants with two placeholders for the short display name of the users that joined and a placeholder for formatted time -->
+    <string name="MessageRecord_s_and_s_are_in_the_call_s1">%1$s და %2$s ამ ზარზე არიან · %3$s</string>
+    <!-- Chat log text for an ongoing group call that has one participant -->
+    <string name="MessageRecord_s_is_in_the_call">%1$s ამ ზარზეა</string>
+    <!-- Chat log text for an ongoing group call only the local user has joined -->
+    <string name="MessageRecord_you_are_in_the_call">ამ ზარზე ხარ</string>
+    <!-- Chat log text for an ongoing group call with two participants with two placeholders, each for the short display name of the users that joined -->
+    <string name="MessageRecord_s_and_s_are_in_the_call">%1$s და %2$s ამ ზარზე არიან</string>
+    <!-- Chat log text for a group call that ended within the last 5 minutes -->
+    <string name="MessageRecord__the_video_call_has_ended">ეს ვიდეო ზარი დასრულდა</string>
+    <!-- Chat log text for a group call that ended within the last 5 minutes with a placeholder for formatted time -->
+    <string name="MessageRecord__the_video_call_has_ended_s">ეს ვიდეო ზარი დასრულდა · %1$s</string>
+    <!-- Chat log text for a group call that ended more than 5 minutes ago and was missed -->
+    <string name="MessageRecord__missed_video_call">გამოტოვებული ვიდეო ზარი</string>
+    <!-- Chat log text for a group call that ended more than 5 minutes ago and was missed with a placeholder for formatted time -->
+    <string name="MessageRecord__missed_video_call_s">გამოტოვებული ვიდეო ზარი · %1$s</string>
+    <!-- Chat log text for a group call that ended that the local user did not start -->
+    <string name="MessageRecord__incoming_video_call">შემომავალი ვიდეო ზარი</string>
+    <!-- Chat log text for a group call that ended that the local user did not start with a placeholder for formatted time -->
+    <string name="MessageRecord__incoming_video_call_s">შემომავალი ვიდეო ზარი · %1$s</string>
+    <!-- Chat log text for a group call that ended that the local user started -->
+    <string name="MessageRecord__outgoing_video_call">გამავალი ვიდეო ზარი</string>
+    <!-- Chat log text for a group call that ended that the local user started with a placeholder for formatted time -->
+    <string name="MessageRecord__outgoing_video_call_s">გამავალი ვიდეო ზარი · %1$s</string>
+    <!-- Chat log text for an ongoing group call that the local user started -->
+    <string name="MessageRecord__you_started_a_video_call">შენ წამოიწყე ვიდეო ზარი</string>
+    <!-- Chat log text for an ongoing group call that the local user started with a placeholder for formatted time -->
+    <string name="MessageRecord__you_started_a_video_call_s">შენ წამოიწყე ვიდეო ზარი · %1$s</string>
+    <!-- Chat log text for an ongoing group call that the local user has not joined with a placeholder for user\'s short display name -->
+    <string name="MessageRecord__s_started_a_video_call">%1$s-მა ვიდეო ზარი წამოიწყო</string>
+    <!-- Chat log text for an ongoing group call that the local user has not joined with a placeholder for user\'s short display name and a placeholder for formatted time -->
+    <string name="MessageRecord__s_started_a_video_call_s">%1$s-მა ვიდეო ზარი წამოიწყო · %2$s</string>
 
     <string name="MessageRecord_you">შენ</string>
 
-    <plurals name="MessageRecord_s_s_and_d_others_are_in_the_group_call_s">
+    <!-- Chat log text for an ongoing group call with more than two participants with placeholders for the first two joined users, a placeholder for the number of users in the call, and a placeholder for formatted time -->
+    <plurals name="MessageRecord_s_s_and_d_others_are_in_the_call_s">
         <item quantity="one">%1$s, %2$s, და %3$d სხვა ჯგუფურ ზარში არიან · %4$s</item>
         <item quantity="other">%1$s, %2$s, და %3$d სხვა ჯგუფურ ზარზე არიან · %4$s</item>
     </plurals>
 
-    <plurals name="MessageRecord_s_s_and_d_others_are_in_the_group_call">
+    <!-- Chat log text for an ongoing group call with more than two participants with placeholders for the first two joined users and a placeholder for the number of users in the call -->
+    <plurals name="MessageRecord_s_s_and_d_others_are_in_the_call">
         <item quantity="one">%1$s, %2$s, და %3$d სხვა ჯგუფურ ზარში არიან</item>
         <item quantity="other">%1$s, %2$s, და %3$d სხვა ჯგუფურ ზარზე არიან</item>
     </plurals>
@@ -1866,9 +1910,9 @@
     <!-- Utilized in the lobby before joining a call link -->
     <string name="WebRtcCallView__signal_call_link">Signal-ის ზარის ბმული</string>
     <!-- Warning displayed when entering a call via a link and you have Phone Number Privacy disabled-->
-    <string name="WebRtcCallView__anyone_who_joins_pnp_disabled">Anyone who joins this call via the link will see your name, photo, and phone number.</string>
+    <string name="WebRtcCallView__anyone_who_joins_pnp_disabled">ვინც ამ ზარზე ბმულის საშუალებით შევა, შენს სახელს, ფოტოსა და ტელეფონის ნომერს დაინახავს.</string>
     <!-- Warning displayed when entering a call via a link and you have Phone Number Privacy enabled-->
-    <string name="WebRtcCallView__anyone_who_joins_pnp_enabled">Anyone who joins this call via the link will see your name and photo.</string>
+    <string name="WebRtcCallView__anyone_who_joins_pnp_enabled">ვინც ამ ზარს ბმულის საშუალებით შეუერთდება, შენს სახელს და ფოტოს დაინახავს.</string>
     <!-- Displayed on the call screen as the status when waiting to be let into a call link by an admin -->
     <string name="WebRtcCallView__waiting_to_be_let_in">ელოდება შეშვებას…</string>
 
@@ -1975,7 +2019,7 @@
     <!-- Displayed in bottom sheet describing that the user has no direct messages with this person. The placeholder is a person\'s name. -->
     <string name="AboutSheet__no_direct_message">%1$s-სთან პირადი მიმოწერა ვერ მოიძებნა</string>
     <!-- Explains that the given user (placeholder is short name) is in the users system contact -->
-    <string name="AboutSheet__s_is_in_your_system_contacts">%1$s შენი სისტემის კონტაქტებშია</string>
+    <string name="AboutSheet__s_is_in_your_system_contacts">%1$s შენი მობილურის კონტაქტებშია</string>
     <!-- Notice in a row when user has no groups in common -->
     <string name="AboutSheet__you_have_no_groups_in_common">თქვენ საერთო ჯგუფები არ გაქვთ</string>
     <!-- Notice when a user is not a connection to review requests carefully -->
@@ -1989,6 +2033,8 @@
     <string name="AboutSheet__about">შესახებ</string>
     <!-- Text displayed in title for you -->
     <string name="AboutSheet__you">შენ</string>
+    <!-- Displays the name of a contact. The first placeholder is the name the user has assigned to that contact, the second name is the name the contact assigned to themselves -->
+    <string name="AboutSheet__user_set_display_name_and_profile_name">%1$s (%2$s)</string>
 
     <!-- CallParticipantsListDialog -->
     <plurals name="CallParticipantsListDialog_in_this_call">
@@ -2064,6 +2110,7 @@
     <!-- Generic error when the app is unable to request an SMS code for an unknown reason. -->
     <string name="RegistrationActivity_unable_to_request_verification_code">ვერიფიკაციის კოდის მოთხოვნა შეუძლებელია. გთხოვთ, შეამოწმო შენი ქსელის კავშირი და თავიდან სცადო.</string>
     <string name="RegistrationActivity_non_standard_number_format">ნომრის არასტანდარტული ფორმატი</string>
+    <!-- Dialog message shown to confirm when entering phone number (first placeholder) is normalized and formatted differently by the app (second placeholder). -->
     <string name="RegistrationActivity_the_number_you_entered_appears_to_be_a_non_standard">შენ მიერ შეყვანილი ნომერი (%1$s), როგორც ჩანს, არასტანდარტული ფორმატისაა. %2$s-ს გულისხმობდი?</string>
     <string name="RegistrationActivity_signal_android_phone_number_format">Signal Android-ი - ტელეფონის ნომრის ფორმატი</string>
     <!--    Small "toast" notification to the user confirming that they have requested a new code via voice call.-->
@@ -2710,6 +2757,8 @@
     <string name="ConversationUpdateItem_loading">იტვირთება</string>
     <string name="ConversationUpdateItem_learn_more">გაიგე მეტი</string>
     <string name="ConversationUpdateItem_join_call">ზარზე შესვლა</string>
+    <!-- Action button label for starting a new call in the current conversation -->
+    <string name="ConversationUpdateItem_call_back">გადარეკვა</string>
     <string name="ConversationUpdateItem_return_to_call">ზარზე დაბრუნება</string>
     <string name="ConversationUpdateItem_call_is_full">ზარი გადავსებულია</string>
     <string name="ConversationUpdateItem_invite_friends">მოიწვიე მეგობრები</string>
@@ -2774,6 +2823,7 @@
     <string name="safety_number_change_dialog__leave_call">ზარის დატოვება</string>
     <string name="safety_number_change_dialog__the_following_people_may_have_reinstalled_or_changed_devices">ამ ადამიანებმა შესაძლოა გადააყენეს ან შეცვალეს მოწყობილობები. კონფიდენციალურობის უზრუნველსაყოფად, დაადასტურე შენი უსაფრთხოების ნომერი მათთან.</string>
     <string name="safety_number_change_dialog__view">View</string>
+    <!-- Subtitle shown for a single contact and that their safety number was previously verified and is now no longer verified. -->
     <string name="safety_number_change_dialog__previous_verified">წინა ვერიფიცირებული</string>
 
     <!-- EnableCallNotificationSettingsDialog__call_notifications_checklist -->
@@ -2925,6 +2975,18 @@
     <string name="EditProfileFragment__group_name">ჯგუფის სახელი</string>
     <string name="EditProfileFragment__group_description">ჯგუფის აღწერილობა</string>
   <!-- Removed by excludeNonTranslatables <string name="EditProfileFragment__support_link" translatable="false">https://support.signal.org/hc/articles/360007459591</string> -->
+    <!-- The title of a dialog prompting user to update to the latest version of Signal. -->
+    <string name="EditProfileFragment_deprecated_dialog_title">Signal-ის განახლება</string>
+    <!-- The body of a dialog prompting user to update to the latest version of Signal. -->
+    <string name="EditProfileFragment_deprecated_dialog_body">Signal-ის ამ ვერსიას ვადა გაუვიდა. განაახლე ახლავე, რათა Signal-ის გამოყენება განაგრძო.</string>
+    <!-- The button on a dialog prompting user to update to the latest version of Signal. When clicked, the user will be taken to the store to update their app. -->
+    <string name="EditProfileFragment_deprecated_dialog_update_button">განახლება</string>
+    <!-- The title of a dialog informing the user that they cannot use this app feature when they are unregistered. -->
+    <string name="EditProfileFragment_unregistered_dialog_title">მოწყობილობა არ არის რეგისტრირებული</string>
+    <!-- The body of a dialog informing the user that they cannot use this app feature when they are unregistered. -->
+    <string name="EditProfileFragment_unregistered_dialog_body">ეს მოწყობილობა აღარ არის რეგისტრირებული. თავიდან დარეგისტრირდი, რომ შენს მონაცემებში ცვლილებები შეიტანო.</string>
+    <!-- The button on a dialog informing the user that they cannot use this app feature when they are unregistered. When clicked, the user will be taken to a screen to help them re-register. -->
+    <string name="EditProfileFragment_unregistered_dialog_reregister_button">ხელახლა რეგისტრაცია</string>
 
     <!-- EditProfileNameFragment -->
     <string name="EditProfileNameFragment_your_name">შენი სახელი</string>
@@ -3019,7 +3081,6 @@
         <item>სხვა</item>
         <item>ტრანზაქციები (MobileCoin)</item>
         <item>დონაციები &amp; ემბლემები</item>
-        <item>SMS ექსპორტირება</item>
     </string-array>
     <!-- Subject of email when submitting debug logs to help debug slow notifications -->
     <string name="DebugLogsPromptDialogFragment__signal_android_support_request">Signal Android-ის გამართვის ჟურნალის ატვირთვა</string>
@@ -3076,6 +3137,7 @@
 
     <string name="arrays__default">ძირითადი</string>
     <string name="arrays__high">მაღალი</string>
+    <!-- Setting title that represent an abstract priority to assign to notifications as the max/highest priority a notification can be within the system. -->
     <string name="arrays__max">მაქსიმალური</string>
 
     <!-- plurals.xml -->
@@ -3396,6 +3458,14 @@
     <!-- Storage permission row description -->
     <string name="GrantPermissionsFragment__send_photos_videos_and_files">გაგზავნე ფოტოები, ვიდეოები და ფაილები შენი მოწყობილობიდან.</string>
 
+    <!-- PermissionDeniedBottomSheet -->
+    <!-- Sheet describing step 1 on how to give permissions by opening settings -->
+    <string name="PermissionDeniedBottomSheet__1_tap_settings_below">1. Tap “Settings” below</string>
+    <!-- Sheet describing step 2 on how to give permissions by checking the permissions button in settings where %s will be replaced with an image of a checked button -->
+    <string name="PermissionDeniedBottomSheet__2_allow_permission">2. %1$s Allow the permission</string>
+    <!-- Label for button at the bottom of the sheet which opens the system permission settings -->
+    <string name="PermissionDeniedBottomSheet__settings">Settings</string>
+
     <!-- PaymentsSecuritySetupFragment -->
     <!-- Toolbar title -->
     <string name="PaymentsSecuritySetupFragment__security_setup">უსაფრთხოების პარამეტრების დაყენება</string>
@@ -3436,6 +3506,7 @@
     <string name="PaymentsDetailsFragment__sent_to_s">გაგზავნილია %1$s-სთან</string>
     <string name="PaymentsDetailsFragment__you_on_s_at_s">შენ %1$s-ს %2$s-ზე</string>
     <string name="PaymentsDetailsFragment__s_on_s_at_s">%1$s %2$s-ს %3$s-ზე</string>
+    <!-- Prefix to a name to indicate who a payment was sent to -->
     <string name="PaymentsDetailsFragment__to">To</string>
     <string name="PaymentsDetailsFragment__from">From</string>
     <string name="PaymentsDetailsFragment__information">ტრანზაქციის დეტალები, მათ შორის გადახდის თანხა და ტრანზაქციის დრო, არის MobileCoin Ledger-ის ნაწილი.</string>
@@ -3498,6 +3569,7 @@
     <string name="ConfirmPayment__confirm_payment">ტრანზაქციის დადასტურება</string>
     <string name="ConfirmPayment__network_fee">ქსელის საფასური</string>
     <string name="ConfirmPayment__estimated_s">ნავარაუდევი %1$s</string>
+    <!-- Prefix to a name to indicate who a payment will be sent to -->
     <string name="ConfirmPayment__to">To</string>
     <string name="ConfirmPayment__total_amount">ჯამი</string>
     <string name="ConfirmPayment__balance_s">ბალანსი: %1$s</string>
@@ -3648,6 +3720,14 @@
     <string name="conversation_group_options__conversation">ჩატი</string>
     <string name="conversation_group_options__broadcast">მაუწყებლობა</string>
 
+    <!-- DoubleTapEditEducationSheet -->
+    <!-- Displayed as the title of the education bottom sheet -->
+    <string name="DoubleTapEditEducationSheet__double_tap_edit_title">Double tap to edit</string>
+    <!-- Text on the sheet explaining how double tapping on a message will let them edit it -->
+    <string name="DoubleTapEditEducationSheet__quickly_tap_twice">Quickly tap twice on your messages to edit them. You can edit your messages up to 24hrs after they’ve been sent.</string>
+    <!-- Button label to dismiss sheet -->
+    <string name="DoubleTapEditEducationSheet__got_it">Got it</string>
+
     <!-- text_secure_normal -->
     <string name="text_secure_normal__menu_new_group">ახალი ჯგუფი</string>
     <string name="text_secure_normal__menu_settings">Settings</string>
@@ -3664,8 +3744,6 @@
     <string name="verify_display_fragment_context_menu__compare_with_clipboard">ბუფერთან შედარება</string>
 
     <!-- reminder_header -->
-    <string name="reminder_header_push_title">Signal-ის შეტყობინებებისა და ზარების ჩართვა</string>
-    <string name="reminder_header_push_text">განაახლე შენი კომუნიკაციის გამოცდილება.</string>
     <string name="reminder_header_service_outage_text">Signal-ი ტექნიკურ სირთულეებს განიცდის. ჩვენ ბევრს ვმუშაობთ სერვისის რაც შეიძლება სწრაფად აღდგენისთვის.</string>
     <string name="reminder_header_progress">%1$d%%</string>
     <!-- Body text of a banner that will show at the top of the chat list when we temporarily cannot process the user\'s contacts -->
@@ -3901,11 +3979,11 @@
     <!-- Snackbar text when pressing invalid radio item -->
     <string name="PhoneNumberPrivacySettingsFragment__to_change_this_setting">"ამ პარამეტრის შესაცვლელად, დააყენე \"ვინ ხედავს ჩემს ნომერს\" \"არავინ\"-ზე."</string>
     <!-- Dialog title shown when selecting "Nobody" in phone number privacy settings for who can find me by number -->
-    <string name="PhoneNumberPrivacySettingsFragment__nobody_can_find_me_warning_title">Are you sure?</string>
+    <string name="PhoneNumberPrivacySettingsFragment__nobody_can_find_me_warning_title">დარწმუნებული ხარ?</string>
     <!-- Dialog warning message shown when selecting "Nobody" in phone number privacy settings for who can find me by number -->
-    <string name="PhoneNumberPrivacySettingsFragment__nobody_can_find_me_warning_message">Setting \"Who can find me by number\" to \"Nobody\" will make it harder for people to find you on Signal.</string>
+    <string name="PhoneNumberPrivacySettingsFragment__nobody_can_find_me_warning_message">თუ „ვინ მიპოვის ნომრით“ პარამეტრს „არავინ“-ზე დააყენებ, სხვებს შენი Signal-ზე პოვნა გაურთულდებათ.</string>
     <!-- Dialog button text for canceling change action -->
-    <string name="PhoneNumberPrivacySettingsFragment__cancel">Cancel</string>
+    <string name="PhoneNumberPrivacySettingsFragment__cancel">გაუქმება</string>
     <string name="PhoneNumberPrivacy_everyone">ყველა</string>
     <string name="PhoneNumberPrivacy_nobody">არავინ</string>
     <string name="preferences_app_protection__screen_lock">Ეკრანის დაბლოკვა</string>
@@ -3962,6 +4040,8 @@
     <string name="TransferOrRestoreFragment__you_need_access_to_your_old_device">შენს ძველ მოწყობილობაზე წვდომა გჭირდება.</string>
     <string name="TransferOrRestoreFragment__restore_from_backup">სარეზერვო კოპიიდან აღდგენა</string>
     <string name="TransferOrRestoreFragment__restore_your_messages_from_a_local_backup">აღადგინე შენი შეტყობინებები ადგილობრივი სარეზერვო კოპიიდან. თუ ახლა არ აღადგენ, მოგვიანებით აღდგენას ვეღარ შეძლებ.</string>
+    <!-- Button label for more options -->
+    <string name="TransferOrRestoreFragment__more_options">მეტი ოფცია</string>
 
     <!-- NewDeviceTransferInstructionsFragment -->
     <string name="NewDeviceTransferInstructions__open_signal_on_your_old_android_phone">გახსენი Signal-ი შენს ძველ Android მობილურზე</string>
@@ -4102,6 +4182,7 @@
     <string name="RecipientBottomSheet_copied_to_clipboard">დაკოპირებულია ბუფერში</string>
 
     <string name="GroupRecipientListItem_admin">ადმინი</string>
+    <!-- Button text to approve a user that has requested to join a group -->
     <string name="GroupRecipientListItem_approve_description">დადასტურება</string>
     <string name="GroupRecipientListItem_deny_description">უარყოფა</string>
 
@@ -4129,6 +4210,7 @@
 
     <!-- VoiceNoteMediaDescriptionCompatFactory -->
     <string name="VoiceNoteMediaItemFactory__voice_message">ხმოვანი შეტყობინება · %1$s</string>
+    <!-- This is a title in a banner describing the conversation sender to receiver placeholders of the currently playing voice memo. -->
     <string name="VoiceNoteMediaItemFactory__s_to_s">%1$s %2$s-ს</string>
 
     <!-- StorageUtil -->
@@ -4142,8 +4224,16 @@
     <string name="ReviewCardDialogFragment__review_members">წევრების განხილვა</string>
     <!-- Title of a screen where the user will be prompted to review a message request matching the name of someone they already know -->
     <string name="ReviewCardDialogFragment__review_request">მოთხოვნის განხილვა</string>
-    <string name="ReviewCardDialogFragment__d_group_members_have_the_same_name">ჯგუფის %1$d წევრს აქვს იგივე სახელი, გადახედე ქვემოთ მოცემულ წევრებს და აირჩიე მოქმედება.</string>
-    <string name="ReviewCardDialogFragment__if_youre_not_sure">თუ არ ხარ დარწმუნებული, ვისგან არის მოთხოვნა, გადახედე ქვემოთ მოცემულ კონტაქტებს და მიიღე ზომები.</string>
+    <!-- Message of a screen where the user will be prompted to review a message request matching the name of someone they already know -->
+    <plurals name="ReviewCardDialogFragment__d_group_members_have_the_same_name">
+        <item quantity="one">%1$d group member have the same name, review the member below and choose to take action.</item>
+        <item quantity="other">%1$d group members have the same name, review the members below and choose to take action.</item>
+    </plurals>
+    <!-- Message of a screen where the user will be prompted to review a message request matching the name of someone they already know -->
+    <plurals name="ReviewCardDialogFragment__if_youre_not_sure">
+        <item quantity="one">If you\'re not sure who the request is from, review the contact below and take action.</item>
+        <item quantity="other">If you\'re not sure who the request is from, review the contacts below and take action.</item>
+    </plurals>
     <string name="ReviewCardDialogFragment__no_other_groups_in_common">არცერთი სხვა საერთო ჯგუფი.</string>
     <string name="ReviewCardDialogFragment__no_groups_in_common">არცერთი საერთო ჯგუფი.</string>
     <plurals name="ReviewCardDialogFragment__d_other_groups_in_common">
@@ -4168,17 +4258,26 @@
     <!-- Displayed when a recent name change has occurred. First placeholder is new short name, second is previous name, third is new name. -->
     <string name="ReviewCard__s_recently_changed">%1$s-მა პროფილის სახელი %2$s %3$s-ით ახლახანს შეცვალა</string>
     <!-- Displayed when a review user is in your system contacts. Placeholder is short name. -->
-    <string name="ReviewCard__s_is_in_your_system_contacts">%1$s შენი სისტემის კონტაქტებშია</string>
+    <string name="ReviewCard__s_is_in_your_system_contacts">%1$s შენი მობილურის კონტაქტებშია</string>
 
     <!-- CallParticipantsListUpdatePopupWindow -->
     <string name="CallParticipantsListUpdatePopupWindow__s_joined">%1$s შემოგიერთდათ</string>
     <string name="CallParticipantsListUpdatePopupWindow__s_and_s_joined">%1$s და %2$s შემოგიერთდნენ</string>
     <string name="CallParticipantsListUpdatePopupWindow__s_s_and_s_joined">%1$s, %2$s და %3$s შემოგიერთდნენ</string>
-    <string name="CallParticipantsListUpdatePopupWindow__s_s_and_d_others_joined">%1$s, %2$s და %3$d სხვები შემოგიერთდნენ</string>
+    <!-- Toast message shown in group call when 3 or more people join -->
+    <plurals name="CallParticipantsListUpdatePopupWindow__s_s_and_d_others_joined">
+        <item quantity="one">%1$s, %2$s and %3$d other joined</item>
+        <item quantity="other">%1$s, %2$s and %3$d others joined</item>
+    </plurals>
+    <!-- Toast/popup text shown when someone leaves a group call -->
     <string name="CallParticipantsListUpdatePopupWindow__s_left">%1$s გავიდა</string>
     <string name="CallParticipantsListUpdatePopupWindow__s_and_s_left">%1$s და %2$s გავიდნენ</string>
     <string name="CallParticipantsListUpdatePopupWindow__s_s_and_s_left">%1$s, %2$s და %3$s გავიდნენ</string>
-    <string name="CallParticipantsListUpdatePopupWindow__s_s_and_d_others_left">%1$s, %2$s და %3$d სხვები გავიდნენ</string>
+    <!-- Toast message shown in group call when 3 or more people leave -->
+    <plurals name="CallParticipantsListUpdatePopupWindow__s_s_and_d_others_left">
+        <item quantity="one">%1$s, %2$s and %3$d other left</item>
+        <item quantity="other">%1$s, %2$s and %3$d others left</item>
+    </plurals>
 
     <string name="CallParticipant__you">შენ</string>
     <string name="CallParticipant__you_on_another_device">შენ (სხვა მოწყობილობით)</string>
@@ -4412,7 +4511,7 @@
     <!-- Label for our high quality media conversion. This has better quality than standard. -->
     <string name="QualitySelectorBottomSheetDialog__slower_more_data">უფრო ნელი, მეტი მონაცემი</string>
     <!-- Title heading for our media conversion quality selector. -->
-    <string name="QualitySelectorBottomSheetDialog__media_quality">Media quality</string>
+    <string name="QualitySelectorBottomSheetDialog__media_quality">მედია-ფაილების ხარისხი</string>
 
     <!-- AppSettingsFragment -->
     <string name="AppSettingsFragment__invite_your_friends">მოიწვიე მეგობრები</string>
@@ -4548,10 +4647,15 @@
 
     <!-- PrivacySettingsFragment -->
     <string name="PrivacySettingsFragment__blocked">დაბლოკილია</string>
-    <string name="PrivacySettingsFragment__d_contacts">%1$d კონტაქტი</string>
+    <!-- Settings label that shows the number blocked contacts -->
+    <plurals name="PrivacySettingsFragment__d_contacts">
+        <item quantity="one">%1$d contact</item>
+        <item quantity="other">%1$d contacts</item>
+    </plurals>
     <string name="PrivacySettingsFragment__messaging">მიმოწერა</string>
     <string name="PrivacySettingsFragment__disappearing_messages">გაქრობადი შეტყობინებები</string>
     <string name="PrivacySettingsFragment__app_security">აპის უსაფრთხოება</string>
+    <!-- This refers to the multi-tasking overview (recent apps) from the Android operating system.-->
     <string name="PrivacySettingsFragment__block_screenshots_in_the_recents_list_and_inside_the_app">მიმდინარე სიასა და აპის შიგნით სქრინშოტების დაბლოკვა</string>
     <string name="PrivacySettingsFragment__signal_message_and_calls">Signal-ის შეტყობინებები და ზარები, ყოველთვის გადამისამართებული ზარებია და დაფარული გამომგზავნი</string>
     <string name="PrivacySettingsFragment__default_timer_for_new_changes">ნაგულისხმევი ტაიმერი ახალი ჩატებისთვის</string>
@@ -4608,11 +4712,14 @@
     <string name="DataAndStorageSettingsFragment__media_quality">მედია-ფაილების ხარისხი</string>
     <string name="DataAndStorageSettingsFragment__sent_media_quality">გაგზავნილი მედია-ფაილების ხარისხი</string>
     <string name="DataAndStorageSettingsFragment__sending_high_quality_media_will_use_more_data">მაღალი ხარისხის მედია-ფაილის გაგზავნა უფრო მეტ მობილურ ინტერნეტს გამოიყენებს.</string>
+    <!-- Setting option that can be selected to default media to be sent as high quality by default -->
     <string name="DataAndStorageSettingsFragment__high">მაღალი</string>
+    <!-- Setting option that can be selected to default media to be sent as standard quality by default -->
     <string name="DataAndStorageSettingsFragment__standard">სტანდარტული</string>
     <string name="DataAndStorageSettingsFragment__calls">ზარები</string>
 
     <!-- ChatColorSelectionFragment -->
+    <!-- Text shown on a circle button to indicate the app will automatically select a color for conversation bubbles for this chat. -->
     <string name="ChatColorSelectionFragment__auto">ავტომატური</string>
     <string name="ChatColorSelectionFragment__use_custom_colors">ფერების მორგება</string>
     <string name="ChatColorSelectionFragment__chat_color">ჩატის ფერი</string>
@@ -4719,7 +4826,7 @@
     <string name="ConversationSettingsFragment__disappearing_messages">გაქრობადი შეტყობინებები</string>
     <string name="ConversationSettingsFragment__sounds_and_notifications">ხმები &amp; შეტყობინებები</string>
   <!-- Removed by excludeNonTranslatables <string name="ConversationSettingsFragment__internal_details" translatable="false">Internal details</string> -->
-    <string name="ConversationSettingsFragment__contact_details">Საკონტაქტო ინფორმაცია</string>
+    <string name="ConversationSettingsFragment__contact_details">ინფორმაცია მობილური კონტაქტების შესახებ</string>
     <string name="ConversationSettingsFragment__view_safety_number">უსაფრთხოების ნომრის ნახვა</string>
     <string name="ConversationSettingsFragment__block">დაბლოკვა</string>
     <string name="ConversationSettingsFragment__block_group">ჯგუფის დაბლოკვა</string>
@@ -4824,6 +4931,7 @@
     <string name="AvatarPickerFragment__take_a_picture">სურათის გადაღება</string>
     <string name="AvatarPickerFragment__choose_a_photo">ფოტოს არჩევა</string>
     <string name="AvatarPickerFragment__photo">ფოტო</string>
+    <!-- Button label during avatar selection/creation that when tapped lets you generate an avatar from typed in text. -->
     <string name="AvatarPickerFragment__text">ტექსტი</string>
     <string name="AvatarPickerFragment__save">შენახვა</string>
     <string name="AvatarPickerFragment__clear_avatar">ავატარის წაშლა</string>
@@ -4884,26 +4992,32 @@
     <string name="MediaReviewFragment__add_a_message">შეტყობინების დამატება</string>
     <string name="MediaReviewFragment__add_a_reply">პასუხის დამატება</string>
     <string name="MediaReviewFragment__send_to">გაეგზავნოთ ჩამოთვლილებს</string>
-    <string name="MediaReviewFragment__view_once_message">ერთხელ სანახავი შეტყობინება</string>
+    <string name="MediaReviewFragment__view_once_message">ერთხელ სანახავი მედია-ფაილი</string>
     <string name="MediaReviewFragment__one_or_more_items_were_too_large">ერთი ან მეტი ელემენტი ზედმეტად დიდი იყო</string>
     <string name="MediaReviewFragment__one_or_more_items_were_invalid">ერთი ან მეტი ელემენტი არავალიდური იყო</string>
     <string name="MediaReviewFragment__too_many_items_selected">მონიშნულია ზედმეტი ელემენტი</string>
     <!-- Small notification presented to the user when they set their video to view-once mode -->
-    <string name="MediaReviewFragment__video_set_to_view_once">Video set to view once</string>
+    <string name="MediaReviewFragment__video_set_to_view_once">ვიდეო ერთხელ ნახვის რეჟიმზეა დაყენებული</string>
     <!-- Small notification presented to the user when they set their photo to view-once mode -->
-    <string name="MediaReviewFragment__photo_set_to_view_once">Photo sent to view once</string>
+    <string name="MediaReviewFragment__photo_set_to_view_once">ფოტო ერთხელ ნახვის რეჟიმზეა დაყენებული</string>
     <!-- Small notification presented to the user when they set their video to be sent in high visual quality. -->
-    <string name="MediaReviewFragment__video_set_to_high_quality">Video set to high quality</string>
+    <string name="MediaReviewFragment__video_set_to_high_quality">ვიდეო დაყენებულია მაღალ ხარისხზე</string>
     <!-- Small notification presented to the user when they set their video to be sent in standard (lower than high) visual quality. -->
-    <string name="MediaReviewFragment__video_set_to_standard_quality">Video set to standard quality</string>
+    <string name="MediaReviewFragment__video_set_to_standard_quality">ვიდეო სტანდარტულ ხარისხზეა დაყენებული</string>
     <!-- Small notification presented to the user when they set their still image to be sent in high visual quality. -->
-    <string name="MediaReviewFragment__photo_set_to_high_quality">Photo set to high quality</string>
+    <string name="MediaReviewFragment__photo_set_to_high_quality">ფოტო დაყენებულია მაღალ ხარისხზე</string>
     <!-- Small notification presented to the user when they set their still image to be sent in standard (lower than high) visual quality. -->
-    <string name="MediaReviewFragment__photo_set_to_standard_quality">Photo set to standard quality</string>
+    <string name="MediaReviewFragment__photo_set_to_standard_quality">ფოტო სტანდარტულ ხარისხზეა დაყენებული</string>
     <!-- Small notification presented to the user when they set multiple media items to be sent in high visual quality. -->
-    <string name="MediaReviewFragment__items_set_to_high_quality">%1$d items set to high quality</string>
+    <plurals name="MediaReviewFragment__items_set_to_high_quality">
+        <item quantity="one">%1$d ელემენტი მაღალ ხარისხზეა დაყენებული</item>
+        <item quantity="other">%1$d ელემენტი მაღალ ხარისხზეა დაყენებული</item>
+    </plurals>
     <!-- Small notification presented to the user when they set multiple media items to be sent in standard (lower than high) visual quality. -->
-    <string name="MediaReviewFragment__items_set_to_standard_quality">%1$d items set to standard quality</string>
+    <plurals name="MediaReviewFragment__items_set_to_standard_quality">
+        <item quantity="one">%1$d ელემენტი სტანდარტულ ხარისხზეა დაყენებული</item>
+        <item quantity="other">%1$d ელემენტი სტანდარტულ ხარისხზეა დაყენებული</item>
+    </plurals>
 
     <string name="ImageEditorHud__cancel">გაუქმება</string>
     <string name="ImageEditorHud__draw">დახატვა</string>
@@ -4929,18 +5043,18 @@
     <string name="MediaReviewImagePageFragment__youll_lose_any_changes">ამ ფოტოში შეტანილ ყველა ცვლილებას დაკარგავ.</string>
 
     <!-- The title of a dialog notifying that a user was found matching a scanned QR code. The placeholder is a username. Usernames are always latin characters. -->
-    <string name="MediaCaptureFragment_username_dialog_title">Found %1$s</string>
+    <string name="MediaCaptureFragment_username_dialog_title">ნაპოვნია %1$s</string>
     <!-- The body of a dialog notifying that a user was found matching a scanned QR code, prompting the user to start a chat with them. The placeholder is a username. Usernames are always latin characters. -->
-    <string name="MediaCaptureFragment_username_dialog_body">Start a chat with \"%1$s\"</string>
+    <string name="MediaCaptureFragment_username_dialog_body">\"%1$s\"-თან ჩატის დაწყება</string>
     <!-- The label of a dialog asking the user if they would like to start a chat with a specific user. -->
-    <string name="MediaCaptureFragment_username_dialog_go_to_chat_button">Go to chat</string>
+    <string name="MediaCaptureFragment_username_dialog_go_to_chat_button">ჩატში გადასვლა</string>
 
     <!-- The title of a dialog notifying that the user scanned a QR code that could be used to link a Signal device. -->
-    <string name="MediaCaptureFragment_device_link_dialog_title">Link device?</string>
+    <string name="MediaCaptureFragment_device_link_dialog_title">დავაკავშიროთ მოწყობილობა?</string>
     <!-- The body of a dialog notifying that the user scanned a QR code that could be used to link a Signal device. -->
-    <string name="MediaCaptureFragment_device_link_dialog_body">It looks like you\'re trying to link a Signal device. Tap continue and scan the code again to link it.</string>
+    <string name="MediaCaptureFragment_device_link_dialog_body">როგორც ჩანს, Signal-ის მოწყობილობის დაკავშირებას ცდილობ. დააჭირე გაგრძელებას და ისევ დაასკანირე კოდი მის დასაკავშირებლად.</string>
     <!-- The label of a dialog asking the user if they would like to continue to the linked device settings screen. -->
-    <string name="MediaCaptureFragment_device_link_dialog_continue">Continue</string>
+    <string name="MediaCaptureFragment_device_link_dialog_continue">გაგრძელება</string>
 
 
     <string name="BadgesOverviewFragment__my_badges">ჩემი ემბლემები</string>
@@ -5040,7 +5154,7 @@
     <!-- Displayed as a subtitle on a row in the Manage Donations screen when payment for a donation is pending -->
     <string name="MySupportPreference__payment_pending">ტრანზაქცია მუშავდება</string>
     <!-- Displayed as a dialog message when clicking on a donation row that is pending. Placeholder is a formatted fiat amount -->
-    <string name="MySupportPreference__your_bank_transfer_of_s">Your bank transfer of %1$s is pending. Bank transfers can take 1 to 14 business days to complete.  </string>
+    <string name="MySupportPreference__your_bank_transfer_of_s">შენი %1$s-ის საბანკო გადარიცხვა მუშავდება. საბანკო გადარიცხვების დასრულებას შეიძლება 1-დან 14 სამუშაო დღემდე დასჭირდეს.  </string>
     <!-- Displayed in the pending help dialog, used to launch user to more details about bank transfers -->
     <string name="MySupportPreference__learn_more">გაიგე მეტი</string>
 
@@ -5471,7 +5585,7 @@
     <string name="StoryViewerFragment__s_s">%1$s %2$s</string>
     <!-- Displayed when viewing a post you sent -->
     <string name="StoryViewerPageFragment__you">შენ</string>
-    <!-- Displayed when viewing a post displayed to a group -->
+    <!-- Displayed when viewing a story sent to a group, placeholders are person who sent the story and the group name -->
     <string name="StoryViewerPageFragment__s_to_s">%1$s %2$s-ს</string>
     <!-- Displayed when viewing a post from another user with no replies -->
     <string name="StoryViewerPageFragment__reply">პასუხი</string>
@@ -5564,7 +5678,7 @@
     <!-- Signal connections sheet bullet point 2 -->
     <string name="SignalConnectionsBottomSheet__accepting_a_message_request">შეტყობინების მოთხოვნის დადასტურება</string>
     <!-- Signal connections sheet bullet point 3 -->
-    <string name="SignalConnectionsBottomSheet__having_them_in_your_system_contacts">შენი სისტემის კონტაქტებში მათი არსებობა</string>
+    <string name="SignalConnectionsBottomSheet__having_them_in_your_system_contacts">მათი ყოლა შენი მობილურის კონტაქტებში</string>
     <!-- Note at the bottom of the Signal connections sheet -->
     <string name="SignalConnectionsBottomSheet__your_connections_can_see_your_name">"შენს კონტაქტებს შეუძლიათ ნახონ შენი სახელი და ფოტო და დაინახონ რას პოსტავ \"ჩემი Story-ი\"-ში, თუ ამას მათგან არ დამალავ."</string>
     <!-- Clickable option to add a viewer to a custom story -->
@@ -5984,9 +6098,9 @@
     <!-- Dialog title when a user tries to donate while they already have a pending donation. -->
     <string name="DonateToSignalFragment__you_have_a_donation_pending">შენ გაქვს მომლოდინე დონაცია</string>
     <!-- Dialog body when a user tries to donate while they already have a pending monthly donation. -->
-    <string name="DonateToSignalFragment__bank_transfers_usually_take_1_business_day_to_process_monthly">Bank transfers can take 1 to 14 business days to process. Please wait until this payment completes before updating your subscription.</string>
+    <string name="DonateToSignalFragment__bank_transfers_usually_take_1_business_day_to_process_monthly">საბანკო გადარიცხვების დამუშავებას შეიძლება 1-დან 14 სამუშაო დღემდე დასჭირდეს. შენი გამოწერის განახლებამდე, გთხოვთ, ამ ტრანზაქციის დასრულებას დაელოდო.</string>
     <!-- Dialog body when a user tries to donate while they already have a pending one time donation. -->
-    <string name="DonateToSignalFragment__bank_transfers_usually_take_1_business_day_to_process_onetime">Bank transfers can take 1 to 14 business days to process. Please wait until this payment completes before making another donation.</string>
+    <string name="DonateToSignalFragment__bank_transfers_usually_take_1_business_day_to_process_onetime">საბანკო გადარიცხვების დამუშავებას შეიძლება 1-დან 14 სამუშაო დღემდე დასჭირდეს. სანამ სხვა დონაციას განახორციელებ, გთხოვთ, ამ ტრანზაქციის დასრულებას დაელოდო.</string>
     <!-- Dialog body when a user tries to donate while they already have a pending monthly donation. -->
     <string name="DonateToSignalFragment__your_payment_is_still_being_processed_monthly">შენი დონაცია ისევ მუშავდება. ამას შეიძლება რამდენიმე წუთი დასჭირდეს შენი ინტერნეტ-კავშირიდან გამომდინარე. შენი გამოწერის განახლებამდე, გთხოვთ, ამ ტრანზაქციის დასრულებას დაელოდო.</string>
     <!-- Dialog body when a user tries to donate while they already have a pending one time donation. -->
@@ -6138,7 +6252,7 @@
     <!-- Top text block of donation pending sheet displayed after one-time donation via a bank transfer. Placeholder is the badge name. -->
     <string name="DonationPendingBottomSheet__your_one_time_donation_is_pending">შენი ერთჯერადი დონაცია მუშავდება. როცა შენს დონაციას მივიღებთ, %1$s-ის ემბლემის პროფილზე გამოჩენას შეძლებ.</string>
     <!-- Bottom text block of donation pending sheet displayed after donating via a bank transfer. Placeholder is for learn more. -->
-    <string name="DonationPendingBottomSheet__bank_transfers_usually_take">Bank transfers can take 1 to 14 business days to process. %1$s</string>
+    <string name="DonationPendingBottomSheet__bank_transfers_usually_take">საბანკო გადარიცხვების დამუშავებას შეიძლება 1-დან 14 სამუშაო დღემდე დასჭირდეს. %1$s</string>
     <!-- Learn more text for donation pending sheet displayed after donating via a bank transfer. -->
     <string name="DonationPendingBottomSheet__learn_more">გაიგე მეტი</string>
     <!-- Confirmation button for donation pending sheet displayed after donating via a bank transfer. -->
@@ -6480,7 +6594,7 @@
     <!-- Displayed in action bar at the top of the fragment -->
     <string name="CallLinkDetailsFragment__call_details">ზარის დეტალები</string>
     <!-- Displayed in a text row, allowing the user to click and edit a call name -->
-    <string name="CallLinkDetailsFragment__edit_call_name">Edit call name</string>
+    <string name="CallLinkDetailsFragment__edit_call_name">ზარის სახელის რედაქტირება</string>
     <!-- Displayed in a text row, allowing the user to click and add a call name -->
     <string name="CallLinkDetailsFragment__add_call_name">ზარის სახელის დამატება</string>
     <!-- Displayed in a toggle row, allowing the user to click to enable or disable member approval -->
@@ -6549,9 +6663,9 @@
     <!-- Shown on the generated username qr code image to explain how to use it. -->
     <string name="UsernameLinkSettings_scan_this_qr_code">Signal-ზე ჩემთან მიმოწერის დასაწყებად შენი მობილურით ეს QR კოდი დაასკანირე</string>
     <!-- Dialog title shown when scanning an image from the gallery for a username QR code and there is no qr code in the image. -->
-    <string name="UsernameLinkSettings_qr_code_not_found">QR code not found</string>
+    <string name="UsernameLinkSettings_qr_code_not_found">QR კოდის მოძებნა ვერ მოხერხდა</string>
     <!-- Dialog message shown when scanning an image from the gallery for a username QR code and there is no qr code in the image. -->
-    <string name="UsernameLinkSettings_try_scanning_another_image_containing_a_signal_qr_code">Try scanning another image containing a Signal QR code.</string>
+    <string name="UsernameLinkSettings_try_scanning_another_image_containing_a_signal_qr_code">სცადე დაასკანირო სხვა სურათი, რომელიც Signal-ის QR კოდს შეიცავს.</string>
 
     <!-- Explanatory text at the top of a bottom sheet describing how username links work -->
     <string name="UsernameLinkShareBottomSheet_title">ამ ბმულით ნებისმიერი შეძლებს შენი მომხმარებლის სახელის ნახვას და შენთან ჩატის დაწყებას. ის მხოლოდ მათ გაუზიარე, ვისაც ენდობი.</string>
@@ -6644,9 +6758,70 @@
     <!-- Dialog action to invite the phone number to Signal -->
     <string name="FindByActivity__invite">მოწვევა</string>
     <!-- Button label for a button that will launch a camera to scan a username QR code -->
-    <string name="FindByActivity__qr_scan_button">Scan QR code</string>
+    <string name="FindByActivity__qr_scan_button">QR კოდის დასკანირება</string>
     <!-- Content of a dialog indicating that we could not perform the requested action because we encountered a network error. -->
-    <string name="FindByActivity__network_error_dialog">Encountered a network error. Try again later.</string>
+    <string name="FindByActivity__network_error_dialog">ქსელის შეცდომას გადავაწყდით. Მოგვიანებით სცადე.</string>
+
+    <!-- Title for an alert letting someone know that one of their linked devices is inactive. -->
+    <string name="LinkedDeviceInactiveMegaphone_title">არააქტიური დაკავშირებული მოწყობილობა</string>
+    <!-- Body for an alert letting someone know that one of their linked devices is inactive. The string placeholder is the name of the device, and the number placeholder is the number of days before device is unlinked. -->
+    <plurals name="LinkedDeviceInactiveMegaphone_body">
+        <item quantity="one">თუ გსურს, \"%1$s\" მიბმული იყოს, გახსენი Signal-ი მაგ მოწყობილობაზე %2$d დღის განმავლობაში.</item>
+        <item quantity="other">თუ გსურს, \"%1$s\" მიბმული იყოს, გახსენი Signal-ი მაგ მოწყობილობაზე %2$d დღის განმავლობაში.</item>
+    </plurals>
+    <!-- Button label for an alert letting someone know that one of their linked devices is inactive. When clicked, the user will opt out of all future alerts. -->
+    <string name="LinkedDeviceInactiveMegaphone_dont_remind_button_label">არ შემახსენო</string>
+    <!-- Button label for an alert letting someone know that one of their linked devices is inactive. When clicked, the alert will be dismissed. -->
+    <string name="LinkedDeviceInactiveMegaphone_got_it_button_label">გასაგებია</string>
+
+    <!-- NicknameFragment -->
+    <!-- Title displayed at the top of the screen -->
+    <string name="NicknameActivity__nickname">მეტსახელი</string>
+    <!-- Subtitle displayed under title -->
+    <string name="NicknameActivity__nicknames_amp_notes">მეტსახელები &amp; ჩანიშვნები Signal-ში ინახება და ბოლომდეა დაშიფრული. ისინი მხოლოდ შენთვისაა ხილული.</string>
+    <!-- Field label for given name -->
+    <string name="NicknameActivity__first_name">სახელი</string>
+    <!-- Content description for first name clear button -->
+    <string name="NicknameActivity__clear_first_name">სახელის წაშლა</string>
+    <!-- Field label for family name -->
+    <string name="NicknameActivity__last_name">გვარი</string>
+    <!-- Content description for last name clear button -->
+    <string name="NicknameActivity__clear_last_name">გვარის წაშლა</string>
+    <!-- Field label for note -->
+    <string name="NicknameActivity__note">ჩანიშვნა</string>
+    <!-- Button label to save -->
+    <string name="NicknameActivity__save">შენახვა</string>
+    <!-- Dialog title for note and name deletion -->
+    <string name="NicknameActivity__delete_nickname">გსურს წაშალო?</string>
+    <!-- Dialog message for note and name deletion -->
+    <string name="NicknameActivity__this_will_permanently_delete_this_nickname_and_note">ეს სამუდამოდ წაშლის ნებისმიერ მეტსახელსა და ჩანიშვნას, რომელიც შენ დააყენე.</string>
+
+    <!-- ViewNoteBottomSheetDialogFragment -->
+    <!-- Sheet title -->
+    <string name="ViewNoteSheet__note">ჩანიშვნა</string>
+    <!-- Content description for opening the note editor -->
+    <string name="ViewNoteSheet__edit_note">ჩანიშვნის რედაქტირება</string>
+
+    <!-- BackupProgressService -->
+    <!-- Notification title shown while backup restore job is running -->
+    <string name="BackupProgressService_title">მიმდინარეობს სარეზერვო მონაცემების აღდგენა…</string>
+    <!-- Notification title shown while downloading backup restore data -->
+    <string name="BackupProgressService_title_downloading">მიმდინარეობს სარეზერვო მონაცემების გადმოწერა…</string>
+
+    <!-- BackupsTypeSettingsFragment -->
+    <!-- Displayed as the user\'s payment method as a label in a preference row -->
+    <string name="BackupsTypeSettingsFragment__credit_or_debit_card">Credit or debit card</string>
+    <!-- Displayed as the user\'s payment method as a label in a preference row -->
+    <string name="BackupsTypeSettingsFragment__iDEAL">iDEAL</string>
+    <!-- Displayed as the user\'s payment method as a label in a preference row -->
+    <string name="BackupsTypeSettingsFragment__google_pay">Google Pay</string>
+    <!-- Displayed as the user\'s payment method as a label in a preference row -->
+    <string name="BackupsTypeSettingsFragment__bank_transfer">Bank transfer</string>
+    <!-- Displayed as the user\'s payment method as a label in a preference row -->
+    <string name="BackupsTypeSettingsFragment__paypal">PayPal</string>
+    <!-- Displayed as the user\'s payment method as a label in a preference row -->
+    <string name="BackupsTypeSettingsFragment__unknown">Unknown</string>
+
 
     <!-- EOF -->
 </resources>

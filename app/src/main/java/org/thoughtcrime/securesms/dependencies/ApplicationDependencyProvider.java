@@ -11,6 +11,7 @@ import androidx.annotation.VisibleForTesting;
 import org.signal.core.util.ThreadUtil;
 import org.signal.core.util.concurrent.DeadlockDetector;
 import org.signal.core.util.concurrent.SignalExecutors;
+import org.signal.libsignal.net.Network;
 import org.signal.libsignal.zkgroup.profiles.ClientZkProfileOperations;
 import org.signal.libsignal.zkgroup.receipts.ClientZkReceiptOperations;
 import org.thoughtcrime.securesms.BuildConfig;
@@ -89,7 +90,10 @@ import org.whispersystems.signalservice.api.util.SleepTimer;
 import org.whispersystems.signalservice.api.util.UptimeSleepTimer;
 import org.whispersystems.signalservice.api.websocket.WebSocketFactory;
 import org.whispersystems.signalservice.internal.configuration.SignalServiceConfiguration;
+import org.whispersystems.signalservice.internal.websocket.LibSignalNetwork;
 import org.whispersystems.signalservice.internal.websocket.WebSocketConnection;
+import org.whispersystems.signalservice.internal.websocket.LibSignalChatConnection;
+import org.whispersystems.signalservice.internal.websocket.OkHttpWebSocketConnection;
 
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -229,6 +233,11 @@ public class ApplicationDependencyProvider implements ApplicationDependencies.Pr
   }
 
   @Override
+  public @NonNull LibSignalNetwork provideLibsignalNetwork(@NonNull SignalServiceConfiguration config) {
+    return new LibSignalNetwork(new Network(BuildConfig.LIBSIGNAL_NET_ENV), config);
+  }
+
+  @Override
   public @NonNull TypingStatusRepository provideTypingStatusRepository() {
     return new TypingStatusRepository();
   }
@@ -281,10 +290,10 @@ public class ApplicationDependencyProvider implements ApplicationDependencies.Pr
   }
 
   @Override
-  public @NonNull SignalWebSocket provideSignalWebSocket(@NonNull Supplier<SignalServiceConfiguration> signalServiceConfigurationSupplier) {
+  public @NonNull SignalWebSocket provideSignalWebSocket(@NonNull Supplier<SignalServiceConfiguration> signalServiceConfigurationSupplier, @NonNull Supplier<LibSignalNetwork> libSignalNetworkSupplier) {
     SleepTimer                   sleepTimer      = !SignalStore.account().isFcmEnabled() || SignalStore.internalValues().isWebsocketModeForced() ? new AlarmSleepTimer(context) : new UptimeSleepTimer() ;
     SignalWebSocketHealthMonitor healthMonitor   = new SignalWebSocketHealthMonitor(context, sleepTimer);
-    SignalWebSocket              signalWebSocket = new SignalWebSocket(provideWebSocketFactory(signalServiceConfigurationSupplier, healthMonitor));
+    SignalWebSocket              signalWebSocket = new SignalWebSocket(provideWebSocketFactory(signalServiceConfigurationSupplier, healthMonitor, libSignalNetworkSupplier));
 
     healthMonitor.monitor(signalWebSocket);
 
@@ -391,26 +400,35 @@ public class ApplicationDependencyProvider implements ApplicationDependencies.Pr
     return provideClientZkOperations(signalServiceConfiguration).getReceiptOperations();
   }
 
-  @NonNull WebSocketFactory provideWebSocketFactory(@NonNull Supplier<SignalServiceConfiguration> signalServiceConfigurationSupplier, @NonNull SignalWebSocketHealthMonitor healthMonitor) {
+  @NonNull WebSocketFactory provideWebSocketFactory(@NonNull Supplier<SignalServiceConfiguration> signalServiceConfigurationSupplier, @NonNull SignalWebSocketHealthMonitor healthMonitor, @NonNull Supplier<LibSignalNetwork> libSignalNetworkSupplier) {
     return new WebSocketFactory() {
       @Override
       public WebSocketConnection createWebSocket() {
-        return new WebSocketConnection("normal",
-                                       signalServiceConfigurationSupplier.get(),
-                                       Optional.of(new DynamicCredentialsProvider()),
-                                       BuildConfig.SIGNAL_AGENT,
-                                       healthMonitor,
-                                       Stories.isFeatureEnabled());
+        return new OkHttpWebSocketConnection("normal",
+                                             signalServiceConfigurationSupplier.get(),
+                                             Optional.of(new DynamicCredentialsProvider()),
+                                             BuildConfig.SIGNAL_AGENT,
+                                             healthMonitor,
+                                             Stories.isFeatureEnabled());
       }
 
       @Override
       public WebSocketConnection createUnidentifiedWebSocket() {
-        return new WebSocketConnection("unidentified",
-                                       signalServiceConfigurationSupplier.get(),
-                                       Optional.empty(),
-                                       BuildConfig.SIGNAL_AGENT,
-                                       healthMonitor,
-                                       Stories.isFeatureEnabled());
+        if (FeatureFlags.libSignalWebSocketEnabled()) {
+          LibSignalNetwork network = libSignalNetworkSupplier.get();
+          return new LibSignalChatConnection(
+              "libsignal-unauth",
+              network.createChatService(null),
+              healthMonitor,
+              false);
+        } else {
+          return new OkHttpWebSocketConnection("unidentified",
+                                               signalServiceConfigurationSupplier.get(),
+                                               Optional.empty(),
+                                               BuildConfig.SIGNAL_AGENT,
+                                               healthMonitor,
+                                               Stories.isFeatureEnabled());
+        }
       }
     };
   }

@@ -45,8 +45,6 @@
     <string name="ApplicationPreferencesActivity_disable_passphrase">Vypnúť heslo?</string>
     <string name="ApplicationPreferencesActivity_this_will_permanently_unlock_signal_and_message_notifications">Toto natrvalo odomkne Signal a upozornenia na správy.</string>
     <string name="ApplicationPreferencesActivity_disable">Vypnúť</string>
-    <string name="ApplicationPreferencesActivity_disable_signal_messages_and_calls">Vypnúť Signal správy a hovory?</string>
-    <string name="ApplicationPreferencesActivity_disable_signal_messages_and_calls_by_unregistering">Zakážte Signal správy a hovory zrušením registrácie zo serveru. Pre ich opätovné použitie budete musieť svoje telefónne číslo znovu zaregistrovať.</string>
     <string name="ApplicationPreferencesActivity_error_connecting_to_server">Chyba pripojenia na server!</string>
     <string name="ApplicationPreferencesActivity_pins_are_required_for_registration_lock">PIN kódy sú vyžadované pre funkciu registračného zámku. Ak chcete vypnúť PIN kódy, najprv, prosím, vypnite funkciu registračného zámku.</string>
     <string name="ApplicationPreferencesActivity_pin_created">PIN kód sa vytvoril.</string>
@@ -91,6 +89,16 @@
     <string name="AttachmentManager_signal_requires_the_external_storage_permission_in_order_to_attach_photos_videos_or_audio">Signal potrebuje prístup k úložisku aby k správam mohol pridať obrázkové, video a zvukové prílohy, ale prístup bol natrvalo zakázaný. Prosím v nastaveniach aplikácií zvoľte \"Oprávnenia\", a povoľte \"Úložisko\".</string>
     <string name="AttachmentManager_signal_requires_contacts_permission_in_order_to_attach_contact_information">Signal potrebuje prístup ku kontaktom aby k správam mohol pripojiť informácie o kontakte, ale prístup bol natrvalo zakázaný. Prosím v nastaveniach aplikácií zvoľte \"Oprávnenia\", a povoľte \"Kontakty\".</string>
     <string name="AttachmentManager_signal_requires_location_information_in_order_to_attach_a_location">Signal potrebuje prístup k polohe aby k správam mohol pripojiť informácie o polohe, ale prístup bol natrvalo zakázaný. Prosím v nastaveniach aplikácií zvoľte \"Oprávnenia\", a povoľte \"Poloha\".</string>
+
+    <!-- Dialog title asking users for location permission -->
+    <string name="AttachmentManager_signal_allow_access_location">Allow access to your location</string>
+    <!-- Dialog description that will explain the steps needed to give location permission -->
+    <string name="AttachmentManager_signal_to_send_location">To send your location:</string>
+    <!-- Alert dialog description asking for location permission -->
+    <string name="AttachmentManager_signal_allow_signal_access_location">Allow Signal access to send your location.</string>
+    <!-- Toast text explaining Signal\'s need for location access -->
+    <string name="AttachmentManager_signal_needs_location_access">Signal needs location access to send your location.</string>
+
     <!-- Alert dialog title to show the recipient has not activated payments -->
     <string name="AttachmentManager__not_activated_payments">Používateľ %1$s neaktivoval platby </string>
     <!-- Alert dialog description to send the recipient a request to activate payments -->
@@ -311,7 +319,6 @@
     <string name="ConversationItem_error_network_not_delivered">Odoslanie zlyhalo</string>
     <string name="ConversationItem_group_action_left">%1$s opustil/a skupinu.</string>
     <string name="ConversationItem_send_paused">Odoslanie pozastavené</string>
-    <string name="ConversationItem_click_to_approve_unencrypted">Odosielanie zlyhalo, ťuknutím pošlete nezabezpečenú správu</string>
     <string name="ConversationItem_click_to_approve_unencrypted_sms_dialog_title">Prepnúť na nezabezpečené SMS?</string>
     <string name="ConversationItem_click_to_approve_unencrypted_mms_dialog_title">Prepnúť na nezabezpečené MMS?</string>
     <string name="ConversationItem_click_to_approve_unencrypted_dialog_message">Táto správa <b>nebude</b> šifrovaná, pretože adresát už nepoužíva Signal.\n\nOdoslať nezabezpečenú SMS správu?</string>
@@ -395,8 +402,16 @@
     <string name="ConversationActivity_your_request_to_join_has_been_sent_to_the_group_admin">Vaša žiadosť o členstvo bola odoslaná administrátorovi skupiny. Keď na ňu zareaguje, dostanete oznámenie.</string>
     <string name="ConversationActivity_cancel_request">Zrušiť žiadosť</string>
 
-    <string name="ConversationActivity_to_send_audio_messages_allow_signal_access_to_your_microphone">Pre posielanie zvukových správ potrebuje Signal prístup k mikrofónu.</string>
+    <!-- Dialog title asking users for microphone permission -->
+    <string name="ConversationActivity_allow_access_microphone">Allow access to your microphone</string>
+    <!-- Dialog description that will explain the steps needed to give microphone permissions -->
+    <string name="ConversationActivity_signal_to_send_audio_messages">To send audio messages:</string>
+    <!-- Alert dialog description asking for microphone permission in order to send voice messages -->
+    <string name="ConversationActivity_to_send_voice_messages_allow_signal_access_to_your_microphone">To send voice messages, allow Signal access to your microphone.</string>
+    <!-- Toast text explaining Signal\'s need for microphone access -->
+    <string name="ConversationActivity_signal_needs_microphone_access_voice_message">Signal needs microphone access to record a voice message.</string>
     <string name="ConversationActivity_signal_requires_the_microphone_permission_in_order_to_send_audio_messages">Signal potrebuje prístup k mikrofónu aby mohol posielať zvukové správy, ale prístup bol natrvalo zakázaný. Prosím v nastaveniach aplikácií zvoľte \"Oprávnenia\", a povoľte \"Mikrofón\".</string>
+
     <string name="ConversationActivity_signal_needs_the_microphone_and_camera_permissions_in_order_to_call_s">Signal potrebuje prístup k mikrofónu a fotoaparátu aby mohol zavolať %1$s, ale prístup bol natrvalo zakázaný. Prosím v nastaveniach aplikácií zvoľte \"Oprávnenia\", a povoľte \"Mikrofón\" a \"Fotoaparát\".</string>
     <string name="ConversationActivity_to_capture_photos_and_video_allow_signal_access_to_the_camera">Pre fotenie a nahrávanie videa potrebuje Signal prístup k fotoaparátu.</string>
     <string name="ConversationActivity_signal_needs_the_camera_permission_to_take_photos_or_video">Signal potrebuje prístup k fotoaparátu aby mohol vytvárať fotografie a video, ale prístup bol natrvalo zakázaný. Prosím v nastaveniach aplikácií zvoľte \"Oprávnenia\", a povoľte \"Fotoaparát\".</string>
@@ -420,10 +435,17 @@
     <string name="ConversationActivity_you_will_leave_this_group_and_it_will_be_deleted_from_all_of_your_devices">Opustíte túto skupinu a vymažete ju zo všetkých vašich zariadení.</string>
     <string name="ConversationActivity_delete">Vymazať</string>
     <string name="ConversationActivity_delete_and_leave">Vymazať a opustiť</string>
-    <string name="ConversationActivity__to_call_s_signal_needs_access_to_your_microphone">Pre volanie %1$s potrebuje Signal prístup k vášmu mikrofónu</string>
+
+    <!-- Dialog description that will explain the steps needed to give microphone permissions for a voice call -->
+    <string name="ConversationActivity__to_start_call">To start a call:</string>
+    <!-- Alert dialog description asking for microphone permission in order to start a voice call -->
+    <string name="ConversationActivity__to_call_signal_needs_access_to_your_microphone">To start a call, allow Signal access to your microphone.</string>
+    <!-- Toast text explaining Signal\'s need for microphone access for a voice call -->
+    <string name="ConversationActivity_signal_needs_microphone_access_voice_call">Signal needs microphone access to start a call.</string>
 
 
     <string name="ConversationActivity_join">Pridať sa</string>
+    <!-- Button text for an active group call but the call is currently full and unjoinable -->
     <string name="ConversationActivity_full">Plný</string>
 
     <string name="ConversationActivity_error_sending_media">Chyba pri odosielaní médií</string>
@@ -433,7 +455,7 @@
     <!-- Message shown when opening an SMS conversation with SMS disabled and there are no exported messages -->
     <string name="ConversationActivity__sms_messaging_is_no_longer_supported_in_signal_invite_s_to_to_signal_to_keep_the_conversation_here">Signal už nepodporuje odosielanie SMS správ. Ak chcete konverzáciu zachovať tu, pozvite používateľa %1$s, aby sa pripojil k Signalu.</string>
     <!-- Message shown when opening a conversation with an unregistered user who used to be on Signal -->
-    <string name="ConversationActivity__this_person_is_no_longer_using_signal">This person is no longer using Signal. Invite them to Signal to keep the conversation here.</string>
+    <string name="ConversationActivity__this_person_is_no_longer_using_signal">Táto osoba už nepoužíva Signal. Ak chcete pokračovať v konverzácii, pozvite používateľa, aby sa pripojil k Signalu.</string>
     <!-- Action button shown when opening an SMS conversation with SMS disabled and there are no exported messages -->
     <string name="ConversationActivity__invite_to_signal">Pozvať do Signalu</string>
     <!-- Snackbar message shown after dismissing the full screen sms export megaphone indicating we\'ll do it again soon -->
@@ -648,6 +670,7 @@
     <string name="ConversationListFragment_unarchive">Odarchivovať</string>
     <string name="ConversationListFragment_delete">Vymazať</string>
     <string name="ConversationListFragment_select_all">Označiť všetko</string>
+    <!-- Screen title shown when selecting multiple items from a list like conversation threads or call logs. -->
     <plurals name="ConversationListFragment_s_selected">
         <item quantity="one">%1$d vybrané</item>
         <item quantity="few">%1$d vybraných</item>
@@ -905,6 +928,7 @@
         <item quantity="many">Bolo odoslanej %1$d pozvánky</item>
         <item quantity="other">Bolo odoslaných %1$d pozvánok</item>
     </plurals>
+    <!-- Dialog message shown when you are attempting to add a single contact to a group and you don\'t have enough information about them to do it automatically, so must do it via an invite instead. Placeholder is name/username/phone number. -->
     <string name="GroupManagement_invite_single_user">“%1$s” nemôžete automaticky pridať do tejto skupiny.\n\nTomuto používateľovi bola odoslaná pozvánka, aby sa pridal, a kým pozvanie nepríjme, neuvidí žiadne správy zo skupiny.</string>
     <string name="GroupManagement_invite_multiple_users">Týchto používateľov nemôžete automaticky pridať do tejto skupiny.\n\nBoli im odoslané pozvánky, aby sa pridali, a kým pozvanie nepríjmu, neuvidia žiadne správy zo skupiny.</string>
 
@@ -1117,7 +1141,9 @@
 
     <string name="ManageGroupActivity_edit_name_and_picture">Zmeniť názov a obrázok</string>
     <string name="ManageGroupActivity_legacy_group">Zastaraná skupina</string>
+    <!-- This is placed inside a "Learn More" text view, which automatically appends LearnMoreTextView_learn_more in code -->
     <string name="ManageGroupActivity_legacy_group_learn_more">Toto je Zastaraná skupina. Funkcie ako administrátori skupín sú dostupné len pre Nové skupiny.</string>
+    <!-- This is placed inside a "Learn More" text view, which automatically appends LearnMoreTextView_learn_more in code to the end of the string -->
     <string name="ManageGroupActivity_legacy_group_upgrade">Toto je Zastaraná skupina. Pre prístup k novým funkciám ako @spomenutia a administrátori</string>
     <string name="ManageGroupActivity_legacy_group_too_large">Táto Zastaraná skupina nemôže byť modernizovaná na Novú skupinu, lebo je príliš veľká. Maximálna veľkosť skupiny je %1$d.</string>
     <string name="ManageGroupActivity_upgrade_this_group">modernizujte túto skupinu.</string>
@@ -1362,6 +1388,7 @@
         <item quantity="other">Vymazať</item>
     </plurals>
 
+    <!-- Screen title shown when selecting multiple items in the media overview screen. The first placeholder is the number of items, the second number is the cumulative file size in bytes. -->
     <plurals name="MediaOverviewActivity_d_selected_s">
         <item quantity="one">%1$d vybrané (%2$s)</item>
         <item quantity="few">%1$d vybraných (%2$s)</item>
@@ -1428,17 +1455,13 @@
     <string name="MessageRecord_left_group">Opustili ste skupinu.</string>
     <string name="MessageRecord_you_updated_group">Aktualizovali ste skupinu.</string>
     <string name="MessageRecord_the_group_was_updated">Skupina bola aktualizovaná</string>
-    <!-- Update message shown when placing an outgoing 1:1 voice/audio call and it\'s answered by the other party -->
+    <!-- Update message shown when placing an outgoing 1:1 voice/audio call -->
     <string name="MessageRecord_outgoing_voice_call">Odchádzajúci hlasový hovor</string>
-    <!-- Update message shown when placing an outgoing 1:1 video call and it\'s answered by the other party -->
+    <!-- Update message shown when placing an outgoing 1:1 video call -->
     <string name="MessageRecord_outgoing_video_call">Odchádzajúci videohovor</string>
-    <!-- Update message shown when placing an outgoing 1:1 voice/audio call and it\'s not answered by the other party -->
-    <string name="MessageRecord_unanswered_voice_call">Neprijatý hlasový hovor</string>
-    <!-- Update message shown when placing an outgoing 1:1 video call and it\'s not answered by the other party -->
-    <string name="MessageRecord_unanswered_video_call">Neprijatý videohovor</string>
-    <!-- Update message shown when receiving an incoming 1:1 voice/audio call and it\'s answered -->
+    <!-- Update message shown when receiving an incoming 1:1 voice/audio call and it\'s answered or ringing -->
     <string name="MessageRecord_incoming_voice_call">Prichádzajúci hlasový hovor</string>
-    <!-- Update message shown when receiving an incoming 1:1 video call and answered -->
+    <!-- Update message shown when receiving an incoming 1:1 video call and answered or ringing -->
     <string name="MessageRecord_incoming_video_call">Prichádzajúci videohovor</string>
     <!-- Update message shown when receiving an incoming 1:1 voice/audio call and not answered -->
     <string name="MessageRecord_missed_voice_call">Zmeškaný hlasový hovor</string>
@@ -1448,10 +1471,6 @@
     <string name="MessageRecord_missed_voice_call_notification_profile">Zmeškaný hlasový hovor pri zapnutom profile upozornení</string>
     <!-- Update message shown when receiving an incoming video call and declined due to notification profile -->
     <string name="MessageRecord_missed_video_call_notification_profile">Zmeškaný videohovor pri zapnutom profile upozornení</string>
-    <!-- Update message shown when receiving an incoming 1:1 voice/audio call and explicitly declined -->
-    <string name="MessageRecord_you_declined_a_voice_call">Odmietli ste hlasový hovor</string>
-    <!-- Update message shown when receiving an incoming 1:1 video call and explicitly declined -->
-    <string name="MessageRecord_you_declined_a_video_call">Odmietli ste videohovor</string>
     <!-- Call update formatter string to place the update message next to a time stamp. e.g., \'Incoming voice call · 11:11am\' -->
     <string name="MessageRecord_call_message_with_date">%1$s · %2$s</string>
     <string name="MessageRecord_s_updated_group">%1$s aktualizoval/a skupinu.</string>
@@ -1483,7 +1502,7 @@
     <string name="MessageRecord_changed_their_profile_name_from_to">%1$s zmenil/a názov svojho profilu z %2$s na %3$s.</string>
     <string name="MessageRecord_changed_their_profile">%1$s zmenil/a svoj profil.</string>
     <!-- Conversation update event message shown when you\'ve started a conversation by phone number or username and then learn their profile name. placeholder is username or phone number -->
-    <string name="MessageRecord_started_this_chat">You started this chat with %1$s.</string>
+    <string name="MessageRecord_started_this_chat">Zahájili ste čet s používateľom %1$s.</string>
 
     <!-- GV2 specific -->
     <string name="MessageRecord_you_created_the_group">Vytvorili ste skupinu.</string>
@@ -1676,30 +1695,55 @@
     <string name="MessageRecord_can_accept_payments">%1$s odteraz môže prijímať platby</string>
 
     <!-- Group Calling update messages -->
-    <string name="MessageRecord_s_started_a_group_call_s">%1$s zahájil(a) skupinový hovor · %2$s</string>
-    <string name="MessageRecord_you_started_a_group_call_s">Zahájili ste skupinový hovor · %1$s</string>
-    <string name="MessageRecord_s_is_in_the_group_call_s">%1$s je v skupinovom hovore · %2$s</string>
-    <string name="MessageRecord_you_are_in_the_group_call_s1">Ste v skupinovom hovore · %1$s</string>
-    <string name="MessageRecord_s_and_s_are_in_the_group_call_s1">%1$s a %2$s sú v skupinovom hovore · %3$s</string>
-    <string name="MessageRecord_group_call_s">Skupinový hovor · %1$s</string>
-
-    <string name="MessageRecord_s_started_a_group_call">%1$s zahájil(a) skupinový hovor</string>
-    <string name="MessageRecord_you_started_a_group_call">Zahájili ste skupinový hovor</string>
-    <string name="MessageRecord_s_is_in_the_group_call">%1$s je v skupinovom hovore</string>
-    <string name="MessageRecord_you_are_in_the_group_call">Ste v skupinovom hovore</string>
-    <string name="MessageRecord_s_and_s_are_in_the_group_call">%1$s a %2$s sú v skupinovom hovore</string>
-    <string name="MessageRecord_group_call">Skupinový hovor</string>
+    <!-- Chat log text for an ongoing group call that has one participant with a placeholder for the short display name of the user that joined and a placeholder for formatted time -->
+    <string name="MessageRecord_s_is_in_the_call_s">%1$s sa zúčastňuje hovoru · %2$s</string>
+    <!-- Chat log text for an ongoing group call only the local user has joined with a placeholder for formatted time -->
+    <string name="MessageRecord_you_are_in_the_call_s1">Zúčastňujete sa hovoru · %1$s</string>
+    <!-- Chat log text for an ongoing group call with two participants with two placeholders for the short display name of the users that joined and a placeholder for formatted time -->
+    <string name="MessageRecord_s_and_s_are_in_the_call_s1">%1$s a %2$s sa zúčastňujú hovoru · %3$s</string>
+    <!-- Chat log text for an ongoing group call that has one participant -->
+    <string name="MessageRecord_s_is_in_the_call">%1$s sa zúčastňuje hovoru</string>
+    <!-- Chat log text for an ongoing group call only the local user has joined -->
+    <string name="MessageRecord_you_are_in_the_call">Zúčastňujete sa hovoru</string>
+    <!-- Chat log text for an ongoing group call with two participants with two placeholders, each for the short display name of the users that joined -->
+    <string name="MessageRecord_s_and_s_are_in_the_call">%1$s a %2$s sa zúčastňujú hovoru</string>
+    <!-- Chat log text for a group call that ended within the last 5 minutes -->
+    <string name="MessageRecord__the_video_call_has_ended">Videohovor sa skončil</string>
+    <!-- Chat log text for a group call that ended within the last 5 minutes with a placeholder for formatted time -->
+    <string name="MessageRecord__the_video_call_has_ended_s">Videohovor sa skončil · %1$s</string>
+    <!-- Chat log text for a group call that ended more than 5 minutes ago and was missed -->
+    <string name="MessageRecord__missed_video_call">Zmeškaný videohovor</string>
+    <!-- Chat log text for a group call that ended more than 5 minutes ago and was missed with a placeholder for formatted time -->
+    <string name="MessageRecord__missed_video_call_s">Zmeškaný videohovor · %1$s</string>
+    <!-- Chat log text for a group call that ended that the local user did not start -->
+    <string name="MessageRecord__incoming_video_call">Prichádzajúci videohovor</string>
+    <!-- Chat log text for a group call that ended that the local user did not start with a placeholder for formatted time -->
+    <string name="MessageRecord__incoming_video_call_s">Prichádzajúci videohovor · %1$s</string>
+    <!-- Chat log text for a group call that ended that the local user started -->
+    <string name="MessageRecord__outgoing_video_call">Odchádzajúci videohovor</string>
+    <!-- Chat log text for a group call that ended that the local user started with a placeholder for formatted time -->
+    <string name="MessageRecord__outgoing_video_call_s">Odchádzajúci videohovor · %1$s</string>
+    <!-- Chat log text for an ongoing group call that the local user started -->
+    <string name="MessageRecord__you_started_a_video_call">Začali ste videohovor</string>
+    <!-- Chat log text for an ongoing group call that the local user started with a placeholder for formatted time -->
+    <string name="MessageRecord__you_started_a_video_call_s">Začali ste videohovor · %1$s</string>
+    <!-- Chat log text for an ongoing group call that the local user has not joined with a placeholder for user\'s short display name -->
+    <string name="MessageRecord__s_started_a_video_call">Používateľ %1$s začal videohovor</string>
+    <!-- Chat log text for an ongoing group call that the local user has not joined with a placeholder for user\'s short display name and a placeholder for formatted time -->
+    <string name="MessageRecord__s_started_a_video_call_s">Používateľ %1$s začal videohovor · %2$s</string>
 
     <string name="MessageRecord_you">Vy</string>
 
-    <plurals name="MessageRecord_s_s_and_d_others_are_in_the_group_call_s">
+    <!-- Chat log text for an ongoing group call with more than two participants with placeholders for the first two joined users, a placeholder for the number of users in the call, and a placeholder for formatted time -->
+    <plurals name="MessageRecord_s_s_and_d_others_are_in_the_call_s">
         <item quantity="one">%1$s, %2$s a %3$d ďalší sú v skupinovom hovore · %4$s</item>
         <item quantity="few">%1$s, %2$s a %3$d ďalší sú v skupinovom hovore · %4$s</item>
         <item quantity="many">%1$s, %2$s a %3$d ďalší sú v skupinovom hovore · %4$s</item>
         <item quantity="other">%1$s, %2$s a %3$d ďalší sú v skupinovom hovore · %4$s</item>
     </plurals>
 
-    <plurals name="MessageRecord_s_s_and_d_others_are_in_the_group_call">
+    <!-- Chat log text for an ongoing group call with more than two participants with placeholders for the first two joined users and a placeholder for the number of users in the call -->
+    <plurals name="MessageRecord_s_s_and_d_others_are_in_the_call">
         <item quantity="one">%1$s, %2$s a %3$d ďalší sú v skupinovom hovore</item>
         <item quantity="few">%1$s, %2$s a %3$d ďalší sú v skupinovom hovore</item>
         <item quantity="many">%1$s, %2$s a %3$d ďalší sú v skupinovom hovore</item>
@@ -2000,9 +2044,9 @@
     <!-- Utilized in the lobby before joining a call link -->
     <string name="WebRtcCallView__signal_call_link">Odkaz na Signal hovor</string>
     <!-- Warning displayed when entering a call via a link and you have Phone Number Privacy disabled-->
-    <string name="WebRtcCallView__anyone_who_joins_pnp_disabled">Anyone who joins this call via the link will see your name, photo, and phone number.</string>
+    <string name="WebRtcCallView__anyone_who_joins_pnp_disabled">Každý, kto sa pripojí k tomuto hovoru prostredníctvom odkazu, uvidí vaše meno, fotku a telefónne číslo.</string>
     <!-- Warning displayed when entering a call via a link and you have Phone Number Privacy enabled-->
-    <string name="WebRtcCallView__anyone_who_joins_pnp_enabled">Anyone who joins this call via the link will see your name and photo.</string>
+    <string name="WebRtcCallView__anyone_who_joins_pnp_enabled">Každý, kto sa pripojí k tomuto hovoru prostredníctvom odkazu, uvidí vaše meno a fotku.</string>
     <!-- Displayed on the call screen as the status when waiting to be let into a call link by an admin -->
     <string name="WebRtcCallView__waiting_to_be_let_in">Čakajú na pridanie sa k hovoru…</string>
 
@@ -2123,7 +2167,7 @@
     <!-- Displayed in bottom sheet describing that the user has no direct messages with this person. The placeholder is a person\'s name. -->
     <string name="AboutSheet__no_direct_message">Žiadne priame správy s používateľom %1$s</string>
     <!-- Explains that the given user (placeholder is short name) is in the users system contact -->
-    <string name="AboutSheet__s_is_in_your_system_contacts">%1$s je vo vašich systémových kontaktoch</string>
+    <string name="AboutSheet__s_is_in_your_system_contacts">%1$s je vo vašich kontaktoch</string>
     <!-- Notice in a row when user has no groups in common -->
     <string name="AboutSheet__you_have_no_groups_in_common">Nemáte žiadne spoločné skupiny</string>
     <!-- Notice when a user is not a connection to review requests carefully -->
@@ -2139,6 +2183,8 @@
     <string name="AboutSheet__about">Detaily</string>
     <!-- Text displayed in title for you -->
     <string name="AboutSheet__you">Vy</string>
+    <!-- Displays the name of a contact. The first placeholder is the name the user has assigned to that contact, the second name is the name the contact assigned to themselves -->
+    <string name="AboutSheet__user_set_display_name_and_profile_name">%1$s (%2$s)</string>
 
     <!-- CallParticipantsListDialog -->
     <plurals name="CallParticipantsListDialog_in_this_call">
@@ -2222,6 +2268,7 @@
     <!-- Generic error when the app is unable to request an SMS code for an unknown reason. -->
     <string name="RegistrationActivity_unable_to_request_verification_code">Nie je možné požiadať o overovací kód. Skontrolujte pripojenie k sieti a skúste to znova.</string>
     <string name="RegistrationActivity_non_standard_number_format">Neštandardný formát čísla</string>
+    <!-- Dialog message shown to confirm when entering phone number (first placeholder) is normalized and formatted differently by the app (second placeholder). -->
     <string name="RegistrationActivity_the_number_you_entered_appears_to_be_a_non_standard">Zdá sa, že zadané číslo (%1$s) má neštandardný formát.\n\n Mali ste na mysli %2$s?</string>
     <string name="RegistrationActivity_signal_android_phone_number_format">Signal Android - Formát telefónneho čísla</string>
     <!--    Small "toast" notification to the user confirming that they have requested a new code via voice call.-->
@@ -2884,6 +2931,8 @@
     <string name="ConversationUpdateItem_loading">Načítava sa</string>
     <string name="ConversationUpdateItem_learn_more">Dozvedieť sa viac</string>
     <string name="ConversationUpdateItem_join_call">Pripojiť sa k hovoru</string>
+    <!-- Action button label for starting a new call in the current conversation -->
+    <string name="ConversationUpdateItem_call_back">Zavolať späť</string>
     <string name="ConversationUpdateItem_return_to_call">Vrátiť sa k hovoru</string>
     <string name="ConversationUpdateItem_call_is_full">Hovor je plne obsadený</string>
     <string name="ConversationUpdateItem_invite_friends">Pozvať priateľov</string>
@@ -2948,6 +2997,7 @@
     <string name="safety_number_change_dialog__leave_call">Opustiť hovor</string>
     <string name="safety_number_change_dialog__the_following_people_may_have_reinstalled_or_changed_devices">Nasledujúce osoby si možno preinštalovali alebo zmenili zariadenia. Overte si s nimi vaše bezpečnostné číslo pre zaistenie súkromia.</string>
     <string name="safety_number_change_dialog__view">Zobraziť</string>
+    <!-- Subtitle shown for a single contact and that their safety number was previously verified and is now no longer verified. -->
     <string name="safety_number_change_dialog__previous_verified">V minulosti overený</string>
 
     <!-- EnableCallNotificationSettingsDialog__call_notifications_checklist -->
@@ -3113,6 +3163,18 @@
     <string name="EditProfileFragment__group_name">Názov skupiny</string>
     <string name="EditProfileFragment__group_description">Popis skupiny</string>
   <!-- Removed by excludeNonTranslatables <string name="EditProfileFragment__support_link" translatable="false">https://support.signal.org/hc/articles/360007459591</string> -->
+    <!-- The title of a dialog prompting user to update to the latest version of Signal. -->
+    <string name="EditProfileFragment_deprecated_dialog_title">Aktualizovať Signal</string>
+    <!-- The body of a dialog prompting user to update to the latest version of Signal. -->
+    <string name="EditProfileFragment_deprecated_dialog_body">Táto verzia Signalu vypršala. Aktualizujte ju, aby ste mohli Signal používať naďalej.</string>
+    <!-- The button on a dialog prompting user to update to the latest version of Signal. When clicked, the user will be taken to the store to update their app. -->
+    <string name="EditProfileFragment_deprecated_dialog_update_button">Aktualizovať</string>
+    <!-- The title of a dialog informing the user that they cannot use this app feature when they are unregistered. -->
+    <string name="EditProfileFragment_unregistered_dialog_title">Zariadenie nie je registrované</string>
+    <!-- The body of a dialog informing the user that they cannot use this app feature when they are unregistered. -->
+    <string name="EditProfileFragment_unregistered_dialog_body">Toto zariadenie už nie je registrované. Ak chcete vykonať zmeny vo svojom účte, znova ho zaregistrujte.</string>
+    <!-- The button on a dialog informing the user that they cannot use this app feature when they are unregistered. When clicked, the user will be taken to a screen to help them re-register. -->
+    <string name="EditProfileFragment_unregistered_dialog_reregister_button">Znovu zaregistrovať</string>
 
     <!-- EditProfileNameFragment -->
     <string name="EditProfileNameFragment_your_name">Vaše meno</string>
@@ -3207,7 +3269,6 @@
         <item>Iné</item>
         <item>Platby (MobileCoin)</item>
         <item>Príspevky a Odznaky</item>
-        <item>Export SMS</item>
     </string-array>
     <!-- Subject of email when submitting debug logs to help debug slow notifications -->
     <string name="DebugLogsPromptDialogFragment__signal_android_support_request">Odoslanie denníka ladenia Signal Android</string>
@@ -3264,6 +3325,7 @@
 
     <string name="arrays__default">Predvolená</string>
     <string name="arrays__high">Vysoká</string>
+    <!-- Setting title that represent an abstract priority to assign to notifications as the max/highest priority a notification can be within the system. -->
     <string name="arrays__max">Maximálna</string>
 
     <!-- plurals.xml -->
@@ -3590,6 +3652,14 @@
     <!-- Storage permission row description -->
     <string name="GrantPermissionsFragment__send_photos_videos_and_files">Posielajte fotografie, videá a súbory zo svojho zariadenia.</string>
 
+    <!-- PermissionDeniedBottomSheet -->
+    <!-- Sheet describing step 1 on how to give permissions by opening settings -->
+    <string name="PermissionDeniedBottomSheet__1_tap_settings_below">1. Tap “Settings” below</string>
+    <!-- Sheet describing step 2 on how to give permissions by checking the permissions button in settings where %s will be replaced with an image of a checked button -->
+    <string name="PermissionDeniedBottomSheet__2_allow_permission">2. %1$s Allow the permission</string>
+    <!-- Label for button at the bottom of the sheet which opens the system permission settings -->
+    <string name="PermissionDeniedBottomSheet__settings">Settings</string>
+
     <!-- PaymentsSecuritySetupFragment -->
     <!-- Toolbar title -->
     <string name="PaymentsSecuritySetupFragment__security_setup">Nastavenie zabezpečenia</string>
@@ -3630,6 +3700,7 @@
     <string name="PaymentsDetailsFragment__sent_to_s">Odoslané používateľovi %1$s</string>
     <string name="PaymentsDetailsFragment__you_on_s_at_s">Vy na %1$s s %2$s</string>
     <string name="PaymentsDetailsFragment__s_on_s_at_s">%1$s na %2$s s %3$s</string>
+    <!-- Prefix to a name to indicate who a payment was sent to -->
     <string name="PaymentsDetailsFragment__to">Komu</string>
     <string name="PaymentsDetailsFragment__from">Od</string>
     <string name="PaymentsDetailsFragment__information">Podrobnosti o transakcii vrátane sumy a času transakcie sú súčasťou MobileCoin Ledger.</string>
@@ -3692,6 +3763,7 @@
     <string name="ConfirmPayment__confirm_payment">Potvrďte platbu</string>
     <string name="ConfirmPayment__network_fee">Sieťový poplatok</string>
     <string name="ConfirmPayment__estimated_s">Odhadované %1$s</string>
+    <!-- Prefix to a name to indicate who a payment will be sent to -->
     <string name="ConfirmPayment__to">Komu</string>
     <string name="ConfirmPayment__total_amount">Celková suma</string>
     <string name="ConfirmPayment__balance_s">Zostatok: %1$s</string>
@@ -3846,6 +3918,14 @@
     <string name="conversation_group_options__conversation">Čet</string>
     <string name="conversation_group_options__broadcast">Poslať všetkým</string>
 
+    <!-- DoubleTapEditEducationSheet -->
+    <!-- Displayed as the title of the education bottom sheet -->
+    <string name="DoubleTapEditEducationSheet__double_tap_edit_title">Double tap to edit</string>
+    <!-- Text on the sheet explaining how double tapping on a message will let them edit it -->
+    <string name="DoubleTapEditEducationSheet__quickly_tap_twice">Quickly tap twice on your messages to edit them. You can edit your messages up to 24hrs after they’ve been sent.</string>
+    <!-- Button label to dismiss sheet -->
+    <string name="DoubleTapEditEducationSheet__got_it">Got it</string>
+
     <!-- text_secure_normal -->
     <string name="text_secure_normal__menu_new_group">Nová skupina</string>
     <string name="text_secure_normal__menu_settings">Nastavenia</string>
@@ -3862,8 +3942,6 @@
     <string name="verify_display_fragment_context_menu__compare_with_clipboard">Porovnať</string>
 
     <!-- reminder_header -->
-    <string name="reminder_header_push_title">Zapnúť Signal správy a hovory</string>
-    <string name="reminder_header_push_text">Zlepšite svoj zážitok z komunikácie.</string>
     <string name="reminder_header_service_outage_text">Signal má technické ťažkosti. Pracujeme na tom, aby sme čo najskôr obnovili našu službu.</string>
     <string name="reminder_header_progress">%1$d%%</string>
     <!-- Body text of a banner that will show at the top of the chat list when we temporarily cannot process the user\'s contacts -->
@@ -4113,11 +4191,11 @@
     <!-- Snackbar text when pressing invalid radio item -->
     <string name="PhoneNumberPrivacySettingsFragment__to_change_this_setting">"Ak chcete toto nastavenie zmeniť, v časti Kto môže vidieť moje telefónne číslo zvoľte „Nikto“."</string>
     <!-- Dialog title shown when selecting "Nobody" in phone number privacy settings for who can find me by number -->
-    <string name="PhoneNumberPrivacySettingsFragment__nobody_can_find_me_warning_title">Are you sure?</string>
+    <string name="PhoneNumberPrivacySettingsFragment__nobody_can_find_me_warning_title">Naozaj chcete pokračovať?</string>
     <!-- Dialog warning message shown when selecting "Nobody" in phone number privacy settings for who can find me by number -->
-    <string name="PhoneNumberPrivacySettingsFragment__nobody_can_find_me_warning_message">Setting \"Who can find me by number\" to \"Nobody\" will make it harder for people to find you on Signal.</string>
+    <string name="PhoneNumberPrivacySettingsFragment__nobody_can_find_me_warning_message">Ak v časti „Kto ma môže vyhľadať pomocou telefónneho čísla“ vyberiete možnosť „Nikto“, ľudia vás v aplikácii Signal nájdu ťažšie.</string>
     <!-- Dialog button text for canceling change action -->
-    <string name="PhoneNumberPrivacySettingsFragment__cancel">Cancel</string>
+    <string name="PhoneNumberPrivacySettingsFragment__cancel">Zrušiť</string>
     <string name="PhoneNumberPrivacy_everyone">Každý</string>
     <string name="PhoneNumberPrivacy_nobody">Nikto</string>
     <string name="preferences_app_protection__screen_lock">Zámok obrazovky</string>
@@ -4174,6 +4252,8 @@
     <string name="TransferOrRestoreFragment__you_need_access_to_your_old_device">Potrebujete prístup k svojmu starému zariadeniu.</string>
     <string name="TransferOrRestoreFragment__restore_from_backup">Obnoviť zo zálohy</string>
     <string name="TransferOrRestoreFragment__restore_your_messages_from_a_local_backup">Obnovte vaše správy z lokálnej zálohy. Keď nevykonáte obnovu teraz, neskôr nebude možná.</string>
+    <!-- Button label for more options -->
+    <string name="TransferOrRestoreFragment__more_options">Viac možností</string>
 
     <!-- NewDeviceTransferInstructionsFragment -->
     <string name="NewDeviceTransferInstructions__open_signal_on_your_old_android_phone">Otvorte Signal na svojom starom Android zariadení.</string>
@@ -4314,6 +4394,7 @@
     <string name="RecipientBottomSheet_copied_to_clipboard">Skopírované do schránky</string>
 
     <string name="GroupRecipientListItem_admin">Admin</string>
+    <!-- Button text to approve a user that has requested to join a group -->
     <string name="GroupRecipientListItem_approve_description">Prijať</string>
     <string name="GroupRecipientListItem_deny_description">Odmietnuť</string>
 
@@ -4341,6 +4422,7 @@
 
     <!-- VoiceNoteMediaDescriptionCompatFactory -->
     <string name="VoiceNoteMediaItemFactory__voice_message">Hlasová správa · %1$s</string>
+    <!-- This is a title in a banner describing the conversation sender to receiver placeholders of the currently playing voice memo. -->
     <string name="VoiceNoteMediaItemFactory__s_to_s">od %1$s do %2$s</string>
 
     <!-- StorageUtil -->
@@ -4354,8 +4436,20 @@
     <string name="ReviewCardDialogFragment__review_members">Skontrolujte členov</string>
     <!-- Title of a screen where the user will be prompted to review a message request matching the name of someone they already know -->
     <string name="ReviewCardDialogFragment__review_request">Overiť žiadosť</string>
-    <string name="ReviewCardDialogFragment__d_group_members_have_the_same_name">%1$d členovia skupiny majú rovnaké meno. Overte nižšie zobrazených členov a zvoľte ďalší krok.</string>
-    <string name="ReviewCardDialogFragment__if_youre_not_sure">Ak si nie ste istý/á, od koho je táto žiadosť, overte nižšie zobrazené kontakty a zvoľte úkon.</string>
+    <!-- Message of a screen where the user will be prompted to review a message request matching the name of someone they already know -->
+    <plurals name="ReviewCardDialogFragment__d_group_members_have_the_same_name">
+        <item quantity="one">%1$d group member have the same name, review the member below and choose to take action.</item>
+        <item quantity="few">%1$d group members have the same name, review the members below and choose to take action.</item>
+        <item quantity="many">%1$d group members have the same name, review the members below and choose to take action.</item>
+        <item quantity="other">%1$d group members have the same name, review the members below and choose to take action.</item>
+    </plurals>
+    <!-- Message of a screen where the user will be prompted to review a message request matching the name of someone they already know -->
+    <plurals name="ReviewCardDialogFragment__if_youre_not_sure">
+        <item quantity="one">If you\'re not sure who the request is from, review the contact below and take action.</item>
+        <item quantity="few">If you\'re not sure who the request is from, review the contacts below and take action.</item>
+        <item quantity="many">If you\'re not sure who the request is from, review the contacts below and take action.</item>
+        <item quantity="other">If you\'re not sure who the request is from, review the contacts below and take action.</item>
+    </plurals>
     <string name="ReviewCardDialogFragment__no_other_groups_in_common">Žiadne ďalšie spoločné skupiny.</string>
     <string name="ReviewCardDialogFragment__no_groups_in_common">Žiadne spoločné skupiny.</string>
     <plurals name="ReviewCardDialogFragment__d_other_groups_in_common">
@@ -4384,17 +4478,30 @@
     <!-- Displayed when a recent name change has occurred. First placeholder is new short name, second is previous name, third is new name. -->
     <string name="ReviewCard__s_recently_changed">%1$s nedávno zmenil/a názov svojho profilu z %2$s na %3$s</string>
     <!-- Displayed when a review user is in your system contacts. Placeholder is short name. -->
-    <string name="ReviewCard__s_is_in_your_system_contacts">%1$s je vo vašich systémových kontaktoch</string>
+    <string name="ReviewCard__s_is_in_your_system_contacts">%1$s je vo vašich kontaktoch</string>
 
     <!-- CallParticipantsListUpdatePopupWindow -->
     <string name="CallParticipantsListUpdatePopupWindow__s_joined">%1$s sa pripojil(a) k hovoru</string>
     <string name="CallParticipantsListUpdatePopupWindow__s_and_s_joined">%1$s a %2$s sa pripojili k hovoru</string>
     <string name="CallParticipantsListUpdatePopupWindow__s_s_and_s_joined">%1$s, %2$s a %3$s sa pripojili k hovoru</string>
-    <string name="CallParticipantsListUpdatePopupWindow__s_s_and_d_others_joined">%1$s, %2$s a %3$d ďalší sa pripojili k hovoru</string>
+    <!-- Toast message shown in group call when 3 or more people join -->
+    <plurals name="CallParticipantsListUpdatePopupWindow__s_s_and_d_others_joined">
+        <item quantity="one">%1$s, %2$s and %3$d other joined</item>
+        <item quantity="few">%1$s, %2$s and %3$d others joined</item>
+        <item quantity="many">%1$s, %2$s and %3$d others joined</item>
+        <item quantity="other">%1$s, %2$s and %3$d others joined</item>
+    </plurals>
+    <!-- Toast/popup text shown when someone leaves a group call -->
     <string name="CallParticipantsListUpdatePopupWindow__s_left">%1$s opustil(a) hovor</string>
     <string name="CallParticipantsListUpdatePopupWindow__s_and_s_left">%1$s a %2$s opustili hovor</string>
     <string name="CallParticipantsListUpdatePopupWindow__s_s_and_s_left">%1$s, %2$s a %3$s opustili hovor</string>
-    <string name="CallParticipantsListUpdatePopupWindow__s_s_and_d_others_left">%1$s, %2$s a %3$d ďalší opusili hovor</string>
+    <!-- Toast message shown in group call when 3 or more people leave -->
+    <plurals name="CallParticipantsListUpdatePopupWindow__s_s_and_d_others_left">
+        <item quantity="one">%1$s, %2$s and %3$d other left</item>
+        <item quantity="few">%1$s, %2$s and %3$d others left</item>
+        <item quantity="many">%1$s, %2$s and %3$d others left</item>
+        <item quantity="other">%1$s, %2$s and %3$d others left</item>
+    </plurals>
 
     <string name="CallParticipant__you">Vy</string>
     <string name="CallParticipant__you_on_another_device">Vy (na inom zariadení)</string>
@@ -4632,7 +4739,7 @@
     <!-- Label for our high quality media conversion. This has better quality than standard. -->
     <string name="QualitySelectorBottomSheetDialog__slower_more_data">Pomalšie, viac dát</string>
     <!-- Title heading for our media conversion quality selector. -->
-    <string name="QualitySelectorBottomSheetDialog__media_quality">Media quality</string>
+    <string name="QualitySelectorBottomSheetDialog__media_quality">Kvalita médií</string>
 
     <!-- AppSettingsFragment -->
     <string name="AppSettingsFragment__invite_your_friends">Pozvite vašich priateľov</string>
@@ -4768,10 +4875,17 @@
 
     <!-- PrivacySettingsFragment -->
     <string name="PrivacySettingsFragment__blocked">Blokované</string>
-    <string name="PrivacySettingsFragment__d_contacts">%1$d kontaktov</string>
+    <!-- Settings label that shows the number blocked contacts -->
+    <plurals name="PrivacySettingsFragment__d_contacts">
+        <item quantity="one">%1$d contact</item>
+        <item quantity="few">%1$d contacts</item>
+        <item quantity="many">%1$d contacts</item>
+        <item quantity="other">%1$d contacts</item>
+    </plurals>
     <string name="PrivacySettingsFragment__messaging">Odosielanie správ</string>
     <string name="PrivacySettingsFragment__disappearing_messages">Miznúce správy</string>
     <string name="PrivacySettingsFragment__app_security">Zabezpečenie aplikácie</string>
+    <!-- This refers to the multi-tasking overview (recent apps) from the Android operating system.-->
     <string name="PrivacySettingsFragment__block_screenshots_in_the_recents_list_and_inside_the_app">Zakázať vytváranie snímkov obrazovky v aplikácii a zozname nedávnych konverzácií</string>
     <string name="PrivacySettingsFragment__signal_message_and_calls">Správy a hovory Signal, vždy opakované hovory a zapečatený odosielateľ</string>
     <string name="PrivacySettingsFragment__default_timer_for_new_changes">Predvolený časovač pre nové čety</string>
@@ -4828,11 +4942,14 @@
     <string name="DataAndStorageSettingsFragment__media_quality">Kvalita médií</string>
     <string name="DataAndStorageSettingsFragment__sent_media_quality">Kvalita odoslaných médií</string>
     <string name="DataAndStorageSettingsFragment__sending_high_quality_media_will_use_more_data">Odosielanie médií vo vysokej kvalite využije viac dát.</string>
+    <!-- Setting option that can be selected to default media to be sent as high quality by default -->
     <string name="DataAndStorageSettingsFragment__high">Vysoká</string>
+    <!-- Setting option that can be selected to default media to be sent as standard quality by default -->
     <string name="DataAndStorageSettingsFragment__standard">Štandardná</string>
     <string name="DataAndStorageSettingsFragment__calls">Volania</string>
 
     <!-- ChatColorSelectionFragment -->
+    <!-- Text shown on a circle button to indicate the app will automatically select a color for conversation bubbles for this chat. -->
     <string name="ChatColorSelectionFragment__auto">Automatická</string>
     <string name="ChatColorSelectionFragment__use_custom_colors">Použite vlastné farby</string>
     <string name="ChatColorSelectionFragment__chat_color">Farba četu</string>
@@ -4943,7 +5060,7 @@
     <string name="ConversationSettingsFragment__disappearing_messages">Miznúce správy</string>
     <string name="ConversationSettingsFragment__sounds_and_notifications">Zvuky &amp; upozornenia</string>
   <!-- Removed by excludeNonTranslatables <string name="ConversationSettingsFragment__internal_details" translatable="false">Internal details</string> -->
-    <string name="ConversationSettingsFragment__contact_details">Údaje o kontakte</string>
+    <string name="ConversationSettingsFragment__contact_details">Kontaktné informácie</string>
     <string name="ConversationSettingsFragment__view_safety_number">Zobraziť bezpečnostné číslo</string>
     <string name="ConversationSettingsFragment__block">Blokovať</string>
     <string name="ConversationSettingsFragment__block_group">Blokovať skupinu</string>
@@ -5050,6 +5167,7 @@
     <string name="AvatarPickerFragment__take_a_picture">Odfoťte sa</string>
     <string name="AvatarPickerFragment__choose_a_photo">Vyberte fotku</string>
     <string name="AvatarPickerFragment__photo">Fotka</string>
+    <!-- Button label during avatar selection/creation that when tapped lets you generate an avatar from typed in text. -->
     <string name="AvatarPickerFragment__text">Text</string>
     <string name="AvatarPickerFragment__save">Uložiť</string>
     <string name="AvatarPickerFragment__clear_avatar">Vymazať avatara</string>
@@ -5118,26 +5236,36 @@
     <string name="MediaReviewFragment__add_a_message">Pridajte správu</string>
     <string name="MediaReviewFragment__add_a_reply">Pridať odpoveď</string>
     <string name="MediaReviewFragment__send_to">Odoslať</string>
-    <string name="MediaReviewFragment__view_once_message">Zobraziť správu raz</string>
+    <string name="MediaReviewFragment__view_once_message">Médiá na jedno pozretie</string>
     <string name="MediaReviewFragment__one_or_more_items_were_too_large">Jedna, alebo viac položiek bolo príliš veľkých</string>
     <string name="MediaReviewFragment__one_or_more_items_were_invalid">Jedna, alebo viac položiek je neplatných</string>
     <string name="MediaReviewFragment__too_many_items_selected">Je vybratých príliš veľa položiek</string>
     <!-- Small notification presented to the user when they set their video to view-once mode -->
-    <string name="MediaReviewFragment__video_set_to_view_once">Video set to view once</string>
+    <string name="MediaReviewFragment__video_set_to_view_once">Video je nastavené na jedno pozretie</string>
     <!-- Small notification presented to the user when they set their photo to view-once mode -->
-    <string name="MediaReviewFragment__photo_set_to_view_once">Photo sent to view once</string>
+    <string name="MediaReviewFragment__photo_set_to_view_once">Fotka je nastavená na jedno pozretie</string>
     <!-- Small notification presented to the user when they set their video to be sent in high visual quality. -->
-    <string name="MediaReviewFragment__video_set_to_high_quality">Video set to high quality</string>
+    <string name="MediaReviewFragment__video_set_to_high_quality">Video je nastavené na vysokú kvalitu</string>
     <!-- Small notification presented to the user when they set their video to be sent in standard (lower than high) visual quality. -->
-    <string name="MediaReviewFragment__video_set_to_standard_quality">Video set to standard quality</string>
+    <string name="MediaReviewFragment__video_set_to_standard_quality">Video je nastavené na štandardnú kvalitu</string>
     <!-- Small notification presented to the user when they set their still image to be sent in high visual quality. -->
-    <string name="MediaReviewFragment__photo_set_to_high_quality">Photo set to high quality</string>
+    <string name="MediaReviewFragment__photo_set_to_high_quality">Fotka je nastavená na vysokú kvalitu</string>
     <!-- Small notification presented to the user when they set their still image to be sent in standard (lower than high) visual quality. -->
-    <string name="MediaReviewFragment__photo_set_to_standard_quality">Photo set to standard quality</string>
+    <string name="MediaReviewFragment__photo_set_to_standard_quality">Fotka je nastavená na štandardnú kvalitu</string>
     <!-- Small notification presented to the user when they set multiple media items to be sent in high visual quality. -->
-    <string name="MediaReviewFragment__items_set_to_high_quality">%1$d items set to high quality</string>
+    <plurals name="MediaReviewFragment__items_set_to_high_quality">
+        <item quantity="one">%1$d položka je nastavená na vysokú kvalitu</item>
+        <item quantity="few">%1$d položky sú nastavené na vysokú kvalitu</item>
+        <item quantity="many">%1$d položky je nastavenej na vysokú kvalitu</item>
+        <item quantity="other">%1$d položiek je nastavených na vysokú kvalitu</item>
+    </plurals>
     <!-- Small notification presented to the user when they set multiple media items to be sent in standard (lower than high) visual quality. -->
-    <string name="MediaReviewFragment__items_set_to_standard_quality">%1$d items set to standard quality</string>
+    <plurals name="MediaReviewFragment__items_set_to_standard_quality">
+        <item quantity="one">%1$d položka je nastavená na štandardnú kvalitu</item>
+        <item quantity="few">%1$d položky sú nastavené na štandardnú kvalitu</item>
+        <item quantity="many">%1$d položky je nastavenej na štandardnú kvalitu</item>
+        <item quantity="other">%1$d položiek je nastavených na štandardnú kvalitu</item>
+    </plurals>
 
     <string name="ImageEditorHud__cancel">Zrušiť</string>
     <string name="ImageEditorHud__draw">Nakreslite</string>
@@ -5163,18 +5291,18 @@
     <string name="MediaReviewImagePageFragment__youll_lose_any_changes">Prídete o všetky zmeny, ktoré ste urobili na tejto fotografii.</string>
 
     <!-- The title of a dialog notifying that a user was found matching a scanned QR code. The placeholder is a username. Usernames are always latin characters. -->
-    <string name="MediaCaptureFragment_username_dialog_title">Found %1$s</string>
+    <string name="MediaCaptureFragment_username_dialog_title">Používateľ %1$s bol nájdený</string>
     <!-- The body of a dialog notifying that a user was found matching a scanned QR code, prompting the user to start a chat with them. The placeholder is a username. Usernames are always latin characters. -->
-    <string name="MediaCaptureFragment_username_dialog_body">Start a chat with \"%1$s\"</string>
+    <string name="MediaCaptureFragment_username_dialog_body">Začať čet s používateľom „%1$s“</string>
     <!-- The label of a dialog asking the user if they would like to start a chat with a specific user. -->
-    <string name="MediaCaptureFragment_username_dialog_go_to_chat_button">Go to chat</string>
+    <string name="MediaCaptureFragment_username_dialog_go_to_chat_button">Prejsť na čet</string>
 
     <!-- The title of a dialog notifying that the user scanned a QR code that could be used to link a Signal device. -->
-    <string name="MediaCaptureFragment_device_link_dialog_title">Link device?</string>
+    <string name="MediaCaptureFragment_device_link_dialog_title">Prepojiť zariadenie?</string>
     <!-- The body of a dialog notifying that the user scanned a QR code that could be used to link a Signal device. -->
-    <string name="MediaCaptureFragment_device_link_dialog_body">It looks like you\'re trying to link a Signal device. Tap continue and scan the code again to link it.</string>
+    <string name="MediaCaptureFragment_device_link_dialog_body">Vyzerá to, že sa snažíte prepojiť zariadenie Signal. Ťuknite na Pokračovať a znova naskenujte kód, aby ste ho prepojili.</string>
     <!-- The label of a dialog asking the user if they would like to continue to the linked device settings screen. -->
-    <string name="MediaCaptureFragment_device_link_dialog_continue">Continue</string>
+    <string name="MediaCaptureFragment_device_link_dialog_continue">Pokračovať</string>
 
 
     <string name="BadgesOverviewFragment__my_badges">Moje odznaky</string>
@@ -5274,7 +5402,7 @@
     <!-- Displayed as a subtitle on a row in the Manage Donations screen when payment for a donation is pending -->
     <string name="MySupportPreference__payment_pending">Čaká sa na platbu</string>
     <!-- Displayed as a dialog message when clicking on a donation row that is pending. Placeholder is a formatted fiat amount -->
-    <string name="MySupportPreference__your_bank_transfer_of_s">Your bank transfer of %1$s is pending. Bank transfers can take 1 to 14 business days to complete.  </string>
+    <string name="MySupportPreference__your_bank_transfer_of_s">Čaká sa na váš bankový prevod vo výške %1$s. Dokončenie bankového prevodu môže trvať 1 až 14 pracovných dní.  </string>
     <!-- Displayed in the pending help dialog, used to launch user to more details about bank transfers -->
     <string name="MySupportPreference__learn_more">Zistiť viac</string>
 
@@ -5711,7 +5839,7 @@
     <string name="StoryViewerFragment__s_s">%1$s %2$s</string>
     <!-- Displayed when viewing a post you sent -->
     <string name="StoryViewerPageFragment__you">Vy</string>
-    <!-- Displayed when viewing a post displayed to a group -->
+    <!-- Displayed when viewing a story sent to a group, placeholders are person who sent the story and the group name -->
     <string name="StoryViewerPageFragment__s_to_s">od %1$s do %2$s</string>
     <!-- Displayed when viewing a post from another user with no replies -->
     <string name="StoryViewerPageFragment__reply">Odpovedať</string>
@@ -5810,7 +5938,7 @@
     <!-- Signal connections sheet bullet point 2 -->
     <string name="SignalConnectionsBottomSheet__accepting_a_message_request">Prijatie žiadosti o správu</string>
     <!-- Signal connections sheet bullet point 3 -->
-    <string name="SignalConnectionsBottomSheet__having_them_in_your_system_contacts">Mať ich vo svojich systémových kontaktoch</string>
+    <string name="SignalConnectionsBottomSheet__having_them_in_your_system_contacts">Pridali ste si ich do svojich kontaktov</string>
     <!-- Note at the bottom of the Signal connections sheet -->
     <string name="SignalConnectionsBottomSheet__your_connections_can_see_your_name">"Vašim kontaktom sa môže zobrazovať vaše meno a fotografia, ako aj príspevky v časti „Môj príbeh“, pokiaľ to pred nimi neskryjete."</string>
     <!-- Clickable option to add a viewer to a custom story -->
@@ -6256,9 +6384,9 @@
     <!-- Dialog title when a user tries to donate while they already have a pending donation. -->
     <string name="DonateToSignalFragment__you_have_a_donation_pending">Čaká sa na príspevok</string>
     <!-- Dialog body when a user tries to donate while they already have a pending monthly donation. -->
-    <string name="DonateToSignalFragment__bank_transfers_usually_take_1_business_day_to_process_monthly">Bank transfers can take 1 to 14 business days to process. Please wait until this payment completes before updating your subscription.</string>
+    <string name="DonateToSignalFragment__bank_transfers_usually_take_1_business_day_to_process_monthly">Spracovanie bankového prevodu môže trvať 1 až 14 pracovných dní. Pred aktualizáciou prispievania počkajte, kým sa platba nedokončí.</string>
     <!-- Dialog body when a user tries to donate while they already have a pending one time donation. -->
-    <string name="DonateToSignalFragment__bank_transfers_usually_take_1_business_day_to_process_onetime">Bank transfers can take 1 to 14 business days to process. Please wait until this payment completes before making another donation.</string>
+    <string name="DonateToSignalFragment__bank_transfers_usually_take_1_business_day_to_process_onetime">Spracovanie bankového prevodu môže trvať 1 až 14 pracovných dní. Pred odoslaním ďalšieho príspevku počkajte, kým sa platba nedokončí.</string>
     <!-- Dialog body when a user tries to donate while they already have a pending monthly donation. -->
     <string name="DonateToSignalFragment__your_payment_is_still_being_processed_monthly">Váš príspevok sa stále spracováva. V závislosti od vášho pripojenia to môže trvať niekoľko minút. Pred aktualizáciou prispievania počkajte, kým sa platba nedokončí.</string>
     <!-- Dialog body when a user tries to donate while they already have a pending one time donation. -->
@@ -6412,7 +6540,7 @@
     <!-- Top text block of donation pending sheet displayed after one-time donation via a bank transfer. Placeholder is the badge name. -->
     <string name="DonationPendingBottomSheet__your_one_time_donation_is_pending">Čaká sa na váš jednorazový príspevok. Akonáhle bude váš príspevok prijatý, budete môcť vo svojom profile zobraziť odznak %1$s.</string>
     <!-- Bottom text block of donation pending sheet displayed after donating via a bank transfer. Placeholder is for learn more. -->
-    <string name="DonationPendingBottomSheet__bank_transfers_usually_take">Bank transfers can take 1 to 14 business days to process. %1$s</string>
+    <string name="DonationPendingBottomSheet__bank_transfers_usually_take">Spracovanie bankového prevodu môže trvať 1 až 14 pracovných dní. %1$s</string>
     <!-- Learn more text for donation pending sheet displayed after donating via a bank transfer. -->
     <string name="DonationPendingBottomSheet__learn_more">Zistiť viac</string>
     <!-- Confirmation button for donation pending sheet displayed after donating via a bank transfer. -->
@@ -6762,7 +6890,7 @@
     <!-- Displayed in action bar at the top of the fragment -->
     <string name="CallLinkDetailsFragment__call_details">Podrobnosti hovoru</string>
     <!-- Displayed in a text row, allowing the user to click and edit a call name -->
-    <string name="CallLinkDetailsFragment__edit_call_name">Edit call name</string>
+    <string name="CallLinkDetailsFragment__edit_call_name">Upraviť názov hovoru</string>
     <!-- Displayed in a text row, allowing the user to click and add a call name -->
     <string name="CallLinkDetailsFragment__add_call_name">Pridať názov hovoru</string>
     <!-- Displayed in a toggle row, allowing the user to click to enable or disable member approval -->
@@ -6831,9 +6959,9 @@
     <!-- Shown on the generated username qr code image to explain how to use it. -->
     <string name="UsernameLinkSettings_scan_this_qr_code">Naskenujte tento QR kód pomocou telefónu a četujte so mnou v aplikácii Signal.</string>
     <!-- Dialog title shown when scanning an image from the gallery for a username QR code and there is no qr code in the image. -->
-    <string name="UsernameLinkSettings_qr_code_not_found">QR code not found</string>
+    <string name="UsernameLinkSettings_qr_code_not_found">QR kód sa nenašiel</string>
     <!-- Dialog message shown when scanning an image from the gallery for a username QR code and there is no qr code in the image. -->
-    <string name="UsernameLinkSettings_try_scanning_another_image_containing_a_signal_qr_code">Try scanning another image containing a Signal QR code.</string>
+    <string name="UsernameLinkSettings_try_scanning_another_image_containing_a_signal_qr_code">Skúste naskenovať iný obrázok so Signal QR kódom.</string>
 
     <!-- Explanatory text at the top of a bottom sheet describing how username links work -->
     <string name="UsernameLinkShareBottomSheet_title">Ktokoľvek s týmto odkazom si môže pozrieť vaše používateľské meno a začať s vami čet. Zdieľajte ho iba s ľuďmi, ktorým dôverujete.</string>
@@ -6930,9 +7058,72 @@
     <!-- Dialog action to invite the phone number to Signal -->
     <string name="FindByActivity__invite">Pozvať</string>
     <!-- Button label for a button that will launch a camera to scan a username QR code -->
-    <string name="FindByActivity__qr_scan_button">Scan QR code</string>
+    <string name="FindByActivity__qr_scan_button">Skenovať QR kód</string>
     <!-- Content of a dialog indicating that we could not perform the requested action because we encountered a network error. -->
-    <string name="FindByActivity__network_error_dialog">Encountered a network error. Try again later.</string>
+    <string name="FindByActivity__network_error_dialog">Vyskytla sa chyba siete. Skúste znovu neskôr.</string>
+
+    <!-- Title for an alert letting someone know that one of their linked devices is inactive. -->
+    <string name="LinkedDeviceInactiveMegaphone_title">Neaktívne prepojené zariadenie</string>
+    <!-- Body for an alert letting someone know that one of their linked devices is inactive. The string placeholder is the name of the device, and the number placeholder is the number of days before device is unlinked. -->
+    <plurals name="LinkedDeviceInactiveMegaphone_body">
+        <item quantity="one">Ak chcete ponechať zariadenie „%1$s“ prepojené, do %2$d dňa otvorte na danom zariadení Signal.</item>
+        <item quantity="few">Ak chcete ponechať zariadenie „%1$s“ prepojené, do %2$d dní otvorte na danom zariadení Signal.</item>
+        <item quantity="many">Ak chcete ponechať zariadenie „%1$s“ prepojené, do %2$d dňa otvorte na danom zariadení Signal.</item>
+        <item quantity="other">Ak chcete ponechať zariadenie „%1$s“ prepojené, do %2$d dní otvorte na danom zariadení Signal.</item>
+    </plurals>
+    <!-- Button label for an alert letting someone know that one of their linked devices is inactive. When clicked, the user will opt out of all future alerts. -->
+    <string name="LinkedDeviceInactiveMegaphone_dont_remind_button_label">Nepripomínať</string>
+    <!-- Button label for an alert letting someone know that one of their linked devices is inactive. When clicked, the alert will be dismissed. -->
+    <string name="LinkedDeviceInactiveMegaphone_got_it_button_label">Rozumiem</string>
+
+    <!-- NicknameFragment -->
+    <!-- Title displayed at the top of the screen -->
+    <string name="NicknameActivity__nickname">Prezývka</string>
+    <!-- Subtitle displayed under title -->
+    <string name="NicknameActivity__nicknames_amp_notes">Prezývky a poznámky sa ukladajú v aplikácii Signal a sú vybavené end-to-end šifrovaním. Vidíte ich len vy.</string>
+    <!-- Field label for given name -->
+    <string name="NicknameActivity__first_name">Krstné meno</string>
+    <!-- Content description for first name clear button -->
+    <string name="NicknameActivity__clear_first_name">Vymazať krstné meno</string>
+    <!-- Field label for family name -->
+    <string name="NicknameActivity__last_name">Priezvisko</string>
+    <!-- Content description for last name clear button -->
+    <string name="NicknameActivity__clear_last_name">Vymazať priezvisko</string>
+    <!-- Field label for note -->
+    <string name="NicknameActivity__note">Poznámka</string>
+    <!-- Button label to save -->
+    <string name="NicknameActivity__save">Uložiť</string>
+    <!-- Dialog title for note and name deletion -->
+    <string name="NicknameActivity__delete_nickname">Vymazať?</string>
+    <!-- Dialog message for note and name deletion -->
+    <string name="NicknameActivity__this_will_permanently_delete_this_nickname_and_note">Týmto natrvalo vymažete akúkoľvek prezývku a poznámku, ktorú ste nastavili.</string>
+
+    <!-- ViewNoteBottomSheetDialogFragment -->
+    <!-- Sheet title -->
+    <string name="ViewNoteSheet__note">Poznámka</string>
+    <!-- Content description for opening the note editor -->
+    <string name="ViewNoteSheet__edit_note">Upraviť poznámku</string>
+
+    <!-- BackupProgressService -->
+    <!-- Notification title shown while backup restore job is running -->
+    <string name="BackupProgressService_title">Obnovuje sa záloha…</string>
+    <!-- Notification title shown while downloading backup restore data -->
+    <string name="BackupProgressService_title_downloading">Sťahujú sa zálohované údaje…</string>
+
+    <!-- BackupsTypeSettingsFragment -->
+    <!-- Displayed as the user\'s payment method as a label in a preference row -->
+    <string name="BackupsTypeSettingsFragment__credit_or_debit_card">Credit or debit card</string>
+    <!-- Displayed as the user\'s payment method as a label in a preference row -->
+    <string name="BackupsTypeSettingsFragment__iDEAL">iDEAL</string>
+    <!-- Displayed as the user\'s payment method as a label in a preference row -->
+    <string name="BackupsTypeSettingsFragment__google_pay">Google Pay</string>
+    <!-- Displayed as the user\'s payment method as a label in a preference row -->
+    <string name="BackupsTypeSettingsFragment__bank_transfer">Bank transfer</string>
+    <!-- Displayed as the user\'s payment method as a label in a preference row -->
+    <string name="BackupsTypeSettingsFragment__paypal">PayPal</string>
+    <!-- Displayed as the user\'s payment method as a label in a preference row -->
+    <string name="BackupsTypeSettingsFragment__unknown">Unknown</string>
+
 
     <!-- EOF -->
 </resources>
