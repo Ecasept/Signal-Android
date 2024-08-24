@@ -10,6 +10,7 @@ import org.signal.core.util.SqlUtil
 import org.signal.core.util.count
 import org.signal.core.util.delete
 import org.signal.core.util.deleteAll
+import org.signal.core.util.exists
 import org.signal.core.util.flatten
 import org.signal.core.util.insertInto
 import org.signal.core.util.isAbsent
@@ -34,7 +35,7 @@ import org.thoughtcrime.securesms.calls.log.CallLogFilter
 import org.thoughtcrime.securesms.calls.log.CallLogRow
 import org.thoughtcrime.securesms.database.model.GroupCallUpdateDetailsUtil
 import org.thoughtcrime.securesms.database.model.MessageId
-import org.thoughtcrime.securesms.dependencies.ApplicationDependencies
+import org.thoughtcrime.securesms.dependencies.AppDependencies
 import org.thoughtcrime.securesms.jobs.CallSyncEventJob
 import org.thoughtcrime.securesms.recipients.Recipient
 import org.thoughtcrime.securesms.recipients.RecipientId
@@ -170,8 +171,8 @@ class CallTable(context: Context, databaseHelper: SignalDatabase) : DatabaseTabl
       writableDatabase.insert(TABLE_NAME, null, values)
     }
 
-    ApplicationDependencies.getMessageNotifier().updateNotification(context)
-    ApplicationDependencies.getDatabaseObserver().notifyCallUpdateObservers()
+    AppDependencies.messageNotifier.updateNotification(context)
+    AppDependencies.databaseObserver.notifyCallUpdateObservers()
 
     Log.i(TAG, "Inserted call: $callId type: $type direction: $direction event:$event")
   }
@@ -203,8 +204,8 @@ class CallTable(context: Context, databaseHelper: SignalDatabase) : DatabaseTabl
           SignalDatabase.messages.updateCallLog(call.messageId, call.messageType)
         }
 
-        ApplicationDependencies.getMessageNotifier().updateNotification(context)
-        ApplicationDependencies.getDatabaseObserver().notifyCallUpdateObservers()
+        AppDependencies.messageNotifier.updateNotification(context)
+        AppDependencies.databaseObserver.notifyCallUpdateObservers()
       }
 
       call
@@ -324,8 +325,8 @@ class CallTable(context: Context, databaseHelper: SignalDatabase) : DatabaseTabl
       CallSyncEventJob.enqueueDeleteSyncEvents(toSync)
     }
 
-    ApplicationDependencies.getDeletedCallEventManager().scheduleIfNecessary()
-    ApplicationDependencies.getDatabaseObserver().notifyCallUpdateObservers()
+    AppDependencies.deletedCallEventManager.scheduleIfNecessary()
+    AppDependencies.databaseObserver.notifyCallUpdateObservers()
   }
 
   /**
@@ -363,14 +364,16 @@ class CallTable(context: Context, databaseHelper: SignalDatabase) : DatabaseTabl
       CallSyncEventJob.enqueueDeleteSyncEvents(toSync)
     }
 
-    ApplicationDependencies.getDeletedCallEventManager().scheduleIfNecessary()
-    ApplicationDependencies.getDatabaseObserver().notifyCallUpdateObservers()
+    AppDependencies.deletedCallEventManager.scheduleIfNecessary()
+    AppDependencies.databaseObserver.notifyCallUpdateObservers()
   }
 
-  // region Group / Ad-Hoc Calling
-  fun deleteGroupCall(call: Call) {
-    checkIsGroupOrAdHocCall(call)
-
+  /**
+   * Marks the given call event DELETED. This deletes the associated message, but
+   * keeps the call event around for several hours to ensure out of order messages
+   * do not bring it back.
+   */
+  fun markCallDeletedFromSyncEvent(call: Call) {
     val filter: SqlUtil.Query = getCallSelectionQuery(call.callId, call.peer)
 
     writableDatabase.withinTransaction { db ->
@@ -388,20 +391,23 @@ class CallTable(context: Context, databaseHelper: SignalDatabase) : DatabaseTabl
       }
     }
 
-    ApplicationDependencies.getMessageNotifier().updateNotification(context)
-    ApplicationDependencies.getDatabaseObserver().notifyCallUpdateObservers()
-    Log.d(TAG, "Marked group call event for deletion: ${call.callId}")
+    AppDependencies.messageNotifier.updateNotification(context)
+    AppDependencies.databaseObserver.notifyCallUpdateObservers()
+    Log.d(TAG, "Marked call event for deletion: ${call.callId}")
   }
 
-  fun insertDeletedGroupCallFromSyncEvent(
+  /**
+   * Inserts a call event in the DELETED state with the corresponding data.
+   * Deleted calls are kept around for several hours to ensure they don't reappear
+   * due to out of order messages.
+   */
+  fun insertDeletedCallFromSyncEvent(
     callId: Long,
     recipientId: RecipientId,
+    type: Type,
     direction: Direction,
     timestamp: Long
   ) {
-    val recipient = Recipient.resolved(recipientId)
-    val type = if (recipient.isCallLink) Type.AD_HOC_CALL else Type.GROUP_CALL
-
     writableDatabase
       .insertInto(TABLE_NAME)
       .values(
@@ -416,8 +422,11 @@ class CallTable(context: Context, databaseHelper: SignalDatabase) : DatabaseTabl
       )
       .run(SQLiteDatabase.CONFLICT_ABORT)
 
-    ApplicationDependencies.getDeletedCallEventManager().scheduleIfNecessary()
+    AppDependencies.deletedCallEventManager.scheduleIfNecessary()
+    Log.d(TAG, "Inserted deleted call event: $callId, $type, $direction, $timestamp")
   }
+
+  // region Group / Ad-Hoc Calling
 
   fun acceptIncomingGroupCall(call: Call) {
     checkIsGroupOrAdHocCall(call)
@@ -437,8 +446,8 @@ class CallTable(context: Context, databaseHelper: SignalDatabase) : DatabaseTabl
       .where("$CALL_ID = ?", call.callId)
       .run()
 
-    ApplicationDependencies.getMessageNotifier().updateNotification(context)
-    ApplicationDependencies.getDatabaseObserver().notifyCallUpdateObservers()
+    AppDependencies.messageNotifier.updateNotification(context)
+    AppDependencies.databaseObserver.notifyCallUpdateObservers()
     Log.d(TAG, "[acceptIncomingGroupCall] Transitioned group call ${call.callId} from ${call.event} to $newEvent")
   }
 
@@ -464,8 +473,8 @@ class CallTable(context: Context, databaseHelper: SignalDatabase) : DatabaseTabl
       .where("$CALL_ID = ?", call.callId)
       .run()
 
-    ApplicationDependencies.getMessageNotifier().updateNotification(context)
-    ApplicationDependencies.getDatabaseObserver().notifyCallUpdateObservers()
+    AppDependencies.messageNotifier.updateNotification(context)
+    AppDependencies.databaseObserver.notifyCallUpdateObservers()
     Log.d(TAG, "[acceptOutgoingGroupCall] Transitioned group call ${call.callId} from ${call.event} to $newEvent")
   }
 
@@ -488,8 +497,8 @@ class CallTable(context: Context, databaseHelper: SignalDatabase) : DatabaseTabl
       .where("$CALL_ID = ?", call.callId)
       .run()
 
-    ApplicationDependencies.getMessageNotifier().updateNotification(context)
-    ApplicationDependencies.getDatabaseObserver().notifyCallUpdateObservers()
+    AppDependencies.messageNotifier.updateNotification(context)
+    AppDependencies.databaseObserver.notifyCallUpdateObservers()
     Log.d(TAG, "Transitioned group call ${call.callId} from ${call.event} to $newEvent")
   }
 
@@ -535,7 +544,7 @@ class CallTable(context: Context, databaseHelper: SignalDatabase) : DatabaseTabl
         .run(SQLiteDatabase.CONFLICT_ABORT)
     }
 
-    ApplicationDependencies.getDatabaseObserver().notifyCallUpdateObservers()
+    AppDependencies.databaseObserver.notifyCallUpdateObservers()
   }
 
   fun insertDeclinedGroupCall(
@@ -577,23 +586,23 @@ class CallTable(context: Context, databaseHelper: SignalDatabase) : DatabaseTabl
         .run(SQLiteDatabase.CONFLICT_ABORT)
     }
 
-    ApplicationDependencies.getDatabaseObserver().notifyCallUpdateObservers()
+    AppDependencies.databaseObserver.notifyCallUpdateObservers()
   }
 
-  fun insertOrUpdateGroupCallFromExternalEvent(
-    groupRecipientId: RecipientId,
-    sender: RecipientId,
+  fun insertOrUpdateAdHocCallFromObserveEvent(
+    callRecipient: Recipient,
     timestamp: Long,
-    messageGroupCallEraId: String?
+    callId: Long
   ) {
-    insertOrUpdateGroupCallFromLocalEvent(
-      groupRecipientId,
-      sender,
-      timestamp,
-      messageGroupCallEraId,
-      emptyList(),
-      false
-    )
+    handleCallLinkUpdate(callRecipient, timestamp, CallId(callId), Direction.INCOMING)
+  }
+
+  fun insertAdHocCallFromObserveEvent(
+    callRecipient: Recipient,
+    timestamp: Long,
+    eraId: String
+  ): Boolean {
+    return handleCallLinkUpdate(callRecipient, timestamp, CallId.fromEra(eraId), Direction.INCOMING)
   }
 
   fun insertOrUpdateGroupCallFromLocalEvent(
@@ -606,7 +615,7 @@ class CallTable(context: Context, databaseHelper: SignalDatabase) : DatabaseTabl
   ) {
     val recipient = Recipient.resolved(groupRecipientId)
     if (recipient.isCallLink) {
-      handleCallLinkUpdate(recipient, timestamp, peekGroupCallEraId)
+      handleCallLinkUpdate(recipient, timestamp, peekGroupCallEraId?.let { CallId.fromEra(it) })
     } else {
       handleGroupUpdate(recipient, sender, timestamp, peekGroupCallEraId, peekJoinedUuids, isCallFull)
     }
@@ -676,35 +685,53 @@ class CallTable(context: Context, databaseHelper: SignalDatabase) : DatabaseTabl
     }
   }
 
+  /**
+   * @return Whether or not a new row was inserted.
+   */
   private fun handleCallLinkUpdate(
     callLinkRecipient: Recipient,
     timestamp: Long,
-    peekGroupCallEraId: String?
-  ) {
+    callId: CallId?,
+    direction: Direction = Direction.OUTGOING,
+    skipTimestampUpdate: Boolean = false
+  ): Boolean {
     check(callLinkRecipient.isCallLink)
 
-    val callId = peekGroupCallEraId?.let { CallId.fromEra(it).longValue() } ?: return
-
-    writableDatabase.withinTransaction { db ->
-      db.delete(TABLE_NAME)
-        .where("$PEER = ?", callLinkRecipient.id.serialize())
-        .run()
-
-      db.insertInto(TABLE_NAME)
-        .values(
-          CALL_ID to callId,
-          MESSAGE_ID to null,
-          PEER to callLinkRecipient.id.toLong(),
-          EVENT to Event.serialize(Event.GENERIC_GROUP_CALL),
-          TYPE to Type.serialize(Type.AD_HOC_CALL),
-          DIRECTION to Direction.serialize(Direction.OUTGOING),
-          TIMESTAMP to timestamp,
-          RINGER to null
-        ).run(SQLiteDatabase.CONFLICT_ABORT)
+    if (callId == null) {
+      return false
     }
 
-    Log.d(TAG, "Inserted new call event for call link. Call Id: $callId")
-    ApplicationDependencies.getDatabaseObserver().notifyCallUpdateObservers()
+    val didInsert = writableDatabase.withinTransaction { db ->
+      val exists = db.exists(TABLE_NAME)
+        .where("$PEER = ? AND $CALL_ID = ?", callLinkRecipient.id.serialize(), callId.longValue())
+        .run()
+
+      if (exists && !skipTimestampUpdate) {
+        db.update(TABLE_NAME)
+          .values(TIMESTAMP to timestamp)
+          .where("$PEER = ? AND $CALL_ID = ? AND $TIMESTAMP < ?", callLinkRecipient.id.serialize(), callId.longValue(), timestamp)
+          .run()
+        false
+      } else if (!exists) {
+        db.insertInto(TABLE_NAME)
+          .values(
+            CALL_ID to callId.longValue(),
+            MESSAGE_ID to null,
+            PEER to callLinkRecipient.id.toLong(),
+            EVENT to Event.serialize(Event.GENERIC_GROUP_CALL),
+            TYPE to Type.serialize(Type.AD_HOC_CALL),
+            DIRECTION to Direction.serialize(direction),
+            TIMESTAMP to timestamp,
+            RINGER to null
+          ).run(SQLiteDatabase.CONFLICT_ABORT)
+
+        Log.d(TAG, "Inserted new call event for call link. Call Id: $callId")
+        true
+      } else false
+    }
+
+    AppDependencies.databaseObserver.notifyCallUpdateObservers()
+    return didInsert
   }
 
   private fun insertCallEventFromGroupUpdate(
@@ -755,7 +782,7 @@ class CallTable(context: Context, databaseHelper: SignalDatabase) : DatabaseTabl
       Log.d(TAG, "Skipping call event processing for null era id.")
     }
 
-    ApplicationDependencies.getDatabaseObserver().notifyCallUpdateObservers()
+    AppDependencies.databaseObserver.notifyCallUpdateObservers()
   }
 
   /**
@@ -787,7 +814,7 @@ class CallTable(context: Context, databaseHelper: SignalDatabase) : DatabaseTabl
       updateGroupCallState(call, peekJoinedUuids)
     }
 
-    ApplicationDependencies.getDatabaseObserver().notifyCallUpdateObservers()
+    AppDependencies.databaseObserver.notifyCallUpdateObservers()
     return sameEraId
   }
 
@@ -945,7 +972,7 @@ class CallTable(context: Context, databaseHelper: SignalDatabase) : DatabaseTabl
       }
     }
 
-    ApplicationDependencies.getDatabaseObserver().notifyCallUpdateObservers()
+    AppDependencies.databaseObserver.notifyCallUpdateObservers()
   }
 
   private fun updateEventFromRingState(
@@ -1040,7 +1067,7 @@ class CallTable(context: Context, databaseHelper: SignalDatabase) : DatabaseTabl
       }
     }
 
-    ApplicationDependencies.getDatabaseObserver().notifyCallUpdateObservers()
+    AppDependencies.databaseObserver.notifyCallUpdateObservers()
   }
 
   private fun setMessageId(callId: Long, messageId: MessageId) {
@@ -1184,7 +1211,7 @@ class CallTable(context: Context, databaseHelper: SignalDatabase) : DatabaseTabl
     val isMissedGenericGroupCall = "$EVENT = ${Event.serialize(Event.GENERIC_GROUP_CALL)} AND $LOCAL_JOINED = ${false.toInt()} AND $GROUP_CALL_ACTIVE = ${false.toInt()}"
     val filterClause: SqlUtil.Query = when (filter) {
       CallLogFilter.ALL -> SqlUtil.buildQuery("$DELETION_TIMESTAMP = 0")
-      CallLogFilter.MISSED -> SqlUtil.buildQuery("($EVENT = ${Event.serialize(Event.MISSED)} OR $EVENT = ${Event.serialize(Event.MISSED_NOTIFICATION_PROFILE)} OR $EVENT = ${Event.serialize(Event.NOT_ACCEPTED)} OR $EVENT = ${Event.serialize(Event.DECLINED)} OR ($isMissedGenericGroupCall)) AND $DELETION_TIMESTAMP = 0")
+      CallLogFilter.MISSED -> SqlUtil.buildQuery("$TYPE != ${Type.serialize(Type.AD_HOC_CALL)} AND $DIRECTION == ${Direction.serialize(Direction.INCOMING)} AND ($EVENT = ${Event.serialize(Event.MISSED)} OR $EVENT = ${Event.serialize(Event.MISSED_NOTIFICATION_PROFILE)} OR $EVENT = ${Event.serialize(Event.NOT_ACCEPTED)} OR $EVENT = ${Event.serialize(Event.DECLINED)} OR ($isMissedGenericGroupCall)) AND $DELETION_TIMESTAMP = 0")
       CallLogFilter.AD_HOC -> SqlUtil.buildQuery("$TYPE = ${Type.serialize(Type.AD_HOC_CALL)} AND $DELETION_TIMESTAMP = 0")
     }
 
@@ -1406,7 +1433,7 @@ class CallTable(context: Context, databaseHelper: SignalDatabase) : DatabaseTabl
         groupCallState = CallLogRow.GroupCallState.fromDetails(groupCallDetails),
         children = actualChildren.toSet(),
         searchQuery = searchTerm,
-        callLinkPeekInfo = ApplicationDependencies.getSignalCallManager().peekInfoSnapshot[peer.id],
+        callLinkPeekInfo = AppDependencies.signalCallManager.peekInfoSnapshot[peer.id],
         canUserBeginCall = canUserBeginCall
       )
     }
@@ -1648,7 +1675,7 @@ class CallTable(context: Context, databaseHelper: SignalDatabase) : DatabaseTabl
       @JvmStatic
       fun from(event: CallEvent.Event?): Event? {
         return when (event) {
-          null, CallEvent.Event.UNKNOWN_ACTION -> null
+          null, CallEvent.Event.UNKNOWN_ACTION, CallEvent.Event.OBSERVED -> null
           CallEvent.Event.ACCEPTED -> ACCEPTED
           CallEvent.Event.NOT_ACCEPTED -> NOT_ACCEPTED
           CallEvent.Event.DELETE -> DELETE

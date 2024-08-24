@@ -21,17 +21,10 @@ plugins {
 
 apply(from = "static-ips.gradle.kts")
 
-val canonicalVersionCode = 1421
-val canonicalVersionName = "7.8.1"
-
-val postFixSize = 100
-val abiPostFix: Map<String, Int> = mapOf(
-  "universal" to 0,
-  "armeabi-v7a" to 1,
-  "arm64-v8a" to 2,
-  "x86" to 3,
-  "x86_64" to 4
-)
+val canonicalVersionCode = 1449
+val canonicalVersionName = "7.15.2"
+val currentHotfixVersion = 0
+val maxHotfixVersions = 100
 
 val keystores: Map<String, Properties?> = mapOf("debug" to loadKeystoreProperties("keystore.debug.properties"))
 
@@ -79,7 +72,7 @@ wire {
 }
 
 ktlint {
-  version.set("0.49.1")
+  version.set("1.2.1")
 }
 
 android {
@@ -91,6 +84,8 @@ android {
   flavorDimensions += listOf("distribution", "environment")
   useLibrary("org.apache.http.legacy")
   testBuildType = "instrumentation"
+
+  android.bundle.language.enableSplit = false
 
   kotlinOptions {
     jvmTarget = signalKotlinJvmTarget
@@ -140,9 +135,27 @@ android {
     targetCompatibility = signalJavaVersion
   }
 
-  packagingOptions {
+  packaging {
+    jniLibs {
+      excludes += setOf(
+        "**/*.dylib",
+        "**/*.dll"
+      )
+    }
     resources {
-      excludes += setOf("LICENSE.txt", "LICENSE", "NOTICE", "asm-license.txt", "META-INF/LICENSE", "META-INF/LICENSE.md", "META-INF/NOTICE", "META-INF/LICENSE-notice.md", "META-INF/proguard/androidx-annotations.pro", "libsignal_jni.dylib", "signal_jni.dll")
+      excludes += setOf(
+        "LICENSE.txt",
+        "LICENSE",
+        "NOTICE",
+        "asm-license.txt",
+        "META-INF/LICENSE",
+        "META-INF/LICENSE.md",
+        "META-INF/NOTICE",
+        "META-INF/LICENSE-notice.md",
+        "META-INF/proguard/androidx-annotations.pro",
+        "**/*.dylib",
+        "**/*.dll"
+      )
     }
   }
 
@@ -152,11 +165,11 @@ android {
   }
 
   composeOptions {
-    kotlinCompilerExtensionVersion = "1.4.4"
+    kotlinCompilerExtensionVersion = "1.5.4"
   }
 
   defaultConfig {
-    versionCode = canonicalVersionCode * postFixSize
+    versionCode = (canonicalVersionCode * maxHotfixVersions) + currentHotfixVersion
     versionName = canonicalVersionName
 
     minSdk = signalMinSdkVersion
@@ -208,6 +221,7 @@ android {
     buildConfigField("String", "SIGNAL_CAPTCHA_URL", "\"https://signalcaptchas.org/registration/generate.html\"")
     buildConfigField("String", "RECAPTCHA_PROOF_URL", "\"https://signalcaptchas.org/challenge/generate.html\"")
     buildConfigField("org.signal.libsignal.net.Network.Environment", "LIBSIGNAL_NET_ENV", "org.signal.libsignal.net.Network.Environment.PRODUCTION")
+    buildConfigField("int", "LIBSIGNAL_LOG_LEVEL", "org.signal.libsignal.protocol.logging.SignalProtocolLogger.INFO")
 
     buildConfigField("String", "BUILD_DISTRIBUTION_TYPE", "\"unset\"")
     buildConfigField("String", "BUILD_ENVIRONMENT_TYPE", "\"unset\"")
@@ -386,6 +400,7 @@ android {
       buildConfigField("String", "SIGNAL_CAPTCHA_URL", "\"https://signalcaptchas.org/staging/registration/generate.html\"")
       buildConfigField("String", "RECAPTCHA_PROOF_URL", "\"https://signalcaptchas.org/staging/challenge/generate.html\"")
       buildConfigField("org.signal.libsignal.net.Network.Environment", "LIBSIGNAL_NET_ENV", "org.signal.libsignal.net.Network.Environment.STAGING")
+      buildConfigField("int", "LIBSIGNAL_LOG_LEVEL", "org.signal.libsignal.protocol.logging.SignalProtocolLogger.DEBUG")
 
       buildConfigField("String", "BUILD_ENVIRONMENT_TYPE", "\"Staging\"")
       buildConfigField("String", "STRIPE_PUBLISHABLE_KEY", "\"pk_test_sngOd8FnXNkpce9nPXawKrJD00kIDngZkD\"")
@@ -405,7 +420,6 @@ android {
       .map { it as com.android.build.gradle.internal.api.ApkVariantOutputImpl }
       .forEach { output ->
         if (output.baseName.contains("nightly")) {
-          output.versionCodeOverride = canonicalVersionCode * postFixSize + 5
           var tag = getCurrentGitTag()
           if (!tag.isNullOrEmpty()) {
             if (tag.startsWith("v")) {
@@ -419,14 +433,9 @@ android {
         } else {
           output.outputFileName = output.outputFileName.replace(".apk", "-$versionName.apk")
 
-          val abiName: String = output.getFilter("ABI") ?: "universal"
-          val postFix: Int = abiPostFix[abiName]!!
-
-          if (postFix >= postFixSize) {
-            throw AssertionError("postFix is too large")
+          if (currentHotfixVersion >= maxHotfixVersions) {
+            throw AssertionError("Hotfix version is too large!")
           }
-
-          output.versionCodeOverride = canonicalVersionCode * postFixSize + postFix
         }
       }
   }
@@ -434,6 +443,12 @@ android {
   androidComponents {
     beforeVariants { variant ->
       variant.enable = variant.name in selectableVariants
+    }
+    onVariants { variant ->
+      // Include the test-only library on debug builds.
+      if (variant.buildType != "instrumentation") {
+        variant.packaging.jniLibs.excludes.add("**/libsignal_jni_testing.so")
+      }
     }
   }
 
@@ -496,6 +511,7 @@ dependencies {
   implementation(libs.androidx.lifecycle.viewmodel.savedstate)
   implementation(libs.androidx.lifecycle.common.java8)
   implementation(libs.androidx.lifecycle.reactivestreams.ktx)
+  implementation(libs.androidx.lifecycle.runtime.compose)
   implementation(libs.androidx.activity.compose)
   implementation(libs.androidx.camera.core)
   implementation(libs.androidx.camera.camera2)
@@ -509,6 +525,7 @@ dependencies {
   implementation(libs.androidx.profileinstaller)
   implementation(libs.androidx.asynclayoutinflater)
   implementation(libs.androidx.asynclayoutinflater.appcompat)
+  implementation(libs.androidx.emoji2)
   implementation(libs.firebase.messaging) {
     exclude(group = "com.google.firebase", module = "firebase-core")
     exclude(group = "com.google.firebase", module = "firebase-analytics")
@@ -540,6 +557,7 @@ dependencies {
   }
   implementation(libs.stream)
   implementation(libs.lottie)
+  implementation(libs.lottie.compose)
   implementation(libs.signal.android.database.sqlcipher)
   implementation(libs.androidx.sqlite)
   implementation(libs.google.ez.vcard) {
@@ -551,10 +569,15 @@ dependencies {
   implementation(libs.accompanist.permissions)
   implementation(libs.kotlin.stdlib.jdk8)
   implementation(libs.kotlin.reflect)
+  implementation(libs.kotlinx.coroutines.play.services)
+  implementation(libs.kotlinx.coroutines.rx3)
   implementation(libs.jackson.module.kotlin)
   implementation(libs.rxjava3.rxandroid)
   implementation(libs.rxjava3.rxkotlin)
   implementation(libs.rxdogtag)
+
+  "playImplementation"(project(":billing"))
+  "nightlyImplementation"(project(":billing"))
 
   "spinnerImplementation"(project(":spinner"))
 
@@ -598,6 +621,7 @@ dependencies {
   androidTestImplementation(testLibs.mockito.kotlin)
   androidTestImplementation(testLibs.mockk.android)
   androidTestImplementation(testLibs.square.okhttp.mockserver)
+  androidTestImplementation(testLibs.diff.utils)
 
   androidTestUtil(testLibs.androidx.test.orchestrator)
 }
@@ -712,7 +736,8 @@ fun Project.languageList(): List<String> {
     .map { valuesFolderName -> valuesFolderName.replace("values-", "") }
     .filter { valuesFolderName -> valuesFolderName != "values" }
     .map { languageCode -> languageCode.replace("-r", "_") }
-    .distinct() + "en"
+    .distinct()
+    .sorted() + "en"
 }
 
 fun String.capitalize(): String {

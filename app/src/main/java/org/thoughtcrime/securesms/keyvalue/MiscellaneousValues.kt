@@ -5,7 +5,7 @@ import org.thoughtcrime.securesms.database.model.databaseprotos.PendingChangeNum
 import org.thoughtcrime.securesms.jobmanager.impl.ChangeNumberConstraintObserver
 import org.thoughtcrime.securesms.keyvalue.protos.LeastActiveLinkedDevice
 
-internal class MiscellaneousValues internal constructor(store: KeyValueStore) : SignalStoreValues(store) {
+class MiscellaneousValues internal constructor(store: KeyValueStore) : SignalStoreValues(store) {
   companion object {
     private const val LAST_PREKEY_REFRESH_TIME = "last_prekey_refresh_time"
     private const val MESSAGE_REQUEST_ENABLE_TIME = "message_request_enable_time"
@@ -36,6 +36,10 @@ internal class MiscellaneousValues internal constructor(store: KeyValueStore) : 
     private const val LINKED_DEVICE_LAST_ACTIVE_CHECK_TIME = "misc.linked_device.last_active_check_time"
     private const val LEAST_ACTIVE_LINKED_DEVICE = "misc.linked_device.least_active"
     private const val NEXT_DATABASE_ANALYSIS_TIME = "misc.next_database_analysis_time"
+    private const val LOCK_SCREEN_ATTEMPT_COUNT = "misc.lock_screen_attempt_count"
+    private const val LAST_NETWORK_RESET_TIME = "misc.last_network_reset_time"
+    private const val LAST_WEBSOCKET_CONNECT_TIME = "misc.last_websocket_connect_time"
+    private const val LAST_CONNECTIVITY_WARNING_TIME = "misc.last_connectivity_warning_time"
   }
 
   public override fun onFirstEverAppLaunch() {
@@ -156,7 +160,7 @@ internal class MiscellaneousValues internal constructor(store: KeyValueStore) : 
   /**
    * Whether or not we've done the initial "PNP Hello World" dance.
    */
-  var hasPniInitializedDevices by booleanValue(PNI_INITIALIZED_DEVICES, false)
+  var hasPniInitializedDevices by booleanValue(PNI_INITIALIZED_DEVICES, true)
 
   /**
    * Whether or not the user has linked devices.
@@ -198,9 +202,15 @@ internal class MiscellaneousValues internal constructor(store: KeyValueStore) : 
   /**
    * The last-known offset between our local clock and the server. To get an estimate of the server time, take your current time and subtract this offset. e.g.
    *
-   * estimatedServerTime = System.currentTimeMillis() - SignalStore.misc().getLastKnownServerTimeOffset()
+   * estimatedServerTime = System.currentTimeMillis() - SignalStore.misc.getLastKnownServerTimeOffset()
    */
   val lastKnownServerTimeOffset by longValue(SERVER_TIME_OFFSET, 0)
+
+  /**
+   * An estimate of the server time, based on the last-known server time offset.
+   */
+  val estimatedServerTime: Long
+    get() = System.currentTimeMillis() - lastKnownServerTimeOffset
 
   /**
    * The last time (using our local clock) we updated the server time offset returned by [.getLastKnownServerTimeOffset]}.
@@ -242,4 +252,25 @@ internal class MiscellaneousValues internal constructor(store: KeyValueStore) : 
    * When the next scheduled database analysis is.
    */
   var nextDatabaseAnalysisTime: Long by longValue(NEXT_DATABASE_ANALYSIS_TIME, 0)
+
+  /**
+   * How many times the lock screen has been seen and _not_ unlocked. Used to determine if the user is confused by how to bypass the lock screen.
+   */
+  var lockScreenAttemptCount: Int by integerValue(LOCK_SCREEN_ATTEMPT_COUNT, 0)
+
+  fun incrementLockScreenAttemptCount() {
+    lockScreenAttemptCount++
+  }
+
+  var lastNetworkResetDueToStreamResets: Long by longValue(LAST_NETWORK_RESET_TIME, 0L)
+
+  /**
+   * The last time you successfully connected to the websocket.
+   */
+  var lastWebSocketConnectTime: Long by longValue(LAST_WEBSOCKET_CONNECT_TIME, System.currentTimeMillis())
+
+  /**
+   * The last time we prompted the user regarding a [org.thoughtcrime.securesms.util.ConnectivityWarning].
+   */
+  var lastConnectivityWarningTime: Long by longValue(LAST_CONNECTIVITY_WARNING_TIME, 0)
 }

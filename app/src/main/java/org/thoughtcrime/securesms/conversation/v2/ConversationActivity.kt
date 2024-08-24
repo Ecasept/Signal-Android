@@ -7,9 +7,11 @@ import android.view.Window
 import androidx.activity.viewModels
 import io.reactivex.rxjava3.subjects.PublishSubject
 import io.reactivex.rxjava3.subjects.Subject
+import org.signal.core.util.logging.Log
+import org.signal.core.util.logging.Log.tag
 import org.thoughtcrime.securesms.PassphraseRequiredActivity
 import org.thoughtcrime.securesms.R
-import org.thoughtcrime.securesms.components.settings.app.subscription.DonationPaymentComponent
+import org.thoughtcrime.securesms.components.settings.app.subscription.InAppPaymentComponent
 import org.thoughtcrime.securesms.components.settings.app.subscription.StripeRepository
 import org.thoughtcrime.securesms.components.voice.VoiceNoteMediaController
 import org.thoughtcrime.securesms.components.voice.VoiceNoteMediaControllerOwner
@@ -21,9 +23,11 @@ import java.util.concurrent.TimeUnit
 /**
  * Wrapper activity for ConversationFragment.
  */
-open class ConversationActivity : PassphraseRequiredActivity(), VoiceNoteMediaControllerOwner, DonationPaymentComponent {
+open class ConversationActivity : PassphraseRequiredActivity(), VoiceNoteMediaControllerOwner, InAppPaymentComponent {
 
   companion object {
+    private val TAG = tag(ConversationActivity::class.java)
+
     private const val STATE_WATERMARK = "share_data_watermark"
   }
 
@@ -33,7 +37,7 @@ open class ConversationActivity : PassphraseRequiredActivity(), VoiceNoteMediaCo
   override val voiceNoteMediaController = VoiceNoteMediaController(this, true)
 
   override val stripeRepository: StripeRepository by lazy { StripeRepository(this) }
-  override val googlePayResultPublisher: Subject<DonationPaymentComponent.GooglePayResult> = PublishSubject.create()
+  override val googlePayResultPublisher: Subject<InAppPaymentComponent.GooglePayResult> = PublishSubject.create()
 
   private val motionEventRelay: MotionEventRelay by viewModels()
   private val shareDataTimestampViewModel: ShareDataTimestampViewModel by viewModels()
@@ -70,6 +74,13 @@ open class ConversationActivity : PassphraseRequiredActivity(), VoiceNoteMediaCo
     outState.putLong(STATE_WATERMARK, shareDataTimestampViewModel.timestamp)
   }
 
+  override fun onStop() {
+    super.onStop()
+    if (isChangingConfigurations) {
+      Log.i(TAG, "Conversation recreating due to configuration change")
+    }
+  }
+
   override fun onDestroy() {
     super.onDestroy()
     transitionDebouncer.clear()
@@ -87,7 +98,7 @@ open class ConversationActivity : PassphraseRequiredActivity(), VoiceNoteMediaCo
   @Suppress("DEPRECATION")
   override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
     super.onActivityResult(requestCode, resultCode, data)
-    googlePayResultPublisher.onNext(DonationPaymentComponent.GooglePayResult(requestCode, resultCode, data))
+    googlePayResultPublisher.onNext(InAppPaymentComponent.GooglePayResult(requestCode, resultCode, data))
   }
 
   private fun replaceFragment() {

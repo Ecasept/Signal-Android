@@ -186,7 +186,7 @@ public final class ConversationUpdateItem extends FrameLayout
                       shouldCollapse(messageRecord, nextMessageRecord),
                       hasWallpaper);
 
-    presentActionButton(hasWallpaper, conversationMessage.getMessageRecord().isBoostRequest());
+    presentActionButton(hasWallpaper, conversationMessage.getMessageRecord().isReleaseChannelDonationRequest());
 
     updateSelectedState();
   }
@@ -538,7 +538,7 @@ public final class ConversationUpdateItem extends FrameLayout
           eventListener.onBlockJoinRequest(conversationMessage.getMessageRecord().getFromRecipient());
         }
       });
-    } else if (conversationMessage.getMessageRecord().isBoostRequest()) {
+    } else if (conversationMessage.getMessageRecord().isReleaseChannelDonationRequest()) {
       actionButton.setVisibility(VISIBLE);
       actionButton.setOnClickListener(v -> {
         if (batchSelected.isEmpty() && eventListener != null) {
@@ -556,7 +556,7 @@ public final class ConversationUpdateItem extends FrameLayout
       });
 
       actionButton.setText(R.string.ConversationActivity__invite_to_signal);
-    } else if (conversationMessage.getMessageRecord().isPaymentsRequestToActivate() && !conversationMessage.getMessageRecord().isOutgoing() && !SignalStore.paymentsValues().mobileCoinPaymentsEnabled()) {
+    } else if (conversationMessage.getMessageRecord().isPaymentsRequestToActivate() && !conversationMessage.getMessageRecord().isOutgoing() && !SignalStore.payments().mobileCoinPaymentsEnabled()) {
       actionButton.setText(R.string.ConversationUpdateItem_activate_payments);
       actionButton.setVisibility(VISIBLE);
       actionButton.setOnClickListener(v -> {
@@ -580,6 +580,14 @@ public final class ConversationUpdateItem extends FrameLayout
           eventListener.onReportSpamLearnMoreClicked();
         }
       });
+    } else if (conversationMessage.getMessageRecord().isProfileChange() && !conversationMessage.getMessageRecord().getFromRecipient().isSelf()) {
+      actionButton.setText(R.string.ConversationUpdateItem_update);
+      actionButton.setVisibility(VISIBLE);
+      actionButton.setOnClickListener(v -> {
+        if (batchSelected.isEmpty() && eventListener != null) {
+          eventListener.onChangeProfileNameUpdateContact(conversationMessage.getMessageRecord().getFromRecipient());
+        }
+      });
     } else if (conversationMessage.getMessageRecord().isMessageRequestAccepted()) {
       actionButton.setText(R.string.ConversationUpdateItem_options);
       actionButton.setVisibility(VISIBLE);
@@ -588,7 +596,7 @@ public final class ConversationUpdateItem extends FrameLayout
           eventListener.onMessageRequestAcceptOptionsClicked();
         }
       });
-    } else{
+    } else {
       actionButton.setVisibility(GONE);
       actionButton.setOnClickListener(null);
     }

@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
-import androidx.annotation.VisibleForTesting
 import org.signal.core.util.Base64
 import org.signal.core.util.logging.Log
 import org.signal.libsignal.protocol.IdentityKey
@@ -16,7 +15,7 @@ import org.thoughtcrime.securesms.crypto.MasterCipher
 import org.thoughtcrime.securesms.crypto.ProfileKeyUtil
 import org.thoughtcrime.securesms.crypto.storage.PreKeyMetadataStore
 import org.thoughtcrime.securesms.database.SignalDatabase
-import org.thoughtcrime.securesms.dependencies.ApplicationDependencies
+import org.thoughtcrime.securesms.dependencies.AppDependencies
 import org.thoughtcrime.securesms.jobs.PreKeysSyncJob
 import org.thoughtcrime.securesms.recipients.Recipient
 import org.thoughtcrime.securesms.service.KeyCachingService
@@ -31,7 +30,7 @@ import org.whispersystems.signalservice.api.util.UuidUtil
 import org.whispersystems.signalservice.api.util.toByteArray
 import java.security.SecureRandom
 
-internal class AccountValues internal constructor(store: KeyValueStore) : SignalStoreValues(store) {
+class AccountValues internal constructor(store: KeyValueStore, context: Context) : SignalStoreValues(store) {
 
   companion object {
     private val TAG = Log.tag(AccountValues::class.java)
@@ -73,26 +72,19 @@ internal class AccountValues internal constructor(store: KeyValueStore) : Signal
     private const val KEY_USERNAME_SYNC_STATE = "phoneNumberPrivacy.usernameSyncState"
     private const val KEY_USERNAME_SYNC_ERROR_COUNT = "phoneNumberPrivacy.usernameErrorCount"
 
-    @VisibleForTesting
-    const val KEY_E164 = "account.e164"
-
-    @VisibleForTesting
-    const val KEY_ACI = "account.aci"
-
-    @VisibleForTesting
-    const val KEY_PNI = "account.pni"
-
-    @VisibleForTesting
-    const val KEY_IS_REGISTERED = "account.is_registered"
+    private const val KEY_E164 = "account.e164"
+    private const val KEY_ACI = "account.aci"
+    private const val KEY_PNI = "account.pni"
+    private const val KEY_IS_REGISTERED = "account.is_registered"
   }
 
   init {
     if (!store.containsKey(KEY_ACI)) {
-      migrateFromSharedPrefsV1(ApplicationDependencies.getApplication())
+      migrateFromSharedPrefsV1(context)
     }
 
     if (!store.containsKey(KEY_ACI_IDENTITY_PUBLIC_KEY)) {
-      migrateFromSharedPrefsV2(ApplicationDependencies.getApplication())
+      migrateFromSharedPrefsV2(context)
     }
 
     store.getString(KEY_PNI, null)?.let { pni ->
@@ -111,6 +103,7 @@ internal class AccountValues internal constructor(store: KeyValueStore) : Signal
       KEY_PNI_IDENTITY_PUBLIC_KEY,
       KEY_PNI_IDENTITY_PRIVATE_KEY,
       KEY_USERNAME,
+      KEY_USERNAME_LINK_ENTROPY,
       KEY_USERNAME_LINK_SERVER_ID
     )
   }
@@ -360,7 +353,7 @@ internal class AccountValues internal constructor(store: KeyValueStore) : Signal
 
     putBoolean(KEY_IS_REGISTERED, registered)
 
-    ApplicationDependencies.getIncomingMessageObserver().notifyRegistrationChanged()
+    AppDependencies.incomingMessageObserver.notifyRegistrationChanged()
 
     if (previous != registered) {
       Recipient.self().live().refresh()
@@ -378,7 +371,7 @@ internal class AccountValues internal constructor(store: KeyValueStore) : Signal
   fun clearRegistrationButKeepCredentials() {
     putBoolean(KEY_IS_REGISTERED, false)
 
-    ApplicationDependencies.getIncomingMessageObserver().notifyRegistrationChanged()
+    AppDependencies.incomingMessageObserver.notifyRegistrationChanged()
 
     Recipient.self().live().refresh()
   }
@@ -449,7 +442,7 @@ internal class AccountValues internal constructor(store: KeyValueStore) : Signal
     val self = Recipient.self()
 
     SignalDatabase.recipients.setProfileKey(self.id, newProfileKey)
-    ApplicationDependencies.getGroupsV2Authorization().clear()
+    AppDependencies.groupsV2Authorization.clear()
   }
 
   /** Do not alter. If you need to migrate more stuff, create a new method. */
