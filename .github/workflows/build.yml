@@ -25,7 +25,7 @@ jobs:
         uses: android-actions/setup-android@v2.0.10
 
       - name: Build Release apk
-        run: ./gradlew assembleWebsite
+        run: ./gradlew build
 
       - name: Get release file aab path
         id: releaseAab
